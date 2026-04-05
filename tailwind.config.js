@@ -30,9 +30,9 @@ export default {
       {
         dark: {
           // --- Basado en la paleta VERCEL por -> (Midnight, alto contraste)
-          primary: "#3b82f6",
-          secondary: "#8b5cf6",
-          accent: "#00DFD8",
+          primary: "#0070f3", // Azul verde ->> Serio
+          secondary: "#262626", // gris oscuro ->> botones secund.
+          accent: "#00DFD8", // azul cielo ->> pequeños detalles
           neutral: "#111111",
           "base-100": "#0a0a0a", // fondo "Midnight"
           "base-200": "#111111", // Fondo para las cards

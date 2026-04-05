@@ -1,11 +1,54 @@
-COMPONENTES DE DAISY UI A USAR Y SU FUNCION
+---
+project: StackMind
+framework: Tailwind + DaisyUI
+last_updated: 2026-04-05
+status: Draft
+---
 
-Card: Esencial para las preguntas en el feed. Usa el modificador card-side para que se vea bien en escritorio (estilo lista).
+# Componentes de DaisyUI a usar y su función
 
-Stats: Ideal para mostrar los puntos de reputación del usuario y el número de respuestas de forma muy visual.
+:::info
+Esta selección prioriza la accesibilidad para usuarios no técnicos, buscando una interfaz cálida y menos intimidante que un foro de programación tradicional.
+:::
 
-Hero: Para la página de bienvenida, explicando qué es StackMind a los usuarios no técnicos.
+### 1. Card (Tarjetas)
 
-Steps: Perfecto para el proceso de "Mejorar mi pregunta con IA" (/enhance-question), guiando al usuario paso a paso.
+Esencial para las preguntas en el feed.
 
-Chat Bubble: Para la sección de respuestas, dándole un toque más humano y conversacional que el estilo rígido de tablas.
+- **Uso:** `card-side` en pantallas grandes, `card-normal` en móviles.
+- **Propósito:** Agrupar contenido de forma limpia. El estilo de lista en escritorio optimiza el escaneo visual de preguntas.
+
+### 2. Stats (Estadísticas)
+
+:::tip
+Ubica este componente en el perfil del usuario o en el lateral de la pregunta.
+:::
+
+- **Función:** Mostrar puntos de reputación y número de respuestas.
+- **Impacto:** Gamificación visual inmediata que motiva la participación.
+
+### 3. Hero (Sección Destacada)
+
+Para la página de bienvenida.
+
+- **Función:** Explicar qué es **StackMind** a los usuarios no técnicos.
+- **Diseño:** Debe incluir un CTA (Call to Action) claro como "Haz tu primera pregunta".
+
+### 4. Steps (Pasos)
+
+Perfecto para la ruta `/enhance-question`.
+:::important
+Guía al usuario en el proceso de "Mejorar mi pregunta con IA" paso a paso para no abrumarlo.
+:::
+
+1. Redacción inicial.
+2. Optimización por IA.
+3. Revisión humana.
+4. Publicación.
+
+### 5. Chat Bubble (Burbujas de Chat)
+
+Para la sección de respuestas.
+
+- **Estilo:** `chat-start` para otros usuarios, `chat-end` para el autor o la IA.
+- **Efecto:** Aporta un toque humano y conversacional, alejándose del estilo rígido de tablas de otros foros.
