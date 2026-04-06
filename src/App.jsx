@@ -1,8 +1,8 @@
 import React from "react";
-// Importamos solo el icono que se quedó en el layout base
+// Importamos  icono layout base
 import { HiChatBubbleLeftRight } from "react-icons/hi2";
 
-// Importamos nuestros nuevos componentes
+// Importamos componentes
 import Navbar from "./components/layout/Navbar";
 import Hero from "./components/home/Hero";
 import QuestionCard from "./components/shared/QuestionCard";
@@ -36,7 +36,7 @@ function App() {
           </div>
 
           <div className="flex flex-col gap-4">
-            {/* Reutilizamos nuestro componente QuestionCard. */}
+            {/* Reutilizamos componente QuestionCard. */}
             <QuestionCard />
             <QuestionCard />
           </div>

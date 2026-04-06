@@ -1,20 +1,18 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Routes, Route } from "react-router-dom"; // Importamos el sistema de rutas
+import { BrowserRouter } from "react-router-dom"; // Solo necesitamos el BrowserRouter aquí
+import { AuthProvider } from "./context/AuthContext"; // Importamos a nuestro Guardián
 import "./index.css";
 import App from "./App.jsx";
-import Prueba from "./Prueba.jsx"; // Importamos tu componente de prueba
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    {/* BrowserRouter -> lee la URL del navegador */}
     <BrowserRouter>
-      <Routes>
-        {/* Ruta principal: http://localhost:5173/ */}
-        <Route path="/" element={<App />} />
-
-        {/* Tu página de prueba: http://localhost:5173/prueba */}
-        <Route path="/prueba" element={<Prueba />} />
-      </Routes>
+      {/*  envolvemos la App -> con el AuthProvider  */}
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
 );
