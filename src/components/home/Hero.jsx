@@ -4,7 +4,7 @@ import { HiSearch } from "react-icons/hi";
 
 const Hero = () => {
   return (
-    <section className="bg-base-100 pt-6 pb-12 md:pt-10 md:pb-20 px-4 border-b border-base-300 relative overflow-hidden">
+    <section className="bg-base-100 pt-6 pb-12 md:pt-14 md:pb-20 px-4 border-b border-base-300 relative overflow-hidden">
       {/* --- HERO SECTION --- */}
       {/* padding asimétrico (pt-6 y pb-12) para acercarlo al menú */}
       {/* Decoración de fondo sutil (Glow radial de Tailwind) */}
@@ -25,9 +25,12 @@ const Hero = () => {
         <p className="text-base md:text-lg text-base-content/70 max-w-2xl mx-auto mb-10 leading-relaxed">
           {/* Únete a la red más grande de desarrolladores de ML, Data Scientists y
           expertos en LLMs. Comparte código, debate sobre modelos y aprende. */}
-          En StackMind ,la comunidad en español donde aprender a usar la
-          Inteligencia Artificial es tan fácil como tener una charla entre
-          amigos.
+          En{" "}
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+            StackMind
+          </span>{" "}
+          ,la comunidad en español donde aprender a usar la Inteligencia
+          Artificial es tan fácil como tener una charla entre amigos.
         </p>
 
         {/* Buscador Principal */}

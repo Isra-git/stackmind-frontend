@@ -39,6 +39,7 @@ const Home = () => {
         <div className="flex flex-col gap-4">
           <QuestionCard />
           <QuestionCard />
+          <QuestionCard />
         </div>
       </div>
     </>
