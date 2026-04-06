@@ -6,7 +6,7 @@ const Hero = () => {
   return (
     <section className="bg-base-100 pt-6 pb-12 md:pt-10 md:pb-20 px-4 border-b border-base-300 relative overflow-hidden">
       {/* --- HERO SECTION --- */}
-      {/* Aplicamos el padding asimétrico (pt-6 y pb-12) que discutimos para acercarlo al menú */}
+      {/* padding asimétrico (pt-6 y pb-12) para acercarlo al menú */}
       {/* Decoración de fondo sutil (Glow radial de Tailwind) */}
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-base-100 to-base-100 pointer-events-none"></div>
 
@@ -23,8 +23,11 @@ const Hero = () => {
         </h1>
 
         <p className="text-base md:text-lg text-base-content/70 max-w-2xl mx-auto mb-10 leading-relaxed">
-          Únete a la red más grande de desarrolladores de ML, Data Scientists y
-          expertos en LLMs. Comparte código, debate sobre modelos y aprende.
+          {/* Únete a la red más grande de desarrolladores de ML, Data Scientists y
+          expertos en LLMs. Comparte código, debate sobre modelos y aprende. */}
+          En StackMind ,la comunidad en español donde aprender a usar la
+          Inteligencia Artificial es tan fácil como tener una charla entre
+          amigos.
         </p>
 
         {/* Buscador Principal */}
