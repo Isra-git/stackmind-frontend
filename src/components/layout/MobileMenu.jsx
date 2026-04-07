@@ -14,8 +14,8 @@ import {
   HiUsers,
   HiUserCircle,
   HiCog,
-  HiBookmark,
   HiQuestionMarkCircle,
+  HiMiniPencilSquare,
 } from "react-icons/hi2";
 
 const MobileMenu = () => {
@@ -87,20 +87,15 @@ const MobileMenu = () => {
             Preguntas
           </Link>
         </li>
-        {/* 
-        <li>
-          <Link to="/books" className="py-3">
-            <HiBookmark className="h-5 w-5 opacity-70" /> Guardados
-          </Link>
-        </li> */}
+
         <li>
           <Link to="/MyAnswers" onClick={closeMenu} className="py-3">
-            <HiUsers className="h-5 w-5 opacity-70" /> Mis Respuestas
+            <HiMiniPencilSquare className="h-5 w-5 opacity-70" /> Mis Respuestas
           </Link>
         </li>
         <li>
           <Link to="/History" onClick={closeMenu} className="py-3">
-            <HiCog className="h-5 w-5 opacity-70" /> Nuestra Historia
+            <HiUsers className="h-5 w-5 opacity-70" /> Nuestra Historia
           </Link>
         </li>
         <li>

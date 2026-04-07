@@ -45,13 +45,13 @@ const MainLayout = () => {
       <div className="w-full bg-base-200 flex-1">
         <main className="container mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 py-8 md:py-12 px-4 w-full">
           {/* arriba */}
-          <div className="order-2 lg:order-1 lg:col-span-8 space-y-6">
+          <div className="order-1  lg:col-span-8 space-y-6">
             {/* Componente que injecto*/}
             <Outlet />
           </div>
 
           {/* debajo */}
-          <aside className="lg:col-span-4 order-1 lg:order-2">
+          <aside className="order-2 lg:col-span-4">
             <Sidebar />
           </aside>
         </main>
