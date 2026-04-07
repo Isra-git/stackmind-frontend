@@ -1,2 +1,65 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+@plugin "daisyui/theme" {
+    name: "light";
+    default: true;
+    color-scheme: light;
+
+    /* --- Colores principales --- */
+    --color-primary: #c0672a;
+    /* Terracota / melocotón intenso */
+    --color-secondary: #a0522d;
+    /* Marrón siena */
+    --color-accent: #d4956a;
+    /* Melocotón suave */
+    --color-neutral: #5c4a3a;
+    /* Marrón cálido oscuro */
+
+    /* --- Fondos (crema/melocotón) --- */
+    --color-base-100: #f5e9de;
+    /* Fondo principal — crema   melocotón */
+    --color-base-200: #fdf6f0;
+    /* Fondo secundario — crema muy suave */
+    --color-base-300: #ead9cc;
+    /* Bordes / fondos terciarios */
+    --color-base-content: #3d2b1f;
+    /* Texto principal — marrón oscuro legible */
+
+    /* --- Semánticos--- */
+    --color-info: #3abff8;
+    --color-success: #36d399;
+    --color-warning: #fbbd23;
+    --color-error: #f87272;
+}
+
+@plugin "daisyui/theme" {
+    name: "dark";
+    color-scheme: dark;
+
+    /* --- Colores principales --- */
+    --color-primary: #661ae6;
+    /* Morado oscuro */
+    --color-secondary: #d926aa;
+    /* Rosa oscuro */
+    --color-accent: #1fb2a5;
+    /* Turquesa oscuro */
+    --color-neutral: #191d24;
+    /* Casi negro */
+
+    /* --- Fondos --- */
+    --color-base-100: #1d1e20;
+    /* Fondo principal (casi negro) */
+    --color-base-200: #191b1f;
+    /* Fondo secundario */
+    --color-base-300: #151619;
+    /* Fondo terciario / bordes */
+    --color-base-content: #a6adbb;
+    /* Texto principal (gris claro) */
+
+    /* --- Semánticos --- */
+    --color-info: #3abff8;
+    --color-success: #36d399;
+    --color-warning: #fbbd23;
+    --color-error: #f87272;
+}
