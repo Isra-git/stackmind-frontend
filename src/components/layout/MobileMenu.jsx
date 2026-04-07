@@ -1,4 +1,13 @@
+/* 
+
+  Menu del icono de Hamburguesa
+
+*/
+
+// dependencias
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import { HiMenu, HiSun, HiLogout } from "react-icons/hi";
 import {
   HiChatBubbleLeftRight,
@@ -13,6 +22,14 @@ const MobileMenu = () => {
   const [theme, setTheme] = useState(
     localStorage.getItem("stackmind-theme") || "dark",
   );
+
+  // cerramos el menu al hacer Clik en cualquier opcion
+  const closeMenu = () => {
+    const element = document.activeElement;
+    if (element) {
+      element.blur(); // Desactivamos el foco del elemento activo
+    }
+  };
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -60,43 +77,48 @@ const MobileMenu = () => {
 
         {/* Enlaces de navegación */}
         <li>
-          <a className="py-3">
+          <Link to="/Me" onClick={closeMenu} className="py-3">
             <HiUserCircle className="h-5 w-5 opacity-70" /> Mi Perfil
-          </a>
+          </Link>
         </li>
         <li>
-          <a className="py-3">
+          <Link to="/MyQuestions" onClick={closeMenu} className="py-3">
             <HiChatBubbleLeftRight className="h-5 w-5 opacity-70" /> Mis
             Preguntas
-          </a>
+          </Link>
         </li>
+        {/* 
         <li>
-          <a className="py-3">
+          <Link to="/books" className="py-3">
             <HiBookmark className="h-5 w-5 opacity-70" /> Guardados
-          </a>
+          </Link>
+        </li> */}
+        <li>
+          <Link to="/MyAnswers" onClick={closeMenu} className="py-3">
+            <HiUsers className="h-5 w-5 opacity-70" /> Mis Respuestas
+          </Link>
         </li>
         <li>
-          <a className="py-3">
-            <HiUsers className="h-5 w-5 opacity-70" /> Comunidades
-          </a>
+          <Link to="/History" onClick={closeMenu} className="py-3">
+            <HiCog className="h-5 w-5 opacity-70" /> Nuestra Historia
+          </Link>
         </li>
         <li>
-          <a className="py-3">
-            <HiCog className="h-5 w-5 opacity-70" /> Configuración
-          </a>
-        </li>
-        <li>
-          <a className="py-3">
+          <Link to="/Support" onClick={closeMenu} className="py-3">
             <HiQuestionMarkCircle className="h-5 w-5 opacity-70" /> Ayuda y
             Soporte
-          </a>
+          </Link>
         </li>
 
         {/* Botón de salida */}
         <li className="mt-2 pt-2 border-t border-base-200">
-          <a className="text-error hover:bg-error/10 font-medium">
+          <Link
+            to="/Logout"
+            onClick={closeMenu}
+            className="text-error hover:bg-error/10 font-medium"
+          >
             <HiLogout className="h-5 w-5" /> Cerrar Sesión
-          </a>
+          </Link>
         </li>
       </ul>
     </div>

@@ -21,8 +21,8 @@ export default {
           secondary: "#5f6368",
           accent: "#fbbc04",
           neutral: "#3d4451",
-          "base-100": "#ffffff", // Fondo blanco puro
-          "base-200": "#f8f9fa", // Gris para fondos secundarios
+          "base-100": "#A9A9A9", // Fondo blanco puro
+          "base-200": "#A9A9A9", // Gris para fondos secundarios
           "base-300": "#e8eaed", // Bordes
           "base-content": "#202124", // Texto principal
         },
