@@ -1,6 +1,4 @@
-/* 
-
-  Barra de Navegacion
+/* Barra de Navegacion
 
 */
 
@@ -8,14 +6,31 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-// Importamos nuestro nuevo componente
+import { useAuth } from "../../context/AuthContext";
+
+// Importamos nuestro componente
 import MobileMenu from "./MobileMenu";
 
-// Aquí ya solo necesitamos los iconos de la vista de escritorio
+//  iconos de la vista de escritorio
 import { HiSearch } from "react-icons/hi";
 import { HiChatBubbleLeftRight, HiTag, HiUsers } from "react-icons/hi2";
 
 const Navbar = () => {
+  // extraemos el token y usuario del contexto de autenticación
+  const { token, user } = useAuth();
+
+  // Logica de Avatares (1- solo admin), fallback 2 por seguridad
+  let avatarPath = "/img/avatars/avatar2.png";
+
+  // 2. Solo si el usuario existe, hacemos las comprobaciones
+  if (user) {
+    if (user.is_admin) {
+      avatarPath = "/img/avatars/avatar1.png";
+    } else if (user.avatar_url) {
+      avatarPath = `/img/avatars/${user.avatar_url}`;
+    }
+  }
+
   return (
     <header className="navbar bg-base-100 border-b border-base-300 sticky top-0 z-50 px-2 md:px-8 shadow-sm">
       {/* SECCIÓN IZQUIERDA */}
@@ -62,24 +77,51 @@ const Navbar = () => {
           </Link>
         </nav>
       </div>
-      {/* questions tags topquestions search login register*/}
-      {/* SECCIÓN DERECHA: Acciones */}
-      <div className="navbar-end w-auto lg:w-1/4 flex gap-2 justify-end">
+
+      {/* SECCIÓN DERECHA: Acciones -> Segun la session (token?) */}
+      <div className="navbar-end w-auto lg:w-1/4 flex gap-2 justify-end items-center">
         <Link to="/search" className="btn btn-ghost btn-circle md:hidden">
           <HiSearch className="h-5 w-5" />
         </Link>
-        <Link
-          to="/login"
-          className="btn btn-ghost btn-sm hidden md:inline-flex font-medium"
-        >
-          Entrar
-        </Link>
-        <Link
-          to="/register"
-          className="btn btn-primary btn-sm px-6 shadow-lg shadow-primary/10"
-        >
-          Unirse
-        </Link>
+
+        {/* ToKen ? Avatar : Login / Register */}
+        {token && user ? (
+          <div className="flex items-center gap-3 bg-base-200/50 py-1 px-2 pr-4 rounded-full border border-base-300">
+            <Link
+              to="/me"
+              className="avatar hover:opacity-80 transition-opacity cursor-pointer"
+            >
+              <div className="w-8 md:w-9 rounded-full ring ring-primary/20 ring-offset-base-100 ring-offset-1">
+                <img
+                  src={avatarPath}
+                  alt={`Avatar de ${user.username}`}
+                  title={user.username}
+                />
+              </div>
+            </Link>
+            <div className="flex flex-col">
+              <span className="font-bold text-sm md:text-base leading-tight">
+                <span className="text-[#6499DC]">{user.username}</span>
+              </span>
+              {/* <span className="text-xs text-warning font-semibold flex items-center gap-1">🏆 {user.reputation || 0}</span> */}
+            </div>
+          </div>
+        ) : (
+          <>
+            <Link
+              to="/login"
+              className="btn btn-ghost btn-sm hidden md:inline-flex font-medium"
+            >
+              Entrar
+            </Link>
+            <Link
+              to="/register"
+              className="btn btn-primary btn-sm px-6 shadow-lg shadow-primary/10"
+            >
+              Unirse
+            </Link>
+          </>
+        )}
       </div>
     </header>
   );
