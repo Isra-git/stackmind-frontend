@@ -8,20 +8,32 @@
 
 // dependencias
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   // estados
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // sacamos la funcion login y los estados de carga/errores del AuthContext
+  const { login, loading, error } = useAuth();
+
+  // hook para redirigir al User despues del login
+  const navigate = useNavigate();
+
   // manejador de envio
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    //todo -> llamar AuthContxt
-    console.log("Email:", email);
-    console.log("Password:", password);
+    // llamar AuthContxt
+    const success = await login(email, password);
+
+    // ok? -> redirigimos al usuario a la pagina principal
+    if (success) {
+      navigate("/");
+    }
   };
 
   return (
@@ -54,7 +66,14 @@ const Login = () => {
             Inicia sesión para participar en la comunidad
           </p>
 
-          {/* 3. CONECTAMOS EL FORMULARIO: Le decimos que ejecute handleSubmit al enviarse */}
+          {/* si hay ERROR -> lo mostramos */}
+          {error && (
+            <div className="alert alert-error mb-4 rounded-lg text-sm p-3">
+              <span>{error}</span>
+            </div>
+          )}
+
+          {/*   handleSubmit al enviarse */}
           <form className="space-y-4" onSubmit={handleSubmit}>
             {/* Email */}
             <div className="form-control">
@@ -67,7 +86,7 @@ const Login = () => {
                 type="email"
                 placeholder="tu@email.com"
                 className="input input-bordered w-full"
-                // 4. BINDING (Enlace bidireccional)
+                //  BINDING (Enlace bidireccional)
                 value={email} // El input muestra lo que hay en el estado
                 onChange={(e) => setEmail(e.target.value)} // Al escribir, actualizamos el estado
                 required
@@ -100,8 +119,13 @@ const Login = () => {
               <button
                 type="submit"
                 className="btn btn-primary w-full text-white"
+                disabled={loading}
               >
-                Iniciar Sesión
+                {loading ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  "Iniciar Sessión"
+                )}
               </button>
             </div>
           </form>
