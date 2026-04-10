@@ -1,60 +1,105 @@
-import React from "react";
+/* componente de Tarjeta de Pregunta
 
-const QuestionCard = () => {
+*/
+
+// src/components/shared/QuestionCard.jsx
+
+// dependencias
+import React from "react";
+import { Link } from "react-router-dom";
+import {
+  HiOutlineChatBubbleLeftRight,
+  HiOutlineChevronUp,
+  HiOutlineEye,
+} from "react-icons/hi2";
+
+const QuestionCard = ({ question }) => {
+  // extraemos las propiedades
+  const { id, title, slug, body, views, author_id, created_at, author } =
+    question || {};
+
+  // formateamos la fecha
+  const formattedDate = new Date(created_at).toLocaleDateString("es-ES", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+
+  // avatar del author
+  let authorAvatar = "/img/avatars/avatar2.png";
+  if (author) {
+    if (author.is_admin) {
+      authorAvatar = "/img/avatars/avatar1.png";
+    } else if (author.avatar_url) {
+      authorAvatar = `/img/avatars/${author.avatar_url}`;
+    }
+  }
+
   return (
-    <div className="card bg-base-100 shadow-sm border border-base-200 hover:border-primary/50 hover:shadow-md transition-all duration-300 cursor-pointer group">
-      {/* --- COMPONENTE CARD: PREGUNTA ESTÁTICA --- */}
-      <div className="card-body p-5 flex flex-col sm:flex-row gap-5">
-        {/* Bloque Estadísticas (Votos/Respuestas) */}
-        <div className="flex flex-row sm:flex-col items-center sm:items-end gap-4 sm:gap-2 w-full sm:w-20 border-b sm:border-b-0 sm:border-r border-base-200 pb-4 sm:pb-0 sm:pr-4 shrink-0">
-          <div className="flex flex-col items-center">
-            <span className="text-lg font-bold text-base-content">15</span>
-            <span className="text-[10px] uppercase font-bold text-base-content/50">
-              Votos
+    <div className="card bg-base-100 shadow-sm border border-base-200 hover:shadow-md hover:border-primary/30 transition-all duration-200 mb-4 rounded-xl">
+      <div className="card-body p-4 sm:p-5 flex-col sm:flex-row gap-4 sm:gap-6">
+        {/* LADO IZQUIERDO: Contadores  */}
+        <div className="flex sm:flex-col gap-4 sm:gap-2 items-center justify-start sm:min-w-[70px] shrink-0 text-center border-b sm:border-b-0 sm:border-r border-base-200 pb-3 sm:pb-0 sm:pr-4">
+          {/* Votos */}
+          <div className="flex sm:flex-col items-center gap-1 sm:gap-0">
+            <span className="font-semibold text-lg flex items-center gap-1">
+              <HiOutlineChevronUp className="text-xl text-base-content/50 hidden sm:block" />
+              0
+            </span>
+            <span className="text-[11px] text-base-content/60 uppercase tracking-wider hidden sm:block">
+              votos
             </span>
           </div>
-          <div className="flex flex-col items-center bg-success/10 text-success rounded px-2 py-1 border border-success/20">
-            <span className="text-lg font-bold">3</span>
-            <span className="text-[10px] uppercase font-bold">Resp.</span>
+
+          {/* Respuestas (Verde -> respuestas, gris ->  vacía) */}
+          <div className="flex sm:flex-col items-center gap-1 sm:gap-0 px-2 sm:px-0 py-1 rounded sm:rounded-none sm:mt-1 text-base-content/50">
+            <span className="font-semibold text-lg sm:text-md flex items-center gap-1">
+              <HiOutlineChatBubbleLeftRight className="sm:hidden" />0
+            </span>
+            <span className="text-[11px] uppercase tracking-wider hidden sm:block">
+              respuestas
+            </span>
           </div>
-          <span className="text-xs text-base-content/40 sm:hidden ml-auto">
-            2h
-          </span>
         </div>
 
-        {/* Bloque Contenido */}
-        <div className="flex-1">
-          <h3 className="text-lg md:text-xl font-bold text-primary group-hover:text-primary-focus transition-colors leading-tight mb-2">
-            ¿Cómo implementar fine-tuning en un modelo LLM con datos
-            personalizados?
-          </h3>
-          <p className="text-sm text-base-content/70 line-clamp-2 mb-4">
-            Estoy intentando hacer fine-tuning de un modelo GPT con mis propios
-            datos. He probado con LoRA pero los resultados no son los esperados
-            en cuanto a precisión...
-          </p>
+        {/* LADO DERECHO: Contenido de la Pregunta */}
+        <div className="flex-1 flex flex-col gap-2 min-w-0">
+          {/* Título enlazado al detalle de la pregunta */}
+          <Link
+            to={`/questions/${slug || id}`}
+            className="text-lg sm:text-xl font-bold text-base-content hover:text-primary transition-colors leading-tight line-clamp-2"
+          >
+            {title}
+          </Link>
 
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-wrap gap-2">
-              <span className="badge badge-outline badge-sm border-blue-200 text-blue-600 bg-blue-50">
-                fine-tuning
-              </span>
-              <span className="badge badge-outline badge-sm border-purple-200 text-purple-600 bg-purple-50">
-                LLM
-              </span>
-              <span className="badge badge-outline badge-sm border-orange-200 text-orange-600 bg-orange-50">
-                LoRA
-              </span>
-            </div>
+          {/* Extracto del contenido (line-clamp-2 corta el texto con ... si es muy largo) */}
+          <p className="text-sm text-base-content/70 line-clamp-2">{body}</p>
 
-            <div className="flex items-center gap-2 text-xs text-base-content/60">
-              <div className="avatar placeholder">
-                <div className="bg-neutral text-neutral-content rounded-full w-5">
-                  <span className="text-xs">M</span>
+          {/* Footer de la tarjeta: Tags y Meta del Autor */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-3 gap-3 sm:gap-0">
+            {/* Lista de Etiquetas */}
+            <div className="flex flex-wrap gap-2"></div>
+
+            {/* Información del Autor y Fecha */}
+            <div className="flex flex-wrap items-center gap-2 self-end sm:self-auto text-xs text-base-content/60 bg-base-200/50 px-3 py-1.5 rounded-full">
+              <div className="avatar hidden sm:block">
+                <div className="w-5 h-5 rounded-full ring-1 ring-base-300">
+                  <img src={authorAvatar} alt={author?.username || "Anónimo"} />
                 </div>
               </div>
-              <span className="font-medium text-base-content">mario_dev</span>
-              <span className="hidden sm:inline">• hace 2 horas</span>
+
+              <span className="font-medium text-base-content/80">
+                {author?.username || "Usuario Anónimo"}
+              </span>
+
+              <span className="hidden sm:inline opacity-50">•</span>
+
+              <span className="opacity-70">preguntó el {formattedDate}</span>
+
+              <span className="hidden sm:inline opacity-50">•</span>
+              <span className="opacity-70 flex items-center gap-1">
+                <HiOutlineEye className="text-sm" /> {views || 0}
+              </span>
             </div>
           </div>
         </div>

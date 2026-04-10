@@ -111,6 +111,7 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     setUser(null);
     localStorage.removeItem("stackmind_jwt");
+    localStorage.clear();
   };
 
   // devolvemos el Provider con los datos del contexto

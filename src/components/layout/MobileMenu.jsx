@@ -6,7 +6,7 @@
 
 // dependencias
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { HiMenu, HiSun, HiLogout } from "react-icons/hi";
 import {
@@ -17,8 +17,13 @@ import {
   HiQuestionMarkCircle,
   HiMiniPencilSquare,
 } from "react-icons/hi2";
+import { useAuth } from "../../context/AuthContext";
 
 const MobileMenu = () => {
+  // extraemos el contexto de Auth
+  const { token, user, logout } = useAuth();
+  const navigate = useNavigate();
+
   const [theme, setTheme] = useState(
     localStorage.getItem("stackmind-theme") || "dark",
   );
@@ -29,6 +34,14 @@ const MobileMenu = () => {
     if (element) {
       element.blur(); // Desactivamos el foco del elemento activo
     }
+  };
+
+  // Maneja cerrar session + cierre menu
+  const handleLogout = (e) => {
+    e.preventDefault();
+    logout();
+    closeMenu();
+    navigate("/logout");
   };
 
   useEffect(() => {
@@ -109,7 +122,7 @@ const MobileMenu = () => {
         <li className="mt-2 pt-2 border-t border-base-200">
           <Link
             to="/Logout"
-            onClick={closeMenu}
+            onClick={handleLogout}
             className="text-error hover:bg-error/10 font-medium"
           >
             <HiLogout className="h-5 w-5" /> Cerrar Sesión

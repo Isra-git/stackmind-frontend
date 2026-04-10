@@ -17,6 +17,7 @@ import Search from "../pages/Search";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import History from "../pages/History";
+import Logout from "../pages/Logout";
 
 // protegidas
 import Me from "../pages/Me";
@@ -43,6 +44,7 @@ const routes = (isLoggedIn) => [
       { path: "/topquestions", element: <TopQuestions /> }, // o "/top" según tu Navbar
       { path: "/search", element: <Search /> },
       { path: "/history", element: <History /> },
+      { path: "/logout", element: <Logout /> },
 
       // --- RUTAS PROTEGIDAS ---
       {

@@ -16,7 +16,7 @@ const Hero = () => {
         </span>
 
         <h1 className="text-4xl md:text-6xl font-black mt-2 mb-6 leading-tight tracking-tight">
-          Resuelve tus dudas sobre <br className="hidden md:block" />
+          sobre <br className="hidden md:block" />
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
             Inteligencia Artificial
           </span>

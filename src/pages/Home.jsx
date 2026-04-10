@@ -1,13 +1,11 @@
-/* 
-
-    contenido exclusivo de la portada
+/* contenido exclusivo de la portada
 
 */
 
 // src/pages/Home.jsx
 
 // dependencias
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { HiChatBubbleLeftRight } from "react-icons/hi2";
 
 import Hero from "../components/home/Hero";
@@ -15,6 +13,58 @@ import QuestionCard from "../components/shared/QuestionCard";
 
 // contenido Exclusivo de la Portada (Home)
 const Home = () => {
+  // direccion del backend
+  const question_endpoint =
+    "https://stackmind-api.onrender.com/questions/?skip=0&limit=20";
+
+  // estados del componente
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // ejecutamos -> Al cargar la pagina ¡¡
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        // realizamos la peticion
+        const response = await fetch(question_endpoint);
+
+        // si Respuesta != ok
+        if (!response.ok) {
+          throw new Error("Error al obtener las preguntas");
+        }
+
+        const data = await response.json();
+        setQuestions(data);
+        setLoading(false);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchQuestions();
+  }, []);
+
+  // Renderizados Condicionales (mostrar mientras carga o  falla)
+  if (loading) {
+    return (
+      <div className="min-h-[80vh] flex flex-col justify-center items-center gap-4">
+        <span className="loading loading-bars loading-lg text-primary"></span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="alert alert-error shadow-lg max-w-2xl mx-auto">
+          <span>Error: {error}</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="space-y-6">
@@ -37,9 +87,15 @@ const Home = () => {
         </div>
 
         <div className="flex flex-col gap-4">
-          <QuestionCard />
-          <QuestionCard />
-          <QuestionCard />
+          {questions.length === 0 ? (
+            <div className="text-center py-10 opacity-50">
+              No hay preguntas todavía.
+            </div>
+          ) : (
+            questions.map((question) => (
+              <QuestionCard key={question.id} question={question} />
+            ))
+          )}
         </div>
       </div>
     </>
