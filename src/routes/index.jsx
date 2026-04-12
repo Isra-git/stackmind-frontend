@@ -26,6 +26,7 @@ import MyAnswers from "../pages/MyAnswers";
 import Support from "../pages/Support";
 import NewQuestion from "../pages/NewQuestion";
 import NewAnswer from "../pages/NewAnswer";
+import QuestionDetail from "../pages/QuestionDetail";
 
 // contexto de Autenticacion
 import ProtectedRoute from "./ProtectedRoute";
@@ -41,7 +42,7 @@ const routes = (isLoggedIn) => [
       { path: "/", element: <Home /> },
       { path: "/questions", element: <Questions /> },
       { path: "/tags", element: <Tags /> },
-      { path: "/topquestions", element: <TopQuestions /> }, // o "/top" según tu Navbar
+      { path: "/topquestions", element: <TopQuestions /> },
       { path: "/search", element: <Search /> },
       { path: "/history", element: <History /> },
       { path: "/logout", element: <Logout /> },
@@ -56,6 +57,8 @@ const routes = (isLoggedIn) => [
           { path: "/support", element: <Support /> },
           { path: "/myanswers", element: <MyAnswers /> },
           { path: "/myquestions", element: <MyQuestions /> },
+          { path: "/preguntas/:id/:slug", element: <QuestionDetail /> },
+          { path: "/preguntas/:id", element: <QuestionDetail /> }, // fallback por si no viene el slug
         ],
       },
     ],

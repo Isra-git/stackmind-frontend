@@ -9,14 +9,24 @@ import React from "react";
 import { Link } from "react-router-dom";
 import {
   HiOutlineChatBubbleLeftRight,
-  HiOutlineChevronUp,
-  HiOutlineEye,
+  HiOutlineEye, // vistas
+  HiMegaphone, // fecha de publicacion
+  HiOutlineChatBubbleBottomCenterText, // responder
 } from "react-icons/hi2";
 
 const QuestionCard = ({ question }) => {
   // extraemos las propiedades
-  const { id, title, slug, body, views, author_id, created_at, author } =
-    question || {};
+  const {
+    id,
+    title,
+    slug,
+    body,
+    views,
+    author_id,
+    answers_count,
+    created_at,
+    author,
+  } = question || {};
 
   // formateamos la fecha
   const formattedDate = new Date(created_at).toLocaleDateString("es-ES", {
@@ -40,24 +50,35 @@ const QuestionCard = ({ question }) => {
       <div className="card-body p-4 sm:p-5 flex-col sm:flex-row gap-4 sm:gap-6">
         {/* LADO IZQUIERDO: Contadores  */}
         <div className="flex sm:flex-col gap-4 sm:gap-2 items-center justify-start sm:min-w-[70px] shrink-0 text-center border-b sm:border-b-0 sm:border-r border-base-200 pb-3 sm:pb-0 sm:pr-4">
-          {/* Votos */}
-          <div className="flex sm:flex-col items-center gap-1 sm:gap-0">
-            <span className="font-semibold text-lg flex items-center gap-1">
-              <HiOutlineChevronUp className="text-xl text-base-content/50 hidden sm:block" />
-              0
-            </span>
-            <span className="text-[11px] text-base-content/60 uppercase tracking-wider hidden sm:block">
-              votos
+          {/* Visitas */}
+          <div className="flex flex-col items-center gap-1">
+            <HiOutlineEye className="text-sm" />
+            <span className="font-semibold text-lg opacity-70">
+              {views || 0}
             </span>
           </div>
-
-          {/* Respuestas (Verde -> respuestas, gris ->  vacía) */}
-          <div className="flex sm:flex-col items-center gap-1 sm:gap-0 px-2 sm:px-0 py-1 rounded sm:rounded-none sm:mt-1 text-base-content/50">
+          {/* Respuestas (Verde -> respuestas, gris -> vacía) */}
+          <div
+            className={`flex sm:flex-col items-center gap-1 sm:gap-0 px-2 sm:px-0 py-1 rounded sm:rounded-none sm:mt-1 ${answers_count ? "text-green-400" : ""}`}
+          >
             <span className="font-semibold text-lg sm:text-md flex items-center gap-1">
-              <HiOutlineChatBubbleLeftRight className="sm:hidden" />0
+              <HiOutlineChatBubbleLeftRight className="sm:hidden" />
+              <span className="font-semibold text-lg opacity-70">
+                {answers_count ? answers_count : 0}
+              </span>
             </span>
+
             <span className="text-[11px] uppercase tracking-wider hidden sm:block">
-              respuestas
+              {answers_count ? (
+                <Link
+                  to={`/preguntas/${question.id}/${question.slug}`}
+                  className="hover:opacity-80"
+                >
+                  respuestas
+                </Link>
+              ) : (
+                "respuestas"
+              )}
             </span>
           </div>
         </div>
@@ -66,7 +87,7 @@ const QuestionCard = ({ question }) => {
         <div className="flex-1 flex flex-col gap-2 min-w-0">
           {/* Título enlazado al detalle de la pregunta */}
           <Link
-            to={`/questions/${slug || id}`}
+            to={`/preguntas/${question.id}/${question.slug}`}
             className="text-lg sm:text-xl font-bold text-base-content hover:text-primary transition-colors leading-tight line-clamp-2"
           >
             {title}
@@ -78,7 +99,14 @@ const QuestionCard = ({ question }) => {
           {/* Footer de la tarjeta: Tags y Meta del Autor */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-3 gap-3 sm:gap-0">
             {/* Lista de Etiquetas */}
-            <div className="flex flex-wrap gap-2"></div>
+            <div className="flex flex-wrap gap-2">
+              <Link to="/NewAnswer">
+                <span className="flex items-center gap-2 justify-between hover:text-primary transition-colors">
+                  <HiOutlineChatBubbleBottomCenterText className="text-primary" />{" "}
+                  Responder
+                </span>
+              </Link>
+            </div>
 
             {/* Información del Autor y Fecha */}
             <div className="flex flex-wrap items-center gap-2 self-end sm:self-auto text-xs text-base-content/60 bg-base-200/50 px-3 py-1.5 rounded-full">
@@ -94,12 +122,12 @@ const QuestionCard = ({ question }) => {
 
               <span className="hidden sm:inline opacity-50">•</span>
 
-              <span className="opacity-70">preguntó el {formattedDate}</span>
+              <span className="opacity-70 flex flex-items-center gap-1">
+                <HiMegaphone className="text-[var(--color-info)]" />
+                <span> {formattedDate}</span>
+              </span>
 
               <span className="hidden sm:inline opacity-50">•</span>
-              <span className="opacity-70 flex items-center gap-1">
-                <HiOutlineEye className="text-sm" /> {views || 0}
-              </span>
             </div>
           </div>
         </div>
