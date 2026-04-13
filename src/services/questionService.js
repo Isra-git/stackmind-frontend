@@ -19,6 +19,7 @@ export const getQuestions = async (tipo = "new", skip = 0, limit = 20) => {
 
   // seleccionamos la Url (por defecto -> new)
   const url = endpoints[tipo] || endpoints["new"];
+  console.log(url);
 
   // hacemos la peticion a -> url
   const response = await fetch(url);
@@ -29,5 +30,8 @@ export const getQuestions = async (tipo = "new", skip = 0, limit = 20) => {
   }
 
   // devolvemos lo datos
-  return await response.json();
+  const data = await response.json();
+  console.log(data);
+
+  return data;
 };

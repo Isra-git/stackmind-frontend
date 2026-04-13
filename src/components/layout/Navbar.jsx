@@ -73,7 +73,7 @@ const Navbar = () => {
             to="/topquestions"
             className="btn btn-ghost btn-sm font-normal text-base hover:bg-base-300 hover:shadow-sm transition-all flex items-center gap-2"
           >
-            <HiUsers className="text-lg text-accent" /> Respuestas Top
+            <HiUsers className="text-lg text-accent" /> Top Preguntas
           </Link>
         </nav>
       </div>

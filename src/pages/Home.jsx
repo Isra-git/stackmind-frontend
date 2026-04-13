@@ -5,75 +5,19 @@
 // src/pages/Home.jsx
 
 // dependencias
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { HiChatBubbleLeftRight } from "react-icons/hi2";
 
 import QuestionCard from "../components/shared/QuestionCard";
+import { useQuestions } from "../hooks/useQuestions";
 
 // contenido Exclusivo de la Portada (Home)
 const Home = () => {
-  // direccion del backend
-
   // estados del componente
-  const [questions, setQuestions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("new");
-
-  // funcion para realizar la seleccion de preguntas en base al TAB componente
-  const fetchQuestions = async (tipo) => {
-    // mostramos spinner + limpiamos errores cuando cambia pestaña de TAB
-    setLoading(true);
-    setError(null);
-    setActiveTab(tipo); // actualizamos el estado de la pestaña activa
-
-    // direccion de la peticion del componente TAB
-    let question_endpoint =
-      "https://stackmind-api.onrender.com/questions/?skip=0&limit=20";
-
-    try {
-      switch (tipo) {
-        case "new":
-          question_endpoint =
-            "https://stackmind-api.onrender.com/questions/?skip=0&limit=20";
-          break;
-
-        case "unanswered":
-          question_endpoint =
-            "https://stackmind-api.onrender.com/questions/unanswered";
-          break;
-        case "top":
-          question_endpoint =
-            "https://stackmind-api.onrender.com/questions/top";
-          break;
-        default:
-          question_endpoint =
-            "https://stackmind-api.onrender.com/questions/?skip=0&limit=20";
-          break;
-      }
-      // realizamos la peticion
-      const response = await fetch(question_endpoint);
-
-      // si Respuesta != ok
-      if (!response.ok) {
-        throw new Error("Error al obtener las preguntas");
-      }
-
-      const data = await response.json();
-      setQuestions(data);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // ejecutamos -> Al cargar la pagina ¡¡
-  useEffect(() => {
-    fetchQuestions("new");
-  }, []);
+  const { questions, loading, error } = useQuestions(activeTab);
 
   // funcion para Renderizar el TItulo de la TAB
   const getTitle = () => {
@@ -94,19 +38,19 @@ const Home = () => {
           <div className="tabs tabs-boxed bg-base-100 border border-base-200 p-1">
             <span
               className={`tab ${activeTab === "new" ? "tab-active bg-primary text-white rounded-lg" : "hover:text-primary transition-colors"}`}
-              onClick={() => fetchQuestions("new")}
+              onClick={() => setActiveTab("new")}
             >
               Nuevas
             </span>
             <span
               className={`tab ${activeTab === "unanswered" ? "tab-active bg-primary text-white rounded-lg" : "hover:text-primary transition-colors"}`}
-              onClick={() => fetchQuestions("unanswered")}
+              onClick={() => setActiveTab("unanswered")}
             >
               Sin responder
             </span>
             <span
               className={`tab ${activeTab === "top" ? "tab-active bg-primary text-white rounded-lg" : "hover:text-primary transition-colors"}`}
-              onClick={() => fetchQuestions("top")}
+              onClick={() => setActiveTab("top")}
             >
               Populares
             </span>

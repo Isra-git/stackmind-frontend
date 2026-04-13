@@ -15,9 +15,10 @@ import { useState, useEffect } from "react";
 import { getQuestions } from "../services/questionService";
 
 // custom Hook
-export const useQuestions = (tipo = "new", skip = 0, limit = 0) => {
+export const useQuestions = (tipo = "new", skip = 0, limit = 20) => {
   // estados
   const [questions, setQuestions] = useState([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -31,7 +32,8 @@ export const useQuestions = (tipo = "new", skip = 0, limit = 0) => {
       try {
         // llamada al servicio getQuestions
         const data = await getQuestions(tipo, skip, limit);
-        setQuestions(data);
+        setQuestions(data.items || []);
+        setTotal(data.total || 0);
       } catch (error) {
         setError(error.message);
       } finally {
@@ -44,5 +46,5 @@ export const useQuestions = (tipo = "new", skip = 0, limit = 0) => {
   }, [tipo, skip, limit]); // dependencias de useEffect
 
   // devolvemos todo empaquetado_> questions loadong error
-  return { questions, loading, error };
+  return { questions, total, loading, error };
 }; // Para usarlo -> useQuestions
