@@ -86,7 +86,7 @@ const Home = () => {
     <>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-base-300 pb-4">
-          <h2 className="text-2xl font-bold flex items-center gap-2">
+          <h2 className="text-xl font-mono font-bold flex items-center gap-2">
             <HiChatBubbleLeftRight className="text-primary" />
             {""}
             {getTitle()}
