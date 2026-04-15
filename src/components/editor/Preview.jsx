@@ -16,7 +16,7 @@ export function Preview({ steps }) {
         const stepMeta =
           STEP_TYPES.find((t) => t.id === step.type) || STEP_TYPES[1];
         return (
-          <div key={step.id} className="flex mb-4 items-center">
+          <div key={step.id} className="flex mb-0 ">
             <div className="flex flex-col items-center w-9 shrink-0">
               <div
                 className={`w-7 h-7 rounded-full border-2 flex items-center justify-center text-[11px] shrink-0 bg-base-100 ${stepMeta.borderClass} ${stepMeta.colorClass}`}
@@ -26,12 +26,12 @@ export function Preview({ steps }) {
               </div>
               {i < steps.length - 1 && (
                 <div
-                  className={`w-[2px] flex-1 min-h-[20px] my-0.5 border-l-2 border-dashed opacity-30 ${stepMeta.borderClass}`}
+                  className={`w-[2px] flex-1 min-h-[20px] my-1.5 border-l-2 border-dashed opacity-30 ${stepMeta.borderClass}`}
                 />
               )}
             </div>
 
-            <div className="flex-1 ml-3 mb-6">
+            <div className="flex-1 ml-4 pb-10">
               {step.title && (
                 <div
                   className={`text-[13px] font-bold mb-1 ${stepMeta.colorClass}`}

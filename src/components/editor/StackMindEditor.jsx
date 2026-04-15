@@ -88,12 +88,12 @@ export default function StackMindEditor() {
   return (
     <div
       data-theme="dark"
-      className="min-h-screen bg-base-100 text-base-content font-sans py-8 px-4 transition-colors duration-300"
+      className="min-h-screen bg-base-200 text-base-content font-sans py-8 px-4 transition-colors duration-300"
     >
       <div className="max-w-[780px] mx-auto">
         <div className="mb-8">
-          <div className="text-[10px] tracking-[3px] text-accent uppercase mb-2 font-bold opacity-80">
-            Comunidad IA · Editor
+          <div className="text-[15px] tracking-[3px] text-accent uppercase mb-2 font-bold opacity-80">
+            Ayuda a otros usuarios:
           </div>
           <h1 className="m-0 text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary pb-1">
             Construye tu respuesta paso a paso
@@ -107,21 +107,21 @@ export default function StackMindEditor() {
         <div className="mb-6 bg-base-200 p-1.5 rounded-xl w-fit flex gap-1">
           <button
             onClick={() => setActiveTab("editor")}
-            className={`px-5 py-2 rounded-lg text-[13px] font-semibold transition-all ${activeTab === "editor" ? "bg-base-100 text-primary shadow-sm" : "text-base-content/60 hover:text-base-content"}`}
+            className={`px-5 py-2 rounded-lg text-[13px] font-semibold transition-all ${activeTab === "editor" ? "bg-base-300 text-primary shadow-sm" : "text-base-content/60 hover:text-base-content"}`}
             aria-label="Cambiar a vista de edición"
           >
             ✏️ Editor
           </button>
           <button
             onClick={() => setActiveTab("preview")}
-            className={`px-5 py-2 rounded-lg text-[13px] font-semibold transition-all ${activeTab === "preview" ? "bg-base-100 text-primary shadow-sm" : "text-base-content/60 hover:text-base-content"}`}
+            className={`px-5 py-2 rounded-lg text-[13px] font-semibold transition-all ${activeTab === "preview" ? "bg-base-300 text-primary shadow-sm" : "text-base-content/60 hover:text-base-content"}`}
             aria-label="Cambiar a vista previa"
           >
             👁️ Vista Previa
           </button>
         </div>
 
-        <div className="bg-base-100 rounded-2xl border border-base-300 p-6 min-h-[380px] shadow-lg shadow-base-300/10">
+        <div className="bg-base-200 rounded-2xl border border-base-300 p-6 min-h-[380px] shadow-lg shadow-base-300/10">
           {activeTab === "editor" ? (
             <>
               {steps.map((step, i) => (
@@ -164,14 +164,26 @@ export default function StackMindEditor() {
           )}
         </div>
 
-        <div className="flex justify-end mt-6">
-          <button
-            onClick={exportToMarkdown}
-            className={`btn border-none text-base-100 shadow-md transition-all duration-300 px-6 ${isCopied ? "bg-success hover:bg-success" : "bg-gradient-to-r from-primary to-secondary hover:opacity-90 hover:scale-[1.02]"}`}
-            aria-label="Exportar respuesta a formato Markdown"
-          >
-            {isCopied ? "✓ ¡Copiado al portapapeles!" : "⬆ Exportar a Markdown"}
-          </button>
+        <div className="flex justify-around items-end mt-6">
+          <div className="flex justify-end mt-6">
+            <button
+              onClick={exportToMarkdown}
+              className={`btn border-none text-color-info px-6 ${isCopied ? "bg-success hover:bg-success" : "bg-base-300 hover:opacity-90 hover:scale-[1.02]"}`}
+              aria-label="Exportar respuesta a formato Markdown"
+            >
+              {isCopied ? "✓ ¡Copiado al portapapeles!" : "Exportar a Markdown"}
+            </button>
+          </div>
+
+          <div className="flex justify-end mt-6">
+            <button
+              onClick={{}}
+              className={`btn border-none text-base-100 shadow-md transition-all duration-300 px-6 ${isCopied ? "bg-success hover:bg-success" : "bg-gradient-to-r from-primary to-secondary hover:opacity-90 hover:scale-[1.02]"}`}
+              aria-label="Añadir Respuesta"
+            >
+              {isCopied ? "✓ ¡Enviando!" : "⬆ Enviar"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
