@@ -28,6 +28,8 @@ import NewQuestion from "../pages/NewQuestion";
 import NewAnswer from "../pages/NewAnswer";
 import QuestionDetail from "../pages/QuestionDetail";
 
+// temporal ->
+import StackMindEditor from "../components/editor/StackMindEditor";
 // contexto de Autenticacion
 import ProtectedRoute from "./ProtectedRoute";
 import { AuthContext } from "../context/AuthContext";
@@ -59,6 +61,7 @@ const routes = (isLoggedIn) => [
           { path: "/myquestions", element: <MyQuestions /> },
           { path: "/preguntas/:id/:slug", element: <QuestionDetail /> },
           { path: "/preguntas/:id", element: <QuestionDetail /> }, // fallback por si no viene el slug
+          { path: "/editor", element: <StackMindEditor /> }, // ruta probisional para probar el editor
         ],
       },
     ],
