@@ -15,17 +15,19 @@ import { useAuth } from "../context/AuthContext";
 
 // componentes
 import UserStats from "../components/shared/UserStats";
+import MeRecentActivity from "./MeRecentActivity";
 
 // iconos
 import {
   HiOutlineEnvelope,
   HiOutlineCalendar,
-  HiOutlineChatBubbleLeftRight,
+  HiMiniUserCircle,
+  HiUserGroup,
 } from "react-icons/hi2";
 import { GiToken } from "react-icons/gi";
 
 // direccion backend -> Stats
-const stats_url = "/api/users/me/stats";
+const stats_url = "https://stackmind-api.onrender.com/users/me/stats";
 
 const Me = () => {
   // contexto de Autenticacion -> User
@@ -96,22 +98,36 @@ const Me = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* COLUMNA IZQUIERDA: Tarjeta de Identidad */}
         <div className="md:col-span-1">
-          <div className="card bg-base-100 shadow-xl border border-base-200">
-            <div className="card-body items-center text-center">
+          <div className="card bg-base-100 shadow-xl border border-base-200 ">
+            <div className="card-body items-start">
               {/* Avatar  */}
-              <div className="avatar mb-4">
-                <div className="w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 shadow-lg">
+              <div className="avatar mb-4 self-center ">
+                <div className=" w-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 shadow-lg">
                   <img src={avatarPath} alt={`Avatar de ${user.username}`} />
                 </div>
               </div>
 
               {/* Info Principal */}
               <h2 className="card-title text-2xl font-bold">{user.username}</h2>
+              {/* email */}
               <p className="text-base-content/60 font-medium flex items-center gap-2 mt-2">
-                <HiOutlineEnvelope className="text-lg" /> {user.email}
+                <HiOutlineEnvelope className="text-lg text-accent" />{" "}
+                {user.email}
               </p>
+              {/* username avatar_url: created_at  email full_name id is_active is_admin reputation username*/}
               <p className="text-base-content/60 font-medium flex items-center gap-2 mt-1 capitalize">
-                <HiOutlineCalendar className="text-lg" />
+                <HiUserGroup className="text-lg text-accent" />
+                <span> {user.username}</span>
+              </p>
+              {/* Full Name*/}
+              <p className="text-base-content/60 font-medium flex items-center gap-2 mt-1 capitalize">
+                <HiMiniUserCircle className="text-lg text-accent" />
+                <span> {user.full_name}</span>
+              </p>
+
+              {/* Fecha de Registro   */}
+              <p className="text-base-content/60 font-medium flex items-center gap-2 mt-1 capitalize">
+                <HiOutlineCalendar className="text-lg text-accent" />
                 <span>Desde {formatDate}</span>
               </p>
 
@@ -130,23 +146,7 @@ const Me = () => {
           <UserStats stats={stats} />
 
           {/* Actividad Reciente */}
-          <div className="card bg-base-100 shadow-xl border border-base-200">
-            <div className="card-body">
-              <h3 className="text-xl font-bold border-b border-base-200 pb-3 mb-4">
-                Actividad Reciente
-              </h3>
-
-              <div className="flex flex-col items-center justify-center py-8 text-base-content/40 text-center">
-                <HiOutlineChatBubbleLeftRight className="text-5xl mb-3 opacity-20" />
-                <p className="font-medium">
-                  Aún no has hecho ninguna pregunta.
-                </p>
-                <p className="text-sm mt-1">
-                  ¡Anímate a abrir tu primer hilo sobre IA!
-                </p>
-              </div>
-            </div>
-          </div>
+          <MeRecentActivity />
         </div>
       </div>
     </div>
