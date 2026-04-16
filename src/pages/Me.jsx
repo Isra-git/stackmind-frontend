@@ -16,6 +16,7 @@ import { useAuth } from "../context/AuthContext";
 // componentes
 import UserStats from "../components/shared/UserStats";
 import MeRecentActivity from "./MeRecentActivity";
+import EditProfile from "../components/me/EditProfile";
 
 // iconos
 import {
@@ -39,6 +40,9 @@ const Me = () => {
     answers_count: 0,
     reputation: 0,
   });
+
+  // estado para la edicion
+  const [editing, setEditing] = useState(false);
 
   // al cargar Pedimos las estadisticas
   useEffect(() => {
@@ -133,7 +137,10 @@ const Me = () => {
 
               {/* Botón de Edición */}
               <div className="card-actions w-full mt-6">
-                <button className="btn btn-primary btn-outline w-full">
+                <button
+                  className="btn btn-primary btn-outline w-full"
+                  onClick={() => setEditing(true)}
+                >
                   Editar Perfil
                 </button>
               </div>
@@ -144,9 +151,12 @@ const Me = () => {
         {/* COLUMNA DERECHA -> Estadísticas y Actividad */}
         <div className="md:col-span-2 space-y-6">
           <UserStats stats={stats} />
-
-          {/* Actividad Reciente */}
-          <MeRecentActivity />
+          {editing ? (
+            // Formulario de Edición
+            <EditProfile user={user} setEditing={setEditing} />
+          ) : (
+            <MeRecentActivity />
+          )}
         </div>
       </div>
     </div>
