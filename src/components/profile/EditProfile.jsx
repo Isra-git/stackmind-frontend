@@ -7,7 +7,11 @@
 
 // src/components/me/EditProfile.jsx
 
-import React, { useState } from "react";
+// dependencias
+import React, { useContext, useState } from "react";
+
+import { AuthContext } from "../../context/AuthContext";
+
 import {
   HiOutlineUser,
   HiOutlineEnvelope,
@@ -17,41 +21,72 @@ import {
 } from "react-icons/hi2";
 
 const EditProfile = ({ user, setEditing }) => {
-  // 1. Inicializamos el estado con los datos actuales del usuario
+  // extraemos Token del contexto
+  const { token, user, updateLocalUser } = useContext(AuthContext);
+
+  // Inicializamos el estado con los datos actuales del usuario
   const [formData, setFormData] = useState({
     username: user?.username || "",
     full_name: user?.full_name || "",
-    email: user?.email || "",
+    email: user?.avatar_url || "",
   });
 
+  // estados
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
-  // 2. Manejador para actualizar el estado cuando el usuario escribe
+  //  Manejador para actualizar el estado cuando el usuario escribe
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+
+    // Ocultamos mssg exito si User -> Vuelve a escribir
+    setSuccess(false);
   };
 
-  // 3. Manejador del envío del formulario
+  // Manejador del envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(true);
+    setSuccess(false);
 
     try {
-      // AQUÍ IRÁ LA LLAMADA A TU BACKEND
-      // Ejemplo: await updateUserService(formData);
+      // gestionamos la llamada al bknd
 
-      console.log("🚀 Datos listos para enviar a FastAPI:", formData);
+      const response = await fetch(
+        "https://stackmind-api.onrender.com/users/me",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Autenticación obligatoria
+          },
+          // Enviamos el JSON exacto que espera UserUpdate
+          body: JSON.stringify(formData),
+        },
+      );
 
-      // Simulamos un pequeño retraso de red
-      setTimeout(() => {
-        setLoading(false);
-        setEditing(false); // Cerramos el formulario al terminar
-      }, 1000);
-    } catch (error) {
-      console.error("Error al actualizar el perfil:", error);
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Capturamos el HTTP_400_BAD_REQUEST de tu backend ("usuario no disponible")
+        throw new Error(data.detail || "Hubo un error al actualizar el perfil");
+      }
+
+      // Si el backend responde 200_OK, actualizamos el estado global en React
+      // para que el navbar y otras vistas cambien al instante
+      if (updateLocalUser) {
+        updateLocalUser(data);
+      }
+
+      setSuccess(true);
+    } catch (err) {
+      setError(err.message);
+    } finally {
       setLoading(false);
     }
   };
