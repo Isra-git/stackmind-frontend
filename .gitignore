@@ -1,4 +1,6 @@
 documentation/
+.env*
+
 # Logs
 logs
 *.log

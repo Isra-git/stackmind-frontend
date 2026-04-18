@@ -11,6 +11,7 @@
 import React, { useContext, useState } from "react";
 
 import { AuthContext } from "../../context/AuthContext";
+import { ENDPOINTS } from "../../api/constantes";
 
 import {
   HiOutlineUser,
@@ -20,7 +21,7 @@ import {
   HiMiniUserCircle,
 } from "react-icons/hi2";
 
-const EditProfile = ({ user, setEditing }) => {
+const EditProfile = ({ setEditing }) => {
   // extraemos Token del contexto
   const { token, user, updateLocalUser } = useContext(AuthContext);
 
@@ -51,14 +52,15 @@ const EditProfile = ({ user, setEditing }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(true);
+    setError(null);
     setSuccess(false);
 
     try {
       // gestionamos la llamada al bknd
 
       const response = await fetch(
-        "https://stackmind-api.onrender.com/users/me",
+        ENDPOINTS.USER_UPDATE,
+        // "https://stackmind-api.onrender.com/users/me",
         {
           method: "PUT",
           headers: {
