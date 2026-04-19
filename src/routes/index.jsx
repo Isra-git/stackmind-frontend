@@ -12,7 +12,7 @@ import MainLayout from "../components/layout/MainLayout";
 import Home from "../pages/Home";
 import Questions from "../pages/Questions";
 import Tags from "../pages/Tags";
-import TopQuestions from "../pages/TopQuestions";
+import TopQuestions from "../components/shared/TopQuestions";
 import Search from "../pages/Search";
 import Login from "../pages/Login";
 import Register from "../pages/Register";

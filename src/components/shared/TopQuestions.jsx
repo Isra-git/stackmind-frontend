@@ -4,8 +4,8 @@
 // src/pages/TopQuestions.jsx
 
 import React, { useState } from "react";
-import { useQuestions } from "../hooks/useQuestions";
-import QuestionCard from "../components/shared/QuestionCard";
+import { useQuestions } from "../../hooks/useQuestions";
+import QuestionCard from "./QuestionCard";
 import {
   HiOutlineTrophy,
   HiOutlineChevronLeft,
