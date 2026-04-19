@@ -1,15 +1,18 @@
 /*
-    Controla quien inicia sesion y sus datos
+    
+  Controla quien inicia sesion y sus datos
+
 */
 
 // src/context/AuthContext.jsx
 
 // dependencias
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { ENDPOINTS } from "../api/constantes";
 
 // url de back-end
-const back_end_url = "https://stackmind-api.onrender.com/auth/login";
-const me_url = "https://stackmind-api.onrender.com/auth/me";
+// const back_end_url = "https://stackmind-api.onrender.com/auth/login";
+// const me_url = "https://stackmind-api.onrender.com/auth/me";
 
 // creamos el contexto
 export const AuthContext = createContext();
@@ -28,7 +31,7 @@ export const AuthProvider = ({ children }) => {
   // Funcion que recupera los datos del User despues de loguearse
   const fetchUserProfile = async (currentToken) => {
     try {
-      const response = await fetch(me_url, {
+      const response = await fetch(ENDPOINTS.AUTH_ME, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${currentToken}`,
@@ -67,7 +70,7 @@ export const AuthProvider = ({ children }) => {
       formData.append("password", password);
 
       // lanzamos la peticion
-      const response = await fetch(back_end_url, {
+      const response = await fetch(ENDPOINTS.AUTH_LOGIN, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
