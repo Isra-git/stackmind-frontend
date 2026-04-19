@@ -8,24 +8,80 @@
 
 // src/components/editor/StackMindEditor.jsx
 import React, { useState } from "react";
+
 import { STEP_TYPES, generateUid, defaultSteps } from "./types";
 import { StepNode } from "./StepNode";
 import { Preview } from "./Preview";
+import { useAuth } from "../../context/AuthContext";
 
-export default function StackMindEditor() {
+import { ENDPOINTS } from "../../api/constantes";
+
+export default function StackMindEditor({ questionId, onSuccess }) {
+  //estado para Autenticar
+  const { token } = useAuth();
+
+  // estados para el editor
   const [steps, setSteps] = useState(defaultSteps);
   const [activeTab, setActiveTab] = useState("editor");
   const [newStepType, setNewStepType] = useState("step");
   const [isCopied, setIsCopied] = useState(false);
+  const [isPublish, setIspublish] = useState(false);
 
+  // Funcion para publicar una respuesta
+  const handlePublish = async () => {
+    // Si no hay ningun pasos, no se puede publicar
+    if (steps.length === 0) return;
+
+    // activamos el estado de publicación
+    setIspublish(true);
+
+    // gestionamos la peticion
+    try {
+      const response = await fetch(ENDPOINTS.ANSWERS_CREATE(questionId), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        // Convertimos el array de Steps en un objeto Json (BD ->JSONB)
+        body: JSON.stringify({
+          body: steps, //author_id -> Sale del token
+        }),
+      });
+
+      // si falla -> Lanzamos error
+      if (!response.ok) {
+        throw new Error("Error al Publicar la Respuesta");
+      }
+
+      // si va bien -> Limpiamos el estado
+      setIspublish(false);
+
+      // recargamos las respuestas y cerramos el editor (TODO)
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error) {
+      console.log("Error al publicar: ", error);
+      setIspublish(false);
+      //todo -> Motrar toast de error al user
+    }
+  };
+
+  // Actualiza el paso con el ID proporcionado con la nueva versión del paso
   const updateStep = (id, modifiedStep) => {
     setSteps((prev) => prev.map((p) => (p.id === id ? modifiedStep : p)));
   };
 
+  // eliminamos un paso
   const removeStep = (id) => {
     setSteps((prev) => prev.filter((p) => p.id !== id));
   };
 
+  // Esta función permite mover un paso hacia arriba en la lista de pasos del editor.
+  // Toma el índice del paso que se desea mover y crea una copia del array de pasos.
+  // intercambia los elementos del array para "subir" el paso un lugar.
+  // actualiza el estado con la nueva lista de pasos
   const moveUp = (index) => {
     setSteps((prev) => {
       const newArray = [...prev];
@@ -48,6 +104,7 @@ export default function StackMindEditor() {
     });
   };
 
+  // añade un paso al array de pasos
   const addStep = () => {
     const stepMeta =
       STEP_TYPES.find((t) => t.id === newStepType) || STEP_TYPES[1];
@@ -67,6 +124,7 @@ export default function StackMindEditor() {
     ]);
   };
 
+  // Funcion para exportar a MarkDown el array de pasos -> Añade \n por paso¡
   const exportToMarkdown = () => {
     const markdownText = steps
       .map((step) => {
@@ -74,7 +132,7 @@ export default function StackMindEditor() {
           STEP_TYPES.find((t) => t.id === step.type) || STEP_TYPES[1];
         const formattedContent =
           step.type === "code"
-            ? `\n\`\`\`\n${step.content}\n\`\`\`\n`
+            ? `\n\`\`\`\n${step.content}\n\`\`\`\n` // añadimos saltos de linea
             : step.content;
         return `**[${stepMeta.label.toUpperCase()}] ${step.title}**\n${formattedContent}`;
       })
@@ -177,11 +235,19 @@ export default function StackMindEditor() {
 
           <div className="flex justify-end mt-6">
             <button
-              onClick={{}}
-              className={`btn border-none text-base-100 shadow-md transition-all duration-300 px-6 ${isCopied ? "bg-success hover:bg-success" : "bg-gradient-to-r from-primary to-secondary hover:opacity-90 hover:scale-[1.02]"}`}
+              onClick={handlePublish}
+              disabled={isPublish || steps.length === 0}
+              className={`btn border-none text-base-100 shadow-md transition-all duration-300 px-6 ${isPublish ? "bg-success hover:bg-success" : "bg-gradient-to-r from-primary to-secondary hover:opacity-90 hover:scale-[1.02]"}`}
               aria-label="Añadir Respuesta"
             >
-              {isCopied ? "✓ ¡Enviando!" : "⬆ Enviar"}
+              {isPublish ? (
+                <>
+                  <span className="loading loading-spinner loading-sm"></span>
+                  Enviando...
+                </>
+              ) : (
+                "⬆ Enviar"
+              )}
             </button>
           </div>
         </div>
