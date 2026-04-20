@@ -237,7 +237,11 @@ export default function StackMindEditor({ questionId, onSuccess }) {
             <button
               onClick={handlePublish}
               disabled={isPublish || steps.length === 0}
-              className={`btn border-none text-base-100 shadow-md transition-all duration-300 px-6 ${isPublish ? "bg-success hover:bg-success" : "bg-gradient-to-r from-primary to-secondary hover:opacity-90 hover:scale-[1.02]"}`}
+              className={`btn px-6 transition-all duration-300 shadow-md border-none ${
+                isPublish
+                  ? "bg-base-300 text-base-content/50"
+                  : "btn-primary text-white"
+              }`}
               aria-label="Añadir Respuesta"
             >
               {isPublish ? (
@@ -246,7 +250,7 @@ export default function StackMindEditor({ questionId, onSuccess }) {
                   Enviando...
                 </>
               ) : (
-                "⬆ Enviar"
+                "Enviar"
               )}
             </button>
           </div>

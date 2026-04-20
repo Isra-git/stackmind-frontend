@@ -80,6 +80,18 @@ const QuestionDetail = () => {
     fetchQuestionsAndAnswers(); // Recargamos para ver la Respuesta Añadida
   };
 
+  // Controlamos  el estado ->feedback y lo limpia a los 4 segundos
+  useEffect(() => {
+    if (feedback) {
+      const timer = setTimeout(() => {
+        setFeedback(null);
+      }, 4000);
+
+      // Función de limpieza para que no queden "fantasmas" en la memoria
+      return () => clearTimeout(timer);
+    }
+  }, [feedback]);
+
   // Pantalla de Carga para mostras hasta que lleguen los datos
   if (loading) {
     return (
@@ -116,6 +128,16 @@ const QuestionDetail = () => {
 
   return (
     <div className="max-w-5xl mx-auto py-8 px-4 space-y-8 animate-fade-in">
+      {/* FEEDBACK PUBLICAR RESPUESTA->  Toast de Éxito */}
+      {feedback && (
+        <div className="toast toast-top toast-center z-50 animate-fade-in">
+          <div className="alert alert-success shadow-lg text-white">
+            <HiCheckCircle className="text-2xl" />
+            <span>{feedback}</span>
+          </div>
+        </div>
+      )}
+
       {/* TARJETA PRINCIPAL DE LA PREGUNTA */}
       <div className="card bg-base-100 shadow-sm border border-accent/30 rounded-xl overflow-hidden">
         <div className="card-body p-6 sm:p-8 ">
@@ -200,16 +222,82 @@ const QuestionDetail = () => {
         </div>
       </div>
 
-      {/* ÁREA DEL EDITOR ( solo si se hace clic en Responder) */}
+      {/* AREA DEL EDITOR ( solo si se hace clic en Responder) */}
       {showEditor && (
         <div className="animate-fade-in mt-4">
           <div className="p-8 bg-base-200 border border-primary/30 rounded-xl text-center">
-            <StackMindEditor questionId={questionData.id} />
+            <StackMindEditor
+              questionId={questionData.id}
+              onSuccess={handleAnswerSuccess}
+            />
           </div>
         </div>
       )}
 
-      {/* LÍNEA ELEGANTE */}
+      {/*  MOSTRAMOS RESPUESTAS */}
+      <div className="mt-12">
+        <h2 className="text-2xl font-bold mb-6 text-base-content border-b border-base-200 pb-3">
+          {answers.length} {answers.length === 1 ? "Respuesta" : "Respuestas"}
+        </h2>
+
+        {answers.length === 0 ? (
+          <div className="text-center py-10 opacity-60 bg-base-200/30 rounded-xl border border-dashed border-base-300">
+            <p className="text-lg">Aún no hay respuestas.</p>
+            <p className="text-sm">¡Se el Primero en Responder!</p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {answers.map((answer) => {
+              const ansDate = new Date(answer.created_at).toLocaleDateString(
+                "es-ES",
+                {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                },
+              );
+              return (
+                <div
+                  key={answer.id}
+                  className="card bg-base-100 shadow-sm border border-base-200 rounded-xl"
+                >
+                  <div className="card-body p-6">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="avatar">
+                        <div className="w-10 h-10 rounded-full ring-1 ring-base-300">
+                          <img
+                            src={`/img/avatars/${answer.author?.avatar_url || "avatar2.png"}`}
+                            alt="Avatar"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <div className="font-bold text-base-content/90">
+                          {answer.author?.username || "Usuario"}
+                        </div>
+                        <div className="text-xs text-base-content/60">
+                          Respondido el {ansDate}
+                        </div>
+                      </div>
+                    </div>
+                    {/* Renderizamos el JSONB a traves del subComponente  Preview */}
+                    <div
+                      className="bg-base-200/40 p-4 rounded-lg text-base-content text-left"
+                      data-theme="dark"
+                    >
+                      <div className="bg-base-200/40 p-4 rounded-lg">
+                        <Preview steps={answer.body} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* LINEA SEPARADORA DE CONTENIDO */}
       <div className="divider my-12 text-base-content/40 text-sm font-medium">
         Explora más contenido
       </div>
