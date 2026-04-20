@@ -12,6 +12,7 @@ import { Link, useParams } from "react-router-dom";
 import { ENDPOINTS } from "../api/constantes";
 import TopQuestions from "../components/shared/TopQuestions";
 import StackMindEditor from "../components/editor/StackMindEditor";
+import { Preview } from "../components/editor/Preview";
 
 // Iconos
 import {
@@ -20,6 +21,7 @@ import {
   HiMegaphone,
   HiOutlineShare,
   HiOutlinePencilSquare,
+  HiCheckCircle,
 } from "react-icons/hi2";
 
 const QuestionDetail = () => {
@@ -30,29 +32,38 @@ const QuestionDetail = () => {
   const [questionData, setQuestionData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [answers, setAnswers] = useState([]);
 
-  // estado de los botones
+  // estado de los botones y feedback visual
   const [showEditor, setShowEditor] = useState(false);
   const [sharedText, setSharedText] = useState("Compartir");
+  const [feedback, setFeedback] = useState(null);
+
+  // Funcion para Cargar la Pregunta y las  Respuestas
+  const fetchQuestionsAndAnswers = async () => {
+    try {
+      // pedimos la pregunta
+      const questionResponse = await fetch(ENDPOINTS.QUESTION_DETAIL(id));
+      if (!questionResponse.ok) throw new Error("Pregunta No encontrada");
+      const questionData = await questionResponse.json();
+      setQuestionData(questionData);
+
+      // pedimos la respuesta
+      const answerResponse = await fetch(ENDPOINTS.ANSWERS_BY_QUESTION(id));
+      if (answerResponse.ok) {
+        const answersData = await answerResponse.json();
+        setAnswers(answersData);
+      }
+    } catch (error) {
+      console.log(error);
+      setError("No hay respuestas para esta pregunta");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // construimos la direccion y hacemos la peticion ((id)=>question..)
-    const fetchUrl = ENDPOINTS.QUESTION_DETAIL(id);
-    fetch(fetchUrl)
-      .then((res) => {
-        if (!res.ok) throw new Error("Pregunta NO encontrada");
-        return res.json();
-      })
-      .then((data) => {
-        setQuestionData(data);
-        setLoading(false);
-        console.log("Datos de la pregunta: ", data);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError("Error al cargar la Prgunta");
-        setLoading(false);
-      });
+    fetchQuestionsAndAnswers();
   }, [id]); // Solo re-ejecutamos si cambia el ID
 
   // Funcion para Compartir (copia Url a Clipboard)  -> Msg: 2 segundos
@@ -60,6 +71,13 @@ const QuestionDetail = () => {
     navigator.clipboard.writeText(window.location.href);
     setSharedText("Copiado¡");
     setTimeout(() => setSharedText("Compartir"), 2000);
+  };
+
+  // Funcion para despues de Publicar una Respuesta
+  const handleAnswerSuccess = () => {
+    setShowEditor(false);
+    setFeedback("Respuesta publicada con éxito!");
+    fetchQuestionsAndAnswers(); // Recargamos para ver la Respuesta Añadida
   };
 
   // Pantalla de Carga para mostras hasta que lleguen los datos
