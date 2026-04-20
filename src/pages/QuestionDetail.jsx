@@ -7,7 +7,7 @@
 
 // dependencias
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 
 import { ENDPOINTS } from "../api/constantes";
 import TopQuestions from "../components/shared/TopQuestions";
@@ -27,6 +27,7 @@ import {
 const QuestionDetail = () => {
   // extraemos las variables de la URL que definimos en el Route
   const { id } = useParams();
+  const location = useLocation(); // cuando viene de Responder/QuestionCard
 
   // estados del componente
   const [questionData, setQuestionData] = useState(null);
@@ -62,9 +63,26 @@ const QuestionDetail = () => {
     }
   };
 
+  // Ejecutamos la funcion cada vez que cambiamos la pregunta (id)
   useEffect(() => {
     fetchQuestionsAndAnswers();
   }, [id]); // Solo re-ejecutamos si cambia el ID
+
+  // Escucha si venimos desde el botón Responder -> QuestionCard
+  useEffect(() => {
+    if (location.state?.openEditor) {
+      // 1. Abrimos el editor
+      setShowEditor(true);
+
+      //  Esperamos un poquito a que React dibuje el editor, y bajamos la pantalla
+      setTimeout(() => {
+        const editorElement = document.getElementById("seccion-editor");
+        if (editorElement) {
+          editorElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 500);
+    }
+  }, [location.state]);
 
   // Funcion para Compartir (copia Url a Clipboard)  -> Msg: 2 segundos
   const handleShare = () => {
@@ -224,7 +242,7 @@ const QuestionDetail = () => {
 
       {/* AREA DEL EDITOR ( solo si se hace clic en Responder) */}
       {showEditor && (
-        <div className="animate-fade-in mt-4">
+        <div id="seccion-editor" className="animate-fade-in mt-4">
           <div className="p-8 bg-base-200 border border-primary/30 rounded-xl text-center">
             <StackMindEditor
               questionId={questionData.id}

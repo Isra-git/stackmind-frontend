@@ -100,7 +100,10 @@ const QuestionCard = ({ question }) => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-3 gap-3 sm:gap-0">
             {/* Lista de Etiquetas */}
             <div className="flex flex-wrap gap-2">
-              <Link to="/NewAnswer">
+              <Link
+                to={`/preguntas/${question.id}/${question.slug}`}
+                state={{ openEditor: true }}
+              >
                 <span className="flex items-center gap-2 justify-between hover:text-primary transition-colors">
                   <HiOutlineChatBubbleBottomCenterText className="text-primary" />{" "}
                   Responder
