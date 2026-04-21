@@ -307,6 +307,21 @@ const QuestionDetail = () => {
                         <Preview steps={answer.body} />
                       </div>
                     </div>
+                    {answer.main_concept && (
+                      <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-base-200/50">
+                        <span className="text-xs font-semibold opacity-50 uppercase tracking-wider flex items-center mr-2">
+                          Conceptos clave:
+                        </span>
+                        {answer.main_concept.split(",").map((tag, index) => (
+                          <div
+                            key={index}
+                            className="badge badge-primary badge-outline badge-sm font-medium"
+                          >
+                            {tag.trim()}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               );
