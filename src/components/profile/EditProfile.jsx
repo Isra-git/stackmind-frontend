@@ -114,17 +114,19 @@ const EditProfile = ({ setEditing }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Campo: Nombre Completo */}
           <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text font-medium">Nombre Completo</span>
+            <label className="label pb-2">
+              <span className="label-text font-medium text-base-content/80">
+                Nombre Completo
+              </span>
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <HiMiniUserCircle className="text-base-content/50 text-lg" />
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors duration-300 group-focus-within:text-primary">
+                <HiMiniUserCircle className="text-base-content/40 text-lg group-focus-within:text-primary transition-colors" />
               </div>
               <input
                 type="text"
                 name="full_name"
-                className="input input-bordered w-full"
+                className="w-full h-12 pl-11 pr-4 bg-base-200/30 border border-base-300 rounded-xl text-base-content placeholder:text-base-content/30 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-300"
                 placeholder="Ej. Ada Lovelace"
                 value={formData.full_name}
                 onChange={handleChange}
@@ -134,17 +136,19 @@ const EditProfile = ({ setEditing }) => {
 
           {/* Campo: Nombre de Usuario */}
           <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text font-medium">Nombre de Usuario</span>
+            <label className="label pb-2">
+              <span className="label-text font-medium text-base-content/80">
+                Nombre de Usuario
+              </span>
             </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <HiOutlineUser className="text-base-content/50 text-lg" />
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors duration-300 group-focus-within:text-primary">
+                <HiOutlineUser className="text-base-content/50 text-lg group-focus-within:text-primary transition-colors" />
               </div>
               <input
                 type="text"
                 name="username"
-                className="input input-bordered w-full pl-10"
+                className="w-full h-12 pl-11 pr-4 bg-base-200/30 border border-base-300 rounded-xl text-base-content placeholder:text-base-content/30 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-300"
                 placeholder="Tu alias en el foro"
                 value={formData.username}
                 onChange={handleChange}

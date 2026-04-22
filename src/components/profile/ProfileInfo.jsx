@@ -56,12 +56,22 @@ export default function ProfileInfo({
           {/* Botón de Edición */}
           <div className="card-actions w-full mt-6">
             <button
-              className="btn btn-primary btn-outline w-full"
+              className="btn btn-info btn-outline w-full"
               onClick={() => setEditing(true)}
             >
               Editar Perfil
             </button>
           </div>
+          {user.is_admin && (
+            <div className="card-actions w-full mt-6">
+              <button
+                className="btn btn-error btn-outline w-full"
+                onClick={() => setEditing(true)}
+              >
+                Panel Administrador
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
