@@ -8,7 +8,7 @@
 
 // dependencias
 import React, { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 
 // hook Autenticación
 import { useAuth } from "../context/AuthContext";
@@ -96,7 +96,9 @@ const Me = () => {
       <h1 className="text-3xl font-extrabold mb-8 text-base-content flex items-center  gap-3 ">
         Mi Perfil
         {user.is_admin && (
-          <span className="badge badge-primary badge-lg">Administrador</span>
+          <Link to="#">
+            <span className="badge badge-primary badge-lg">Administrador</span>
+          </Link>
         )}
       </h1>
 

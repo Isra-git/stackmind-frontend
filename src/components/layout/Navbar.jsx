@@ -25,7 +25,7 @@ const Navbar = () => {
   // 2. Solo si el usuario existe, hacemos las comprobaciones
   if (user) {
     if (user.is_admin) {
-      avatarPath = "/img/avatars/avatar1.png";
+      avatarPath = "/img/avatars/avatar1.jpeg";
     } else if (user.avatar_url) {
       avatarPath = `/img/avatars/${user.avatar_url}`;
     }

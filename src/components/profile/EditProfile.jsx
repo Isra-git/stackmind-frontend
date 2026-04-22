@@ -29,13 +29,19 @@ const EditProfile = ({ setEditing }) => {
   const [formData, setFormData] = useState({
     username: user?.username || "",
     full_name: user?.full_name || "",
-    email: user?.avatar_url || "",
+    avatar_url: user?.avatar_url || "avatar2.png",
   });
 
   // estados
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+
+  // generamos la lista de avatares
+  const availableAvatars = Array.from(
+    { length: 13 },
+    (value, index) => `avatar${index + 2}.png`,
+  );
 
   //  Manejador para actualizar el estado cuando el usuario escribe
   const handleChange = (e) => {
@@ -147,25 +153,30 @@ const EditProfile = ({ setEditing }) => {
             </div>
           </div>
 
-          {/* Campo: Email */}
-          <div className="form-control w-full">
-            <label className="label">
-              <span className="label-text font-medium">Correo Electrónico</span>
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <HiOutlineEnvelope className="text-base-content/50 text-lg" />
+          {/* Cambiar AVATAR->  Grid (4 columnas en móvil, 5 en PC) */}
+          <div className="grid grid-cols-4 sm:grid-cols-5 gap-4 mt-2 p-2 bg-base-200/50 rounded-xl border border-base-300">
+            {availableAvatars.map((avatar) => (
+              <div
+                key={avatar}
+                // Si el avatar es el que tenemos -> borde brillante
+                className={`cursor-pointer rounded-full transition-all duration-200 ${
+                  formData.avatar_url === avatar
+                    ? "ring-4 ring-primary ring-offset-2 ring-offset-base-100 scale-110 shadow-lg"
+                    : "opacity-50 hover:opacity-100 hover:scale-105"
+                }`}
+                //  actualizamos el avatar_url en el estado
+                onClick={() => {
+                  setFormData({ ...formData, avatar_url: avatar });
+                  setSuccess(false);
+                }}
+              >
+                <img
+                  src={`/img/avatars/${avatar}`}
+                  alt={`Avatar ${avatar}`}
+                  className="w-full h-auto rounded-full bg-base-100"
+                />
               </div>
-              <input
-                type="email"
-                name="email"
-                className="input input-bordered w-full pl-10"
-                placeholder="correo@ejemplo.com"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            ))}
           </div>
 
           {/* Botones de Acción */}
