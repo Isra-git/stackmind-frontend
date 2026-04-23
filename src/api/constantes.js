@@ -48,4 +48,8 @@ export const ENDPOINTS = {
 
   // INTELIGENCIA ARTIFICIAL (ai)
   AI_ENHANCE: `${API_BASE}/ai/enhance-question`, // POST
+
+  // 🏷️ ETIQUETAS (tags)
+  TAGS_POPULAR: (limit = 10) => `${API_BASE}/tags/popular?limit=${limit}`,
+  TAGS_RECENT: (limit = 12) => `${API_BASE}/tags/recent?limit=${limit}`,
 };

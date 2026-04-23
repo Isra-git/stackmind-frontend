@@ -1,4 +1,16 @@
+/* 
+
+  Barra lateral (pc) o abajo (movil) con opcion de busqueda por Tags 
+
+*/
+
+// src/components/layout/Sidebar.jsx
+
+// depencencias
 import React from "react";
+
+import TagsComponent from "../sidebar/tagsComponent";
+
 // Importamos solo los iconos que necesita el Sidebar
 import { HiQuestionMarkCircle, HiTag, HiUsers } from "react-icons/hi2";
 
@@ -26,37 +38,7 @@ const Sidebar = () => {
       </div>
 
       {/* Card: Etiquetas */}
-      <div className="card bg-base-200 border border-base-300 shadow-sm overflow-hidden flex flex-col">
-        {/* Cabecera verdosa (Accent) */}
-        <div className="bg-accent/10 border-b border-accent/10 px-6 py-4 flex items-center gap-2 w-full">
-          <HiTag className="h-6 w-6 text-base-content" />
-          <h3 className="text-lg font-bold text-accent m-0">
-            Etiquetas Populares
-          </h3>
-        </div>
-
-        {/* Contenedor de las etiquetas */}
-        <div className="p-6 w-full flex flex-col">
-          <div className="flex flex-wrap gap-2">
-            <span className="badge badge-lg badge-ghost hover:bg-base-300 cursor-pointer">
-              machine-learning
-            </span>
-            <span className="badge badge-lg badge-ghost hover:bg-base-300 cursor-pointer">
-              python
-            </span>
-            <span className="badge badge-lg badge-ghost hover:bg-base-300 cursor-pointer">
-              nlp
-            </span>
-            <span className="badge badge-lg badge-ghost hover:bg-base-300 cursor-pointer">
-              huggingface
-            </span>
-            <span className="badge badge-lg badge-ghost hover:bg-base-300 cursor-pointer">
-              openai
-            </span>
-          </div>
-        </div>
-      </div>
-
+      <TagsComponent />
       {/* Card: Top Usuarios */}
       <div className="card bg-base-200 border border-base-300 shadow-sm overflow-hidden flex flex-col">
         <div className="bg-base-300 border-b border-base-300 px-6 py-4 flex items-center gap-2 w-full">
