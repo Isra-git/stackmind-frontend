@@ -25,24 +25,50 @@ export default function TagsComponent() {
   useEffect(() => {
     const fetchPopularTags = async () => {
       try {
-        // Hacemos la petición  endpoint
+        // Hacemos la petición endpoint
         const response = await fetch(ENDPOINTS.TAGS_POPULAR());
 
         if (!response.ok) {
           throw new Error("No se pudieron cargar las etiquetas");
         }
 
-        const data = await response.json();
-        setTags(data);
+        // Recibimos la lista de tags (ia,modelo,chat) y la separamos y limpiamos
+        const rawData = await response.json();
+
+        const tagMap = {};
+
+        rawData.forEach((row) => {
+          if (row.name) {
+            // Separamos por "," y quitamos espacios
+            const palabras = row.name.split(",").map((word) => word.trim());
+
+            // Metemos cada palabra separada
+            palabras.forEach((palabra) => {
+              // Si existe la palabra (sumamos), sino, creamos
+              if (palabra) {
+                tagMap[palabra] = (tagMap[palabra] || 0) + (row.counter || 0);
+              }
+            });
+          }
+        });
+
+        // Convertimos el diccionario -> array y lo ordenamos de Mayor a Menos
+        const processedTags = Object.keys(tagMap)
+          .map((key) => ({ name: key, counter: tagMap[key] }))
+          .sort((a, b) => b.counter - a.counter)
+          .slice(0, 10); // top 10
+
+        // Guardamos Tags en el estado
+        setTags(processedTags);
       } catch (err) {
         console.error("Error cargando tags:", err);
         setError(err.message);
       } finally {
-        setLoading(false); // Quitamos el estado de carga ¡¡
+        setLoading(false); // Quitamos el estado de carga
       }
     };
 
-    fetchPopularTags(); // ejecutamos la peticion
+    fetchPopularTags(); // Ejecutamos la petición
   }, []);
 
   return (
@@ -81,14 +107,14 @@ export default function TagsComponent() {
               <span
                 key={index}
                 className="badge badge-lg badge-ghost hover:bg-base-300 hover:text-primary transition-colors cursor-pointer border border-base-300 shadow-sm"
-                title={`Mencionada ${tagObj.count || 0} veces`} // Tooltip con la frecuencia
+                title={`Mencionada ${tagObj.counter || 0} veces`} // Tooltip con la frecuencia
               >
                 {tagObj.name || tagObj.tag || tagObj}
 
                 {/*  Mostrar el contador al lado de la etiqueta */}
-                {tagObj.count && (
+                {tagObj.counter && (
                   <span className="ml-2 text-xs opacity-50">
-                    ({tagObj.count})
+                    ({tagObj.counter})
                   </span>
                 )}
               </span>
