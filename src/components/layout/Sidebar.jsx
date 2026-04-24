@@ -8,6 +8,7 @@
 
 // depencencias
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import TagsComponent from "../sidebar/tagsComponent";
 
@@ -15,6 +16,8 @@ import TagsComponent from "../sidebar/tagsComponent";
 import { HiQuestionMarkCircle, HiTag, HiUsers } from "react-icons/hi2";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
+
   return (
     <aside className="order-1 lg:order-2 lg:col-span-4 space-y-6">
       {/* Card: Llamada a la acción */}
@@ -31,7 +34,10 @@ const Sidebar = () => {
             No te quedes atascado. Comparte tu problema y obtén ayuda de
             expertos.
           </p>
-          <button className="btn bg-primary/70 text-base-content/80 border-none hover:bg-primary/30 btn-block mt-4 transition-colors">
+          <button
+            className="btn bg-primary/70 text-base-content/80 border-none hover:bg-primary/30 btn-block mt-4 transition-colors"
+            onClick={() => navigate(`/newquestion`)}
+          >
             Hacer una Pregunta
           </button>
         </div>

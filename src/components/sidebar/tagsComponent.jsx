@@ -11,6 +11,7 @@
 // dependencias
 import React, { useState, useEffect } from "react";
 import { ENDPOINTS } from "../../api/constantes";
+import { useNavigate } from "react-router-dom";
 
 // iconos
 import { HiTag } from "react-icons/hi2";
@@ -20,6 +21,9 @@ export default function TagsComponent() {
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // iniciamos el navigate para redirigir a /tags
+  const navigate = useNavigate();
 
   // al inciarse, pedimos los datos
   useEffect(() => {
@@ -106,6 +110,10 @@ export default function TagsComponent() {
             {tags.map((tagObj, index) => (
               <span
                 key={index}
+                onClick={() => {
+                  // redirigimos a busqueda pasando el Nombre del Tag
+                  navigate(`/search?query=${encodeURIComponent(tagObj.name)}`);
+                }}
                 className="badge badge-lg badge-ghost hover:bg-base-300 hover:text-primary transition-colors cursor-pointer border border-base-300 shadow-sm"
                 title={`Mencionada ${tagObj.counter || 0} veces`} // Tooltip con la frecuencia
               >
