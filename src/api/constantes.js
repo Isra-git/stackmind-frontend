@@ -21,7 +21,7 @@ export const ENDPOINTS = {
   ADMIN_TOGGLE_USER: (userId) => `${API_BASE}/users/${userId}/toggle-status`, // PUT
 
   // PREGUNTAS (questions)
-  QUESTIONS_BASE: `${API_BASE}/questions`, // POST (crear pregunta)
+  QUESTIONS_CREATE: `${API_BASE}/questions`, // POST (crear pregunta)
   QUESTIONS_ALL: (skip = 0, limit = 20) =>
     `${API_BASE}/questions/?skip=${skip}&limit=${limit}`, // GET (listar)
   QUESTIONS_SEARCH: (query, skip = 0, limit = 20) =>

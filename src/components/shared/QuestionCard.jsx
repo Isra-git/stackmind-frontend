@@ -71,7 +71,7 @@ const QuestionCard = ({ question }) => {
             <span className="text-[11px] uppercase tracking-wider hidden sm:block">
               {answers_count ? (
                 <Link
-                  to={`/preguntas/${question.id}/${question.slug}`}
+                  to={`/questions/${question.id}/${question.slug}`}
                   className="hover:opacity-80"
                 >
                   respuestas
@@ -87,7 +87,7 @@ const QuestionCard = ({ question }) => {
         <div className="flex-1 flex flex-col gap-2 min-w-0">
           {/* Título enlazado al detalle de la pregunta */}
           <Link
-            to={`/preguntas/${question.id}/${question.slug}`}
+            to={`/questions/${question.id}/${question.slug}`}
             className="text-lg sm:text-xl font-bold text-base-content hover:text-primary transition-colors leading-tight line-clamp-2"
           >
             {title}
@@ -101,7 +101,7 @@ const QuestionCard = ({ question }) => {
             {/* Lista de Etiquetas */}
             <div className="flex flex-wrap gap-2">
               <Link
-                to={`/preguntas/${question.id}/${question.slug}`}
+                to={`/questions/${question.id}/${question.slug}`}
                 state={{ openEditor: true }}
               >
                 <span className="flex items-center gap-2 justify-between hover:text-primary transition-colors">

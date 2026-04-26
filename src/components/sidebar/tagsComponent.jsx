@@ -25,6 +25,19 @@ export default function TagsComponent() {
   // iniciamos el navigate para redirigir a /tags
   const navigate = useNavigate();
 
+  // manejamos el envio de tags a -> Search
+  const handleSearch = (e, tagTerm = null) => {
+    // evitamos el comportamiento por defecto
+    e.preventDefault();
+
+    // definimos el termino a buscar Tag
+    const tagTermToUse = tagTerm;
+
+    if (tagTermToUse && tagTermToUse.trim()) {
+      navigate(`/search?query=${encodeURIComponent(tagTermToUse.trim())}`);
+    }
+  };
+
   // al inciarse, pedimos los datos
   useEffect(() => {
     const fetchPopularTags = async () => {
@@ -110,9 +123,12 @@ export default function TagsComponent() {
             {tags.map((tagObj, index) => (
               <span
                 key={index}
-                onClick={() => {
-                  // redirigimos a busqueda pasando el Nombre del Tag
-                  navigate(`/search?query=${encodeURIComponent(tagObj.name)}`);
+                onClick={(e) => {
+                  //  Extraemos el texto real venga en cualquier formato
+                  const tagText = tagObj.name || tagObj.tag || tagObj;
+
+                  //  Navegamos usando ese texto seguro
+                  handleSearch(e, tagText);
                 }}
                 className="badge badge-lg badge-ghost hover:bg-base-300 hover:text-primary transition-colors cursor-pointer border border-base-300 shadow-sm"
                 title={`Mencionada ${tagObj.counter || 0} veces`} // Tooltip con la frecuencia

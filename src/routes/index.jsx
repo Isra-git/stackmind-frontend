@@ -59,8 +59,8 @@ const routes = (isLoggedIn) => [
           { path: "/support", element: <Support /> },
           { path: "/myanswers", element: <MyAnswers /> },
           { path: "/myquestions", element: <MyQuestions /> },
-          { path: "/preguntas/:id/:slug", element: <QuestionDetail /> },
-          { path: "/preguntas/:id", element: <QuestionDetail /> }, // fallback por si no viene el slug
+          { path: "/questions/:id/:slug", element: <QuestionDetail /> },
+          { path: "/questions/:id", element: <QuestionDetail /> }, // fallback por si no viene el slug
           { path: "/editor", element: <StackMindEditor /> }, // ruta probisional para probar el editor
         ],
       },

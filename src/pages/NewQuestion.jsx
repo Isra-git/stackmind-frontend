@@ -14,104 +14,355 @@ import { useAuth } from "../context/AuthContext";
 import { ENDPOINTS } from "../api/constantes";
 
 // Iconos
-import { HiOutlineSparkles, HiOutlineCheck, HiOutlineXMark, HiOutlinePaperAirplane } from "react-icons/hi2";
-import { Flag } from "lucide-react";
-const NewQuestion = () => {
+import {
+  HiOutlineSparkles,
+  HiOutlineCheck,
+  HiOutlineXMark,
+  HiOutlinePaperAirplane,
+  HiOutlinePencil,
+  HiOutlineDocumentText,
+  HiOutlineCheckCircle,
+  HiOutlineExclamationCircle,
+} from "react-icons/hi2";
 
+const NewQuestion = () => {
   // Estados navegacion y usuario
-  const navigate=useNavigate();
-  const{token}= useAuth();
+  const navigate = useNavigate();
+  const { token } = useAuth();
 
   // estados del form
-  const [title,setTitle]=useState("");
-  const [body,setBody]=useState("");
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
 
   //estados para gestionar IA
-  const [isImproving,setIsImproving]=useState(false);
-  const [aiSuggest,setAiSuggest]=useState(null);
+  const [isImproving, setIsImproving] = useState(false);
+  const [aiSuggestion, setAiSuggestion] = useState(null);
 
   // estado Publicado?¿
-  const [publishing, setIspublishing]=useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
 
-  //estado para Errores
-  const [error,setError]=useState(null);
-  const [success,setSuccess]=useState(null);
+  // estado para los Modales de Exito / fracaso
+  const [modal, setModal] = useState({
+    isOpen: false,
+    type: "success", // o error
+    message: "",
+    questionId: null, // para Redirigir¡
+  });
 
   // Funcion para pedirle a la IA que mejore la pregunta
-  cons handleImproveWithAi= async()=> {
-    
-    // comprobamos que los campos no esten vacios
-    if(!title.trim() || !body.trim()) return;
-    setIsImproving(true);
-    
-    try {
+  const handleImproveWithAI = async (e) => {
+    if (e) e.preventDefault();
 
+    // comprobamos que los campos no esten vacios
+    if (!body.trim()) return;
+    setIsImproving(true);
+
+    try {
       // llamamos a la api (AI_ENHANCE: `${API_BASE}/ai/enhance-question`)
       //  para mejorar la Pregunta del usuario
-      const response= await fetch(ENDPOINTS.AI_ENHANCE,{
-        method:"POST",
-        headers:{"Content-Type":"application/json", Authorization: `Bearer ${token}`},
-        body:JSON.stringify({title, body})
+      const response = await fetch(ENDPOINTS.AI_ENHANCE, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ raw_text: body }),
       });
 
-      if(response.ok){
-        const data= await response.json();
-       setAiSuggest(data);
-        setError(null);
-        setSuccess("La pregunta ha sido devuelta mejorada por la IA.");
-      }else{
-        const error= await response.json();
-        setError(error.message);
-        setSuccess(null);
+      if (response.ok) {
+        const data = await response.json();
+        setAiSuggestion(data.enhanced_text);
+      } else {
+        const error = await response.json();
+        setModal({
+          isOpen: true,
+          type: "error",
+          message: error || "Error al intentar mejorar con la IA",
+        });
       }
-
-    }catch(err){
+    } catch (err) {
       console.log("Error al Conectar con la IA: ", err);
-      setError(err);
-      
-    }finally{
+      setModal({
+        isOpen: true,
+        type: "error",
+        message: err || "Error al intentar conectar con la IA",
+      });
+    } finally {
       setIsImproving(false);
     }
-
   };
 
-
-
   // Funcion para manejar -> Aceptar la sugerencia de la IA
-  const acceptAiSuggestion=()=>{
+  const acceptAiSuggestion = () => {
+    // asignamos el nuevo  Body
 
-    // asignamos el nuevo TiTULo y Body
-    setTitle(aiSuggest.title);
-    setBody(aiSuggest.body);
+    setBody(aiSuggestion);
 
     // limpiamos la sugerencia
-    setAiSuggest(null);
-  }
-
+    setAiSuggestion(null);
+  };
 
   // Funcion para manejar -> Rechaza la sugerencia de la IA
-  const rejectAiSuggestion=()=>{
-    setAiSuggest(null);
-    
-  }
-  } 
+  const rejectAiSuggestion = () => {
+    setAiSuggestion(null);
+  };
+
+  // Funcion para publicar la pregunta
+  const handlePublish = async (e) => {
+    if (e) e.preventDefault();
+
+    //modificamos el estado
+    setIsPublishing(true);
+
+    // enviamos la Pregunta
+    try {
+      //hacemos la peticion
+      const response = await fetch(ENDPOINTS.QUESTIONS_CREATE, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+
+        body: JSON.stringify({
+          title,
+          body,
+        }),
+      });
+
+      // si no ha ido bien
+      if (!response.ok) throw new Error("Error al publicar");
+
+      // leemos la respuesta
+      const newQuestion = await response.json();
+
+      // abrimos el Modal de Completado
+      setModal({
+        isOpen: true,
+        type: "success",
+        message: "¡Tu Pregunta ha sido publicada con exito!",
+        questionId: newQuestion.id,
+      });
+
+      // // llevamos a su nueva pregunta -> Publicada
+      // navigate(`/questions/${newQuestion.id}`);
+
+      // limpiamos los campos
+      setTitle("");
+      setBody("");
+    } catch (err) {
+      console.log("Error al publicar la respuesta", err);
+      setModal({
+        isOpen: true,
+        type: "error",
+        message: err.message,
+      });
+    } finally {
+      setIsPublishing(false);
+    }
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full min-h-[50vh] p-8 text-center bg-base-100 rounded-box shadow-sm border border-base-200">
-      <span className="text-6xl mb-4 animate-bounce">👋</span>
+    <div className="container mx-auto max-w-5xl py-8 px-4 animate-fade-in">
+      {/* MODAL DAISYUI  */}
+      {modal.isOpen && (
+        <div className="modal modal-open modal-bottom sm:modal-middle bg-base-300/60 backdrop-blur-sm z-50">
+          <div className="modal-box bg-base-100 shadow-2xl border border-base-300">
+            <div className="flex flex-col items-center text-center space-y-4 py-4">
+              {modal.type === "success" ? (
+                <HiOutlineCheckCircle className="text-7xl text-success animate-bounce" />
+              ) : (
+                <HiOutlineExclamationCircle className="text-7xl text-error animate-pulse" />
+              )}
 
-      <h1 className="text-3xl font-bold text-base-content mb-2">¡Hola!</h1>
+              <h3 className="font-bold text-2xl text-base-content">
+                {modal.type === "success"
+                  ? "¡Pregunta Guardada!"
+                  : "Ups, algo salió mal"}
+              </h3>
+              <p className="text-base-content/80 text-lg">{modal.message}</p>
+            </div>
 
-      <p className="text-lg text-base-content/70">
-        Esta es la página de{" "}
-        <span className="font-semibold text-primary">NewQuestion</span>.
-      </p>
+            <div className="modal-action w-full mt-6">
+              {modal.type === "success" ? (
+                // Si hay éxito, el botón nos lleva a la pregunta
+                <button
+                  className="btn btn-primary w-full"
+                  onClick={() => navigate(`/questions/${modal.questionId}`)}
+                >
+                  Ver mi pregunta
+                </button>
+              ) : (
+                // Si hay error, el botón cierra el modal para seguir intentándolo
+                <button
+                  className="btn btn-outline w-full"
+                  onClick={() => setModal({ ...modal, isOpen: false })}
+                >
+                  Volver al editor
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      <div className="mb-8">
+        <h1 className="text-4xl tracking-[3px] pb-2 flex justify-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+          Haz una pregunta a la comunidad
+        </h1>
+        <p className="mt-4 text-lg text-base-content/90 whitespace-pre-wrap leading-relaxed">
+          Explica tu duda de forma sencilla. Nuestra IA te ayudará a darle un
+          formato técnico si lo necesitas.
+        </p>
+      </div>
 
-      <p className="text-sm text-base-content/50 mt-4 italic">
-        (Componente en construcción)
-      </p>
+      {/* MODO COMPARACIÓN ->Si hay sugerencia de la IA*/}
+      {aiSuggestion ? (
+        <div className="space-y-6">
+          <div className="alert alert-info bg-info/10 text-info border-info/20 shadow-sm">
+            <HiOutlineSparkles className="text-xl" />
+            <span>
+              La IA ha analizado tu pregunta. ¿Con cuál versión prefieres
+              quedarte para publicar?
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Tarjeta: Versión Original */}
+            <div className="card bg-base-200 border border-base-300 opacity-70 hover:opacity-100 transition-opacity">
+              <div className="card-body">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-base-content/50 mb-2">
+                  Tu versión original
+                </h2>
+                <h3 className="text-lg font-bold">{title}</h3>
+                <p className="whitespace-pre-wrap text-sm mt-2">{body}</p>
+                <div className="card-actions justify-end mt-4">
+                  <button
+                    onClick={rejectAiSuggestion}
+                    className="btn btn-ghost btn-sm text-base-content/70"
+                  >
+                    <HiOutlineXMark /> Mantener la mía
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Tarjeta: Versión IA */}
+            <div className="card bg-primary/5 border border-primary/20 shadow-md">
+              <div className="card-body">
+                <h2 className="text-sm font-bold uppercase text-primary flex items-center gap-2 mb-2">
+                  <HiOutlineSparkles /> Explicación Optimizada
+                </h2>
+                {/* Quitamos el .title y .body, usamos aiSuggestion directamente */}
+                <h3 className="text-lg font-bold text-base-content">
+                  {title} {/* El título se mantiene igual */}
+                </h3>
+                <p className="whitespace-pre-wrap text-sm mt-2">
+                  {aiSuggestion}
+                </p>
+                <div className="card-actions justify-end mt-4">
+                  <button
+                    onClick={acceptAiSuggestion}
+                    className="btn btn-primary btn-sm"
+                  >
+                    <HiOutlineCheck /> Usar esta descripción
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* 
+          MODO EDICIÓN ->Formulario normal
+           */
+        <div className="space-y-6 bg-base-100 p-6 rounded-2xl border border-base-300 shadow-sm">
+          {/* Título */}
+          <div className="form-control w-full">
+            <label className="label pb-2">
+              <span className="label-text font-medium text-base-content/80 text-lg">
+                Resumen de tu duda
+              </span>
+            </label>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none transition-colors duration-300 group-focus-within:text-primary">
+                <HiOutlinePencil className="text-base-content/50 text-xl group-focus-within:text-primary transition-colors" />
+              </div>
+              <input
+                type="text"
+                className="w-full h-14 pl-12 pr-4 bg-base-200/30 border border-base-300 rounded-xl text-base-content placeholder:text-base-content/30 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-300 text-lg"
+                placeholder="Ej: ¿Hay alguna IA gratuita que me haga resúmenes de PDFs largos?"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                maxLength={150}
+              />
+            </div>
+          </div>
+
+          {/* Cuerpo de la pregunta (Simple Textarea con aspecto de editor) */}
+          <div className="form-control w-full">
+            <label className="label pb-2">
+              <span className="label-text font-medium text-base-content/80 text-lg">
+                Detalles (Explica tu situación)
+              </span>
+            </label>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-4 pt-4 flex items-start pointer-events-none transition-colors duration-300 group-focus-within:text-primary">
+                <HiOutlineDocumentText className="text-base-content/50 text-xl group-focus-within:text-primary transition-colors" />
+              </div>
+              <textarea
+                className="w-full min-h-[250px] pl-12 pr-4 py-4 bg-base-200/30 border border-base-300 rounded-xl text-base-content placeholder:text-base-content/30 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-300 text-base leading-relaxed resize-y"
+                placeholder="Hola comunidad, soy estudiante de derecho y tengo que leerme decenas de sentencias a la semana. Conozco ChatGPT pero no me deja subir archivos en la versión gratis. ¿Existe alguna herramienta sencilla y gratuita para esto? Gracias."
+                value={body}
+                onChange={(e) => setBody(e.target.value)}
+              ></textarea>
+            </div>
+          </div>
+
+          {/* Botonera inferior */}
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-base-200">
+            {/* Botón Mejorar con la IA */}
+            <button
+              type="button"
+              onClick={handleImproveWithAI}
+              disabled={isImproving || !body?.trim()}
+              className="btn bg-gradient-to-r from-indigo-500 to-purple-500 text-white border-none shadow-lg shadow-purple-500/30 hover:scale-[1.02] transition-transform w-full sm:w-auto"
+            >
+              {isImproving ? (
+                <>
+                  <span className="loading loading-spinner loading-sm"></span>{" "}
+                  Analizando...
+                </>
+              ) : (
+                <>
+                  <HiOutlineSparkles className="text-lg" /> Mejorar mi pregunta
+                  con IA
+                </>
+              )}
+            </button>
+
+            {/* Botón de Publicar Directo */}
+            <button
+              type="button"
+              onClick={handlePublish}
+              disabled={isPublishing || !title?.trim() || !body?.trim()}
+              className="btn btn-primary w-full sm:w-auto"
+            >
+              {isPublishing ? (
+                <>
+                  <span className="loading loading-spinner loading-sm"></span>{" "}
+                  Publicando...
+                </>
+              ) : (
+                <>
+                  <HiOutlinePaperAirplane className="text-lg" /> Publicar sin
+                  cambios
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
-
 export default NewQuestion;
