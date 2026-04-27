@@ -1,92 +1,73 @@
-/* Página de Preguntas Recientes con Paginación Dinámica
- */
+/* 
 
+Página de Preguntas Recientes con Paginación Dinámica
+
+
+ */
 // src/pages/Questions.jsx
 
+// dependencias
 import React, { useState } from "react";
 import { useQuestions } from "../hooks/useQuestions";
-import QuestionCard from "../components/shared/QuestionCard";
-import {
-  HiOutlineChatBubbleLeftRight,
-  HiOutlineChevronLeft,
-  HiOutlineChevronRight,
-} from "react-icons/hi2";
+import QuestionList from "../components/shared/QuestionList";
+
+// iconos
+import { HiOutlineFire } from "react-icons/hi2";
 
 const Questions = () => {
-  // Estado para la página actual
+  // Estados de Paginación y Filtro
   const [currentPage, setCurrentPage] = useState(1);
-  const limit = 10;
+  const [filter, setFilter] = useState("new");
 
-  // Cálculo matemático para el backend: (página - 1) * cantidad
+  const limit = 10;
   const skip = (currentPage - 1) * limit;
 
-  // Extraemos el total para calcular las páginas disponibles
-  const { questions, total, loading, error } = useQuestions("new", skip, limit);
+  // Extraemos los datos del hook  pasando el filtro actual
+  const { questions, total, loading, error } = useQuestions(
+    filter,
+    skip,
+    limit,
+  );
 
-  const totalPages = Math.ceil(total / limit);
+  // Función para manejar el cambio de pestañas (filtros)
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    setCurrentPage(1); // Volvemos a la página 1
+  };
+
+  // Textos dinámicos según el filtro
+  const getSubtitle = () => {
+    switch (filter) {
+      case "popular":
+        return "Viendo las consultas con más participación e interés.";
+      case "unanswered":
+        return "Sé el primero en ayudar respondiendo estas dudas.";
+      default:
+        return `Explora las ${total || 0} consultas más recientes de la comunidad.`;
+    }
+  };
 
   return (
-    <div className="space-y-6 py-6">
-      <div className="border-b border-base-300 pb-4">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          <HiOutlineChatBubbleLeftRight className="text-primary" />
-          Preguntas Recientes
-        </h2>
-        <p className="text-sm text-base-content/60 mt-1">
-          Explora las {total} consultas más recientes de la comunidad.
-        </p>
-      </div>
-
-      {loading ? (
-        <div className="flex justify-center py-20">
-          <span className="loading loading-bars loading-lg text-primary"></span>
-        </div>
-      ) : error ? (
-        <div className="alert alert-error">
-          <span>{error}</span>
-        </div>
-      ) : (
-        <>
-          <div className="flex flex-col gap-2">
-            {questions.map((q) => (
-              <QuestionCard key={q.id} question={q} />
-            ))}
-          </div>
-
-          {/* Controles de Paginación con DaisyUI */}
-          {total > limit && (
-            <div className="flex flex-col items-center gap-4 mt-10">
-              <div className="join border border-base-300 shadow-sm">
-                <button
-                  className="join-item btn btn-sm btn-ghost"
-                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                >
-                  <HiOutlineChevronLeft />
-                </button>
-
-                <button className="join-item btn btn-sm no-animation bg-base-100">
-                  Página {currentPage} de {totalPages}
-                </button>
-
-                <button
-                  className="join-item btn btn-sm btn-ghost"
-                  onClick={() =>
-                    setCurrentPage((p) => Math.min(totalPages, p + 1))
-                  }
-                  disabled={currentPage === totalPages}
-                >
-                  <HiOutlineChevronRight />
-                </button>
-              </div>
-              <span className="text-xs opacity-50 italic">
-                Mostrando de {skip + 1} a {Math.min(skip + limit, total)} de{" "}
-                {total} registros
-              </span>
-            </div>
-          )}
-        </>
-      )}
+    <div className="container mx-auto max-w-5xl px-4">
+      <QuestionList
+        // Datos
+        questions={questions}
+        total={total}
+        loading={loading}
+        error={error}
+        // Paginación
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+        limit={limit}
+        // Textos y Diseño
+        title="Explora la Comunidad"
+        subtitle={getSubtitle()}
+        icon={HiOutlineFire}
+        // Filtros activados
+        showFilters={true}
+        activeFilter={filter}
+        onFilterChange={handleFilterChange}
+      />
     </div>
   );
 };

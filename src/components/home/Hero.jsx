@@ -32,7 +32,7 @@ const Hero = () => {
         </span>
 
         <h1 className="text-4xl md:text-6xl font-black mt-2 mb-6 leading-tight tracking-tight">
-          sobre <br className="hidden md:block" />
+          Resuelve tus dudas sobre <br className="hidden md:block" />
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
             Inteligencia Artificial
           </span>
@@ -52,7 +52,7 @@ const Hero = () => {
         {/* Buscador Principal */}
         <form
           onSubmit={handleSearch}
-          className="relative max-w-full md:max-w-xl mx-auto px-2 md:px-0 group"
+          className="relative max-w-full md:max-w-xl  mx-auto px-2 md:px-0 group"
         >
           <div className="absolute inset-y-0 left-0 pl-3 md:pl-5 flex items-center pointer-events-none">
             <HiSearch className="h-5 w-5 text-base-content/40 group-focus-within:text-primary transition-colors" />
@@ -62,7 +62,7 @@ const Hero = () => {
           <input
             type="text"
             placeholder="¿Cómo hacer fine-tuning a Llama 3?..."
-            className="input input-bordered w-full pl-10 md:pl-12 pr-24 py-6 shadow-sm hover:shadow-md focus:shadow-lg transition-shadow border-base-300 bg-base-100 rounded-2xl"
+            className="w-full h-14 pl-12 md:pl-14 pr-28 bg-base-200/30 border border-base-300 rounded-2xl text-base-content placeholder:text-base-content/40 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-300 text-lg shadow-sm hover:shadow-md"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -70,7 +70,7 @@ const Hero = () => {
           {/* BOTÓN  */}
           <button
             type="submit"
-            className="btn btn-primary absolute top-1.5 right-1.5 md:right-2 rounded-xl h-[calc(100%-12px)] min-h-0"
+            className="btn btn-primary absolute top-2 right-2 bottom-2 rounded-xl px-6 md:px-8 font-semibold shadow-md shadow-primary/20 hover:shadow-primary/40 hover:scale-[1.02] transition-all duration-300 h-auto min-h-0"
           >
             Buscar
           </button>
