@@ -6,47 +6,130 @@
 // src/pages/Register.jsx
 
 // dependencias
-import React from "react";
-import {Link, useNavigate} from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+import { availableAvatars } from "../api/helpers";
+import {
+  HiOutlineUser,
+  HiOutlineEnvelope,
+  HiOutlineXMark,
+  HiOutlineCheck,
+} from "react-icons/hi2";
+import { ENDPOINTS } from "../api/constantes";
 
 // iconos
 
-
-
-
 const Register = () => {
-
   // estados -> Objeto para los datos del Registro
-  const[datos,setDatos]=useState({
-    email:"",
-    password:"",
-    username:"",
-    fullName:"",
-    avatar_url:"" || "avatar2.png",
-  })
+  const [datos, setDatos] = useState({
+    email: "",
+    password: "",
+    username: "",
+    full_name: "",
+    avatar_url: "" || "avatar2.png",
+  });
 
-  const [error,setError]=useState(false);
-  const [loading,setLoading]=useState(false);
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   // instancia de navegacion
-  navigate= useNavigate();
+  const navigate = useNavigate();
 
   // manejador de cambios en el form
-  const handleChange=(e)=> {
+  const handleChange = (e) => {
     setDatos({
       ...datos,
-      [e.target.name]:e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
-
   // Funcion para manejar el ENVIO
-  const submitRegister=()=>{
-    return ;
-  }
+  const submitRegister = async (e) => {
+    // evitamos que recarge
+    e.preventDefault();
+
+    // gestionamos estados
+    setLoading(true);
+    setError(false);
+    setSuccess(false);
+
+    try {
+      // gestionamos la llamada al bknd
+      const response = await fetch(
+        ENDPOINTS.AUTH_REGISTER,
+
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          // enviamos el objeto con los datos del usuario
+          body: JSON.stringify(datos),
+        },
+      );
+
+      // seteamos los Datos
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Capturamos el HTTP_400_BAD_REQUEST de tu backend ("usuario no disponible")
+        throw new Error(data.detail || "Hubo un error al Crear el la cuenta");
+      }
+      setSuccess(true);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-   <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-base-200 flex items-center justify-center p-4">
+      {/*  MODAL DE DAISY UI */}
+
+      <input
+        type="checkbox"
+        id="register_modal"
+        className="modal-toggle"
+        checked={success || !!error} // Se abre si hay éxito o error
+        readOnly
+      />
+
+      <div className="modal modal-bottom sm:modal-middle">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg flex items-center gap-2">
+            {success ? (
+              <HiOutlineCheck className="text-success w-6 h-6" />
+            ) : (
+              <HiOutlineXMark className="text-error w-6 h-6" />
+            )}
+            {success ? "¡Cuenta creada!" : "Algo salió mal"}
+          </h3>
+          <p className="py-4">
+            {success
+              ? "Bienvenido a StackMind. Tu perfil ha sido creado correctamente. Ya puedes acceder a la comunidad."
+              : error}
+          </p>
+          <div className="modal-action">
+            {success ? (
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/login")}
+              >
+                Ir al Login
+              </button>
+            ) : (
+              <button className="btn" onClick={() => setError(false)}>
+                Reintentar
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+      {/* FIN MODAL */}
       <div className="card w-full max-w-md bg-base-100 shadow-xl border border-base-300">
         <div className="card-body ">
           <div className="card-title flex items-center justify-center">
@@ -69,10 +152,10 @@ const Register = () => {
           </div>
           <div className="divider w-4/5 mx-auto py-3"></div>
           <h2 className="text-2xl font-bold text-center mb-2">
-            Bienvenido a tu comunidad de IA  en castellano
+            Bienvenido a tu comunidad de IA en castellano
           </h2>
           <p className="text-center text-xl  text-base-content/70 mb-6">
-            Registrate para participar en la comunidad: 
+            Registrate para participar en la comunidad:
           </p>
 
           {/* si hay ERROR -> lo mostramos */}
@@ -82,17 +165,18 @@ const Register = () => {
             </div>
           )}
 
-          {/*   handleSubmit al enviarse */}
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          {/*   submitRegister al enviarse */}
+          <form className="space-y-4" onSubmit={submitRegister}>
             {/* Email */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">
+                <span className="label-text font-medium pb-2">
                   Correo electrónico
                 </span>
               </label>
               <input
                 type="email"
+                name="email"
                 placeholder="tu@email.com"
                 className="input input-bordered w-full"
                 value={datos.email}
@@ -100,51 +184,51 @@ const Register = () => {
                 required
               />
             </div>
-           {/* USERNAME */}
+            {/* USERNAME */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">
+                <span className="label-text font-medium pb-2">
                   Nombre de usuario
                 </span>
               </label>
               <input
                 type="text"
+                name="username"
                 placeholder="Escribe tu nombre en la comunidad"
                 className="input input-bordered w-full"
-                
-                value={datos.username} 
-                onChange={handleChange} 
+                value={datos.username}
+                onChange={handleChange}
                 required
               />
             </div>
-               {/* USERNAME */}
+            {/* FULL_NAME */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">
-                  Nombre de usuario
+                <span className="label-text font-medium pb-2">
+                  Tu Nombre Completo
                 </span>
               </label>
               <input
                 type="text"
+                name="full_name"
                 placeholder="Escribe tu nombre completo"
                 className="input input-bordered w-full"
-                
-                value={datos.fullName} 
-                onChange={handleChange} 
+                value={datos.fullName}
+                onChange={handleChange}
                 required
               />
             </div>
             {/* Contraseña */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">Contraseña</span>
+                <span className="label-text font-medium pb-2">Contraseña</span>
               </label>
               <input
                 type="password"
+                name="password"
                 placeholder="••••••••"
                 className="input input-bordered w-full"
-                
-                value={password}
+                value={datos.password}
                 onChange={handleChange}
                 required
               />
@@ -153,6 +237,44 @@ const Register = () => {
                   ¿Olvidaste tu contraseña?
                 </a>
               </label> */}
+            </div>
+            {/* Cambiar AVATAR->  Grid (4 columnas en móvil, 5 en PC) */}
+            <div className="form-control mt-4 p-4 bg-base-300/40 rounded-2xl border border-base-300">
+              {/* Título: 10% más oscuro (usando text-base-content/80 o base-300) */}
+              <div className="flex flex-col items-center mb-4">
+                <label className="label py-0">
+                  <span className="label-text font-semibold text-md text-base-content/90">
+                    Selecciona un Avatar
+                  </span>
+                </label>
+
+                {/* Línea separadora: 80% de ancho, centrada y sutil */}
+                <div className="h-[1px] w-[80%] bg-base-content/10 mt-2"></div>
+              </div>
+              <div className="grid grid-cols-4 sm:grid-cols-5 gap-4 mt-2 p-2 bg-base-200/50 rounded-xl border border-base-300">
+                {availableAvatars.map((avatar) => (
+                  <div
+                    key={avatar}
+                    // Si el avatar es el que tenemos -> borde brillante
+                    className={`cursor-pointer rounded-full transition-all duration-200 ${
+                      datos.avatar_url === avatar
+                        ? "ring-4 ring-primary ring-offset-2 ring-offset-base-100 scale-110 shadow-lg"
+                        : "opacity-50 hover:opacity-100 hover:scale-105"
+                    }`}
+                    //  actualizamos el avatar_url en el estado
+                    onClick={() => {
+                      setDatos({ ...datos, avatar_url: avatar });
+                      setSuccess(false);
+                    }}
+                  >
+                    <img
+                      src={`/img/avatars/${avatar}`}
+                      alt={`Avatar ${avatar}`}
+                      className="w-full h-auto rounded-full bg-base-100"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Botón Submit */}
@@ -165,7 +287,7 @@ const Register = () => {
                 {loading ? (
                   <span className="loading loading-spinner"></span>
                 ) : (
-                  "Iniciar Sessión"
+                  "Crear cuenta"
                 )}
               </button>
             </div>
@@ -174,9 +296,9 @@ const Register = () => {
           <div className="divider text-sm">O</div>
 
           <p className="text-center text-sm">
-            ¿No tienes cuenta?{" "}
-            <Link to="/register" className="link link-primary font-semibold">
-              Regístrate aquí
+            ¿Ya tienes cuenta?{" "}
+            <Link to="/login" className="link link-primary font-semibold">
+              Entra aqui
             </Link>
           </p>
         </div>

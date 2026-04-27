@@ -12,6 +12,8 @@ import React, { useContext, useState } from "react";
 
 import { AuthContext } from "../../context/AuthContext";
 import { ENDPOINTS } from "../../api/constantes";
+import {availableAvatars} from "../../api/helpers";
+
 
 import {
   HiOutlineUser,
@@ -38,10 +40,10 @@ const EditProfile = ({ setEditing }) => {
   const [success, setSuccess] = useState(false);
 
   // generamos la lista de avatares
-  const availableAvatars = Array.from(
-    { length: 13 },
-    (value, index) => `avatar${index + 2}.png`,
-  );
+  // const availableAvatars = Array.from(
+  //   { length: 13 },
+  //   (value, index) => `avatar${index + 2}.png`,
+  // );
 
   //  Manejador para actualizar el estado cuando el usuario escribe
   const handleChange = (e) => {
