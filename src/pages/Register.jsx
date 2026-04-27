@@ -15,6 +15,8 @@ import {
   HiOutlineEnvelope,
   HiOutlineXMark,
   HiOutlineCheck,
+  HiOutlineLockClosed,
+  HiOutlineIdentification,
 } from "react-icons/hi2";
 import { ENDPOINTS } from "../api/constantes";
 
@@ -167,77 +169,98 @@ const Register = () => {
 
           {/*   submitRegister al enviarse */}
           <form className="space-y-4" onSubmit={submitRegister}>
-            {/* Email */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium pb-2">
+            {/*  Email */}
+            <div className="form-control w-full">
+              <label className="label pb-2">
+                <span className="label-text font-medium text-base-content/80">
                   Correo electrónico
                 </span>
               </label>
-              <input
-                type="email"
-                name="email"
-                placeholder="tu@email.com"
-                className="input input-bordered w-full"
-                value={datos.email}
-                onChange={handleChange} // Al escribir, actualizamos el estado
-                required
-              />
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors duration-300 group-focus-within:text-primary">
+                  <HiOutlineEnvelope className="text-base-content/50 text-lg group-focus-within:text-primary transition-colors" />
+                </div>
+                <input
+                  type="email"
+                  name="email"
+                  className="w-full h-12 pl-11 pr-4 bg-base-200/30 border border-base-300 rounded-xl text-base-content placeholder:text-base-content/30 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-300"
+                  placeholder="tu@email.com"
+                  value={datos.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
-            {/* USERNAME */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium pb-2">
-                  Nombre de usuario
+
+            {/*  Nombre de Usuario */}
+            <div className="form-control w-full">
+              <label className="label pb-2">
+                <span className="label-text font-medium text-base-content/80">
+                  Nombre de Usuario
                 </span>
               </label>
-              <input
-                type="text"
-                name="username"
-                placeholder="Escribe tu nombre en la comunidad"
-                className="input input-bordered w-full"
-                value={datos.username}
-                onChange={handleChange}
-                required
-              />
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors duration-300 group-focus-within:text-primary">
+                  <HiOutlineUser className="text-base-content/50 text-lg group-focus-within:text-primary transition-colors" />
+                </div>
+                <input
+                  type="text"
+                  name="username"
+                  className="w-full h-12 pl-11 pr-4 bg-base-200/30 border border-base-300 rounded-xl text-base-content placeholder:text-base-content/30 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-300"
+                  placeholder="Tu alias en el foro"
+                  value={datos.username}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
-            {/* FULL_NAME */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium pb-2">
-                  Tu Nombre Completo
+
+            {/*  Nombre Completo */}
+            <div className="form-control w-full">
+              <label className="label pb-2">
+                <span className="label-text font-medium text-base-content/80">
+                  Nombre Completo
                 </span>
               </label>
-              <input
-                type="text"
-                name="full_name"
-                placeholder="Escribe tu nombre completo"
-                className="input input-bordered w-full"
-                value={datos.fullName}
-                onChange={handleChange}
-                required
-              />
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors duration-300 group-focus-within:text-primary">
+                  <HiOutlineIdentification className="text-base-content/50 text-lg group-focus-within:text-primary transition-colors" />
+                </div>
+                <input
+                  type="text"
+                  name="full_name" // Verifica que en el estado sea 'full_name'
+                  className="w-full h-12 pl-11 pr-4 bg-base-200/30 border border-base-300 rounded-xl text-base-content placeholder:text-base-content/30 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-300"
+                  placeholder="Escribe tu nombre completo"
+                  value={datos.full_name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
+
             {/* Contraseña */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium pb-2">Contraseña</span>
+            <div className="form-control w-full">
+              <label className="label pb-2">
+                <span className="label-text font-medium text-base-content/80">
+                  Contraseña
+                </span>
               </label>
-              <input
-                type="password"
-                name="password"
-                placeholder="••••••••"
-                className="input input-bordered w-full"
-                value={datos.password}
-                onChange={handleChange}
-                required
-              />
-              {/* <label className="label">
-                <a href="#" className="label-text-alt link link-hover">
-                  ¿Olvidaste tu contraseña?
-                </a>
-              </label> */}
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors duration-300 group-focus-within:text-primary">
+                  <HiOutlineLockClosed className="text-base-content/50 text-lg group-focus-within:text-primary transition-colors" />
+                </div>
+                <input
+                  type="password"
+                  name="password"
+                  className="w-full h-12 pl-11 pr-4 bg-base-200/30 border border-base-300 rounded-xl text-base-content placeholder:text-base-content/30 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-300"
+                  placeholder="••••••••"
+                  value={datos.password}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
+
             {/* Cambiar AVATAR->  Grid (4 columnas en móvil, 5 en PC) */}
             <div className="form-control mt-4 p-4 bg-base-300/40 rounded-2xl border border-base-300">
               {/* Título: 10% más oscuro (usando text-base-content/80 o base-300) */}
