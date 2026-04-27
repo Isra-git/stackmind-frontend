@@ -12,6 +12,9 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../context/AuthContext";
 
+// iconos
+import { HiOutlineEnvelope, HiOutlineLockClosed } from "react-icons/hi2";
+
 const Login = () => {
   // estados
   const [email, setEmail] = useState("");
@@ -76,42 +79,54 @@ const Login = () => {
           {/*   handleSubmit al enviarse */}
           <form className="space-y-4" onSubmit={handleSubmit}>
             {/* Email */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">
+            <div className="form-control w-full">
+              <label className="label pb-2">
+                <span className="label-text font-medium text-base-content/80">
                   Correo electrónico
                 </span>
               </label>
-              <input
-                type="email"
-                placeholder="tu@email.com"
-                className="input input-bordered w-full"
-                //  BINDING (Enlace bidireccional)
-                value={email} // El input muestra lo que hay en el estado
-                onChange={(e) => setEmail(e.target.value)} // Al escribir, actualizamos el estado
-                required
-              />
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors duration-300 group-focus-within:text-primary">
+                  <HiOutlineEnvelope className="text-base-content/50 text-lg group-focus-within:text-primary transition-colors" />
+                </div>
+                <input
+                  type="email"
+                  placeholder="tu@email.com"
+                  className="w-full h-12 pl-11 pr-4 bg-base-200/30 border border-base-300 rounded-xl text-base-content placeholder:text-base-content/30 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-300"
+                  //  BINDING (Enlace bidireccional)
+                  value={email} // El input muestra lo que hay en el estado
+                  onChange={(e) => setEmail(e.target.value)} // Al escribir, actualizamos el estado
+                  required
+                />
+              </div>
             </div>
 
             {/* Contraseña */}
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">Contraseña</span>
+            <div className="form-control w-full">
+              <label className="label pb-2">
+                <span className="label-text font-medium text-base-content/80">
+                  Contraseña
+                </span>
               </label>
-              <input
-                type="password"
-                placeholder="••••••••"
-                className="input input-bordered w-full"
-                // BINDING
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none transition-colors duration-300 group-focus-within:text-primary">
+                  <HiOutlineLockClosed className="text-base-content/50 text-lg group-focus-within:text-primary transition-colors" />
+                </div>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  className="w-full h-12 pl-11 pr-4 bg-base-200/30 border border-base-300 rounded-xl text-base-content placeholder:text-base-content/30 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-300"
+                  // BINDING
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
               {/* <label className="label">
-                <a href="#" className="label-text-alt link link-hover">
-                  ¿Olvidaste tu contraseña?
-                </a>
-              </label> */}
+      <a href="#" className="label-text-alt link link-hover">
+        ¿Olvidaste tu contraseña?
+      </a>
+    </label> */}
             </div>
 
             {/* Botón Submit */}
