@@ -52,4 +52,10 @@ export const ENDPOINTS = {
   // ETIQUETAS (tags)
   TAGS_POPULAR: (limit = 10) => `${API_BASE}/tags/popular?limit=${limit}`,
   TAGS_RECENT: (limit = 12) => `${API_BASE}/tags/recent?limit=${limit}`,
+
+  // HISTORIAL DEL USUARIO (Paginado)
+  USER_QUESTIONS: (skip = 0, limit = 20) =>
+    `${API_BASE}/users/me/questions?skip=${skip}&limit=${limit}`,
+  USER_ANSWERS: (skip = 0, limit = 20) =>
+    `${API_BASE}/users/me/answers?skip=${skip}&limit=${limit}`,
 };

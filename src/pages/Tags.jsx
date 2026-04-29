@@ -123,7 +123,7 @@ const Tags = () => {
           animate-in fade-in zoom-in slide-in-from-bottom-4 // Animación de entrada
         `}
                 style={{
-                  // Ya no necesitamos animationDelay porque el setTimeout maneja el tiempo
+                  //  el setTimeout maneja el tiempo
                   transform: `translateY(${index % 2 === 0 ? "15px" : "-15px"})`,
                 }}
               >

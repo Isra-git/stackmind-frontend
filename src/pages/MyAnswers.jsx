@@ -8,7 +8,7 @@ import React from "react";
 
 const MyAnswers = () => {
   return (
-    <div className="flex flex-col items-center justify-center w-full min-h-[50vh] p-8 text-center bg-base-100 rounded-box shadow-sm border border-base-200">
+    <div className="flex flex-col items-center justify-center w-full mt-6 min-h-[60vh] p-8 text-center bg-base-100 rounded-box shadow-sm border border-base-200 overflow-hidden relative">
       <span className="text-6xl mb-4 animate-bounce">👋</span>
 
       <h1 className="text-3xl font-bold text-base-content mb-2">¡Hola!</h1>
