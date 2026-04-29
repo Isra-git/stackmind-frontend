@@ -8,6 +8,8 @@
 
 //dependencias
 import React from "react";
+import { Link } from "react-router-dom";
+
 import QuestionCard from "./QuestionCard";
 
 // iconos
@@ -15,6 +17,7 @@ import {
   HiOutlineChatBubbleLeftRight,
   HiOutlineChevronLeft,
   HiOutlineChevronRight,
+  HiMagnifyingGlass,
 } from "react-icons/hi2";
 
 const QuestionList = ({
@@ -32,7 +35,8 @@ const QuestionList = ({
   // Textos e Iconos
   title = "Preguntas Recientes",
   subtitle = "Explora las consultas de la comunidad.",
-  icon: Icon = HiOutlineChatBubbleLeftRight,
+  //icon:
+  Icon = HiOutlineChatBubbleLeftRight,
 
   // Filtros
   showFilters = false,
@@ -97,8 +101,14 @@ const QuestionList = ({
         </div>
       ) : questions.length === 0 ? (
         <div className="text-center py-16 bg-base-200/30 rounded-3xl border-2 border-dashed border-base-300">
-          <p className="text-lg text-base-content/50 italic">
-            No se han encontrado resultados.
+          <p className="text-lg text-color-info/50 italic flex items-center gap-2 justify-center">
+            Lo sentimos, No se han encontrado resultados.
+          </p>
+          <p className="text-lg text-base-content/50 italic flex flex-col items-center gap-2 justify-center">
+            Realizar una nueva Busqueda
+            <Link to="/">
+              <HiMagnifyingGlass className="text-5xl text-primary" />
+            </Link>
           </p>
         </div>
       ) : (

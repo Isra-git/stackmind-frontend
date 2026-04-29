@@ -83,7 +83,11 @@ const Search = () => {
         onPageChange={setCurrentPage}
         limit={limit}
         // Textos y Diseño
-        title={`Resultados para: "${query}"`}
+        title={
+          <>
+            Resultados para: <span className="text-info">"{query}"</span>
+          </>
+        }
         subtitle={`Hemos encontrado ${total} discusiones relacionadas con tu búsqueda.`}
         icon={HiOutlineMagnifyingGlass}
         // En la busqueda quitamos y desactivamos los filtros

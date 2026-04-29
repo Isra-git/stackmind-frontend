@@ -23,7 +23,7 @@ const Hero = () => {
     <section className="bg-base-100 pt-6 pb-12 md:pt-14 md:pb-20 px-4 border-b border-base-300 relative overflow-hidden">
       {/* --- HERO SECTION --- */}
       {/* padding asimétrico (pt-6 y pb-12) para acercarlo al menú */}
-      {/* Decoración de fondo sutil (Glow radial de Tailwind) */}
+      {/* Decoración de fondo sutil  */}
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-base-100 to-base-100 pointer-events-none"></div>
 
       <div className="max-w-4xl mx-auto text-center relative z-10">
