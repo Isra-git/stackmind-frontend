@@ -316,6 +316,7 @@ const QuestionDetail = () => {
                           <div
                             key={index}
                             className="badge badge-primary badge-outline badge-sm font-medium"
+                            onClick={<Link to={`/tags/${tag.trim()}`} />}
                           >
                             {tag.trim()}
                           </div>
