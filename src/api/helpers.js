@@ -27,3 +27,13 @@ export const truncateText = (text, maxLength) => {
 
   return `${truncated}...`;
 };
+
+// Formatea una fecha a formato europeo {instanciar con = newDate(fecha_raw)}
+export const format_date = (date_raw) => {
+  const date = date_raw.toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  return date;
+};
