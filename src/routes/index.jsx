@@ -21,7 +21,7 @@ import Logout from "../pages/Logout";
 
 // protegidas
 import Me from "../pages/Me";
-import MyQuestions from "../pages/MyQuestions";
+import MyQuestions from "../components/questions/MyQuestions";
 import MyAnswers from "../pages/MyAnswers";
 import Support from "../pages/Support";
 import NewQuestion from "../pages/NewQuestion";

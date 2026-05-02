@@ -32,7 +32,7 @@ const Home = () => {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-base-300 pb-4">
           <h2 className="text-xl font-mono font-bold flex items-center gap-2">
             <HiChatBubbleLeftRight className="text-primary" />
-            {""}
+
             {getTitle()}
           </h2>
           <div className="tabs tabs-boxed bg-base-100 border border-base-200 p-1">

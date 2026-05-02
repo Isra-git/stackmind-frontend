@@ -28,9 +28,9 @@ const TopQuestions = () => {
   return (
     <div className="space-y-6 py-6">
       <div className="border-b border-base-300 pb-4">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
+        <h2 className="text-2xl font-mono font-bold flex items-center gap-2">
           <HiOutlineTrophy className="text-warning" />
-          Respuestas Top
+          Preguntas Top
         </h2>
         <p className="text-sm text-base-content/60 mt-1">
           Explora las {total} consultas con más impacto en la comunidad.

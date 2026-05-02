@@ -53,7 +53,7 @@ const QuestionList = ({
       <div className="border-b border-base-300 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2 text-base-content">
-            <Icon className="text-primary text-3xl" />
+            <Icon className="text-primary font-mono font-bold text-3xl" />
             {title}
           </h2>
           <p className="text-sm text-base-content/60 mt-1">{subtitle}</p>
