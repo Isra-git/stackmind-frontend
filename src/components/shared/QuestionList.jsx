@@ -64,27 +64,28 @@ const QuestionList = ({
             role="tablist"
             className="tabs tabs-boxed bg-base-200/50 p-1 shadow-sm"
           >
-            <button
+            <span
               role="tab"
-              className={`tab font-medium transition-colors ${activeFilter === "new" ? "tab-active bg-primary text-white" : "hover:text-primary"}`}
+              className={`tab font-medium transition-colors ${activeFilter === "new" ? "tab-active bg-primary text-white rounded-lg" : "hover:text-primary"}`}
               onClick={() => onFilterChange("new")}
             >
               Nuevas
-            </button>
-            <button
+            </span>
+
+            <span
               role="tab"
-              className={`tab font-medium transition-colors ${activeFilter === "popular" ? "tab-active bg-primary text-white" : "hover:text-primary"}`}
-              onClick={() => onFilterChange("popular")}
-            >
-              Populares
-            </button>
-            <button
-              role="tab"
-              className={`tab font-medium transition-colors ${activeFilter === "unanswered" ? "tab-active bg-primary text-white" : "hover:text-primary"}`}
+              className={`tab font-medium transition-colors ${activeFilter === "unanswered" ? "tab-active bg-primary text-white rounded-lg" : "hover:text-primary"}`}
               onClick={() => onFilterChange("unanswered")}
             >
               Sin Respuesta
-            </button>
+            </span>
+            <span
+              role="tab"
+              className={`tab font-medium transition-colors ${activeFilter === "top" ? "tab-active bg-primary text-white rounded-lg" : "hover:text-primary"}`}
+              onClick={() => onFilterChange("top")}
+            >
+              Populares
+            </span>
           </div>
         )}
       </div>

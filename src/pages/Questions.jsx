@@ -38,7 +38,7 @@ const Questions = () => {
   // Textos dinámicos según el filtro
   const getSubtitle = () => {
     switch (filter) {
-      case "popular":
+      case "top":
         return "Viendo las consultas con más participación e interés.";
       case "unanswered":
         return "Sé el primero en ayudar respondiendo estas dudas.";
