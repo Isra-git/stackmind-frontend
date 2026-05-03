@@ -46,5 +46,5 @@ export const useQuestions = (tipo = "new", skip = 0, limit = 20) => {
   }, [tipo, skip, limit]); // dependencias de useEffect
 
   // devolvemos todo empaquetado_> questions loadong error
-  return { questions, total, loading, error };
+  return { questions, setQuestions, total, loading, error };
 }; // Para usarlo -> useQuestions

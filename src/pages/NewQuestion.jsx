@@ -15,6 +15,8 @@ import { useAuth } from "../context/AuthContext"; // Contexto AUth
 import { ENDPOINTS } from "../api/constantes"; // RUtas Endpoints
 import { getTodayDate } from "../api/helpers"; // Fecha de Hoy
 
+import Modal from "../components/shared/Modal"; // Componente Modal
+
 // Iconos
 import {
   HiOutlineSparkles,
@@ -228,48 +230,29 @@ const NewQuestion = () => {
   return (
     <div className="container mx-auto max-w-5xl py-8 px-4 animate-fade-in">
       {/* MODAL DAISYUI  */}
-      {modal.isOpen && (
-        <div className="modal modal-open modal-bottom sm:modal-middle bg-base-300/60 backdrop-blur-sm z-50">
-          <div className="modal-box bg-base-100 shadow-2xl border border-base-300">
-            <div className="flex flex-col items-center text-center space-y-4 py-4">
-              {modal.type === "success" ? (
-                <HiOutlineCheckCircle className="text-7xl text-success animate-bounce" />
-              ) : (
-                <HiOutlineExclamationCircle className="text-7xl text-error animate-pulse" />
-              )}
-
-              <h3 className="font-bold text-2xl text-base-content">
-                {modal.type === "success"
-                  ? isEditMode
-                    ? "¡Cambios Guardados!"
-                    : "¡Pregunta Guardada!"
-                  : "Ups, algo salió mal"}
-              </h3>
-              <p className="text-base-content/80 text-lg">{modal.message}</p>
-            </div>
-
-            <div className="modal-action w-full mt-6">
-              {modal.type === "success" ? (
-                // Si hay éxito, el botón nos lleva a la pregunta
-                <button
-                  className="btn btn-primary w-full"
-                  onClick={() => navigate(`/questions/${modal.questionId}`)}
-                >
-                  Ver mi pregunta
-                </button>
-              ) : (
-                // Si hay error, el botón cierra el modal para seguir intentandolo
-                <button
-                  className="btn btn-outline w-full"
-                  onClick={() => setModal({ ...modal, isOpen: false })}
-                >
-                  Volver al editor
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal
+        isOpen={modal.isOpen}
+        icon={
+          modal.type === "success" ? (
+            <HiOutlineCheckCircle className="text-success animate-bounce" />
+          ) : (
+            <HiOutlineExclamationCircle className="text-error animate-pulse" />
+          )
+        }
+        title={
+          modal.type === "success"
+            ? isEditMode
+              ? "¡Cambios Guardados!"
+              : "¡Pregunta Guardada!"
+            : "Ups, algo salió mal"
+        }
+        message={modal.message}
+        primaryBtnText={modal.type === "success" ? "Ver mi pregunta" : null}
+        onPrimaryClick={() => navigate(`/questions/${modal.questionId}`)}
+        secondaryBtnText={modal.type === "error" ? "Volver al editor" : null}
+        onSecondaryClick={() => setModal({ ...modal, isOpen: false })}
+      />
+      {/* --------------------------------------------- */}
       <div className="mb-8">
         <h1 className="text-4xl tracking-[3px] pb-2 flex justify-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
           {isEditMode

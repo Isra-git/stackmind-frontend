@@ -11,13 +11,22 @@ import React from "react";
 
 import MyQuestionItem from "../questions/MyQuestionItem";
 
-export default function MyQuestionList({ questions, loading, error }) {
+export default function MyQuestionList({
+  questions,
+  loading,
+  error,
+  onDelete,
+}) {
   // si hay preguntas
   if (questions && questions.length > 0) {
     return (
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-5">
         {questions.map((question) => (
-          <MyQuestionItem key={question.id} question={question} />
+          <MyQuestionItem
+            key={question.id}
+            question={question}
+            onDelete={onDelete}
+          />
         ))}
       </div>
     );

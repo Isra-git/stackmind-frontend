@@ -13,9 +13,24 @@ import { useQuestions } from "../../hooks/useUserQuestions";
 import MyQuestionList from "./MyQuestionList";
 
 const MyQuestions = () => {
-  const { questions, loading, error } = useQuestions("my_questions");
+  // extraemos la lista de Mis PReguntas
+  const { questions, setQuestions, loading, error } =
+    useQuestions("my_questions");
 
   if (questions) console.log("Preguntas cargadas:", questions);
+
+  // Funcion que Actualiza el estado -> cuando se Borra una Pregunta
+  const handleDeleteFromState = (idDeleted) => {
+    // Verificamos si  existe
+    if (setQuestions) {
+      setQuestions((prevQuestions) =>
+        // Si hay preguntas previas, filtramos y quitamos la borrada
+        prevQuestions ? prevQuestions.filter((q) => q.id !== idDeleted) : [],
+      );
+    } else {
+      console.warn("Error al Actualizar la Lista de Preguntas");
+    }
+  };
 
   return (
     <div className="flex flex-col items-center w-full mb-6 min-h-[60vh] p-8 bg-base-100 rounded-box shadow-sm border border-base-200 overflow-hidden relative">
@@ -43,7 +58,12 @@ const MyQuestions = () => {
       )}
 
       <div className="w-full max-w-2xl mx-auto">
-        <MyQuestionList questions={questions} loading={loading} error={error} />
+        <MyQuestionList
+          questions={questions}
+          loading={loading}
+          error={error}
+          onDelete={handleDeleteFromState}
+        />
       </div>
     </div>
   );

@@ -7,8 +7,12 @@
 // src/components/questions/MyQuestionItem.jsx
 
 // dependencias
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../context/AuthContext";
+import { ENDPOINTS } from "../../api/constantes";
+import Modal from "../shared/Modal";
 
 import { truncateText, format_date } from "../../api/helpers";
 
@@ -21,10 +25,23 @@ import {
   HiChatBubbleLeftRight,
   HiOutlineArrowRightCircle,
 } from "react-icons/hi2";
+import { SiProcessingfoundation } from "react-icons/si";
 
-const MyQuestionItem = ({ question }) => {
+const MyQuestionItem = ({ question, onDelete }) => {
+  // contexto de autenticacion
+  const { token, user } = useAuth();
+
   // Instancia Navegar
   const navigate = useNavigate();
+
+  // estados
+
+  const [modal, setModal] = useState({
+    isOpen: false,
+    type: "success", // o error
+    message: "",
+    questionId: null, // para Redirigir¡
+  });
 
   // maneja Ver Pregunta
   const handleQuestionSee = () => {
@@ -33,14 +50,67 @@ const MyQuestionItem = ({ question }) => {
 
   // maneja la Edicion de una Pregunta
   const handleQuestionEdit = () => {
-    navigate(`/questions/${question.id}/edit`);
+    navigate(`/edit-question/${question.id}`);
   };
 
   // maneja la eliminacion de una pregunta
-  const handleQuestionDelete = () => {};
+  const handleQuestionDelete = async () => {
+    // Confirmamos ELiminacion por seguridad
+    const isConfirmed = window.confirm(
+      "¿Estas seguro de querer ELiminar esta Pregunta,  esta accion no se puede deshacer?",
+    );
+    if (!isConfirmed) return;
+
+    // si el usuario es el dueño o el admin
+    if (user.id === question.author_id || user.isAdmin) {
+      try {
+        // eliminamos la pregunta
+        const response = await fetch(ENDPOINTS.QUESTION_DELETE(question.id), {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        // si se elimina correctamente
+        if (response.ok) {
+          setModal({
+            isOpen: true,
+            type: "success",
+            message: "Pregunta eliminada de la comunidad StackMind",
+          });
+
+          // esperamos a que lea el modal
+          setTimeout(() => {
+            if (onDelete) onDelete(question.id);
+          }, 2500);
+        } else {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.message || "Error al intentar eliminar la pregunta",
+          );
+        }
+      } catch (error) {
+        console.error("Error al eliminar la pregunta:", error);
+        setModal({
+          isOpen: true,
+          type: "error",
+          message: error.message,
+        });
+      }
+    } else {
+      //Intento borrar sin permiso
+      setModal({
+        isOpen: true,
+        type: "error",
+        message: "No tienes Permisos para borrar esta pregunta",
+      });
+    }
+  };
 
   return (
-    <div className="collapse collapse-plus mb-4bg-base-300 border-white/20 shadow-xl hover:bg-white/20 transition-all duration-300">
+    <div className="collapse collapse-plus mb-4 bg-base-200 border-white/20 shadow-xl hover:bg-base-300 transition-all duration-300">
       <input type="checkbox" className="peer" />
       {/* PREGUNTA ->  */}
       <div className="collapse-title text-xl font-medium peer-checked:bg-base-300 peer-checked:text-secondary-content-content flex justify-between items-center">
@@ -74,7 +144,7 @@ const MyQuestionItem = ({ question }) => {
               title="Respuestas"
             >
               <HiOutlineChatBubbleLeftRight className="text-lg text-warning" />
-              <span>{question.answers || 0}</span>
+              <span>{question.answers_count || 0}</span>
             </div>
 
             <div className="flex justify-center px-1">
