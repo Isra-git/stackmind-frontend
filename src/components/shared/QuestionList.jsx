@@ -35,7 +35,6 @@ const QuestionList = ({
   // Textos e Iconos
   title = "Preguntas Recientes",
   subtitle = "Explora las consultas de la comunidad.",
-  //icon:
   Icon = HiOutlineChatBubbleLeftRight,
 
   // Filtros

@@ -7,17 +7,36 @@
 // src/components/questions/MyQuestions.jsx
 
 // dependencias
-import React from "react";
+import React, { useState } from "react";
 
 import { useQuestions } from "../../hooks/useUserQuestions";
 import MyQuestionList from "./MyQuestionList";
 
 const MyQuestions = () => {
-  // extraemos la lista de Mis PReguntas
-  const { questions, setQuestions, loading, error } =
-    useQuestions("my_questions");
+  // Estados para Paginar
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
+  const skip = (currentPage - 1) * limit;
 
-  if (questions) console.log("Preguntas cargadas:", questions);
+  // extraemos la lista de Mis PReguntas
+  const { questions, setQuestions, total, loading, error } = useQuestions(
+    "my_questions",
+    skip,
+    limit,
+  );
+
+  // calculamos el N Pages Total
+  const totalPages = Math.ceil((total || 0) / limit);
+
+  // Funciones para Manejar la Paginacion
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
+  //if (questions) console.log("Preguntas cargadas:", questions);
 
   // Funcion que Actualiza el estado -> cuando se Borra una Pregunta
   const handleDeleteFromState = (idDeleted) => {
@@ -57,7 +76,7 @@ const MyQuestions = () => {
         </div>
       )}
 
-      <div className="w-full max-w-2xl mx-auto">
+      <div className="w-full max-w-2xl mx-auto min-h-[400px]">
         <MyQuestionList
           questions={questions}
           loading={loading}
@@ -65,6 +84,32 @@ const MyQuestions = () => {
           onDelete={handleDeleteFromState}
         />
       </div>
+      {/*  CONTROLES DE PAGINACIoN DE DAISYUI */}
+      {!loading && !error && totalPages > 1 && (
+        <div className="flex justify-center w-full mt-8">
+          <div className="join shadow-sm border border-base-300">
+            <button
+              className="join-item btn btn-sm hover:bg-base-300"
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+            >
+              « Anterior
+            </button>
+
+            <button className="join-item btn btn-sm no-animation bg-base-200 pointer-events-none">
+              Página {currentPage} de {totalPages}
+            </button>
+
+            <button
+              className="join-item btn btn-sm hover:bg-base-300"
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+            >
+              Siguiente »
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

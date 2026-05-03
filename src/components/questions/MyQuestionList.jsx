@@ -20,7 +20,7 @@ export default function MyQuestionList({
   // si hay preguntas
   if (questions && questions.length > 0) {
     return (
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-3">
         {questions.map((question) => (
           <MyQuestionItem
             key={question.id}
