@@ -1,4 +1,4 @@
-// src/config/api.js
+// src/api/constantes.js
 
 // URL base de tu backend en producción
 export const API_BASE = import.meta.env.VITE_API_BASE_URL;
@@ -30,6 +30,9 @@ export const ENDPOINTS = {
     `${API_BASE}/questions/unanswered?skip=${skip}&limit=${limit}`, // GET
   QUESTIONS_TOP: (skip = 0, limit = 20) =>
     `${API_BASE}/questions/top?skip=${skip}&limit=${limit}`, // GET
+
+  QUESTION_UPDATE: (questionId) => `${API_BASE}/questions/${questionId}`, // PUT (Solo el Autor)
+  QUESTION_DELETE: (questionId) => `${API_BASE}/questions/${questionId}`, // DELETE (Solo el Autor o Admin)
 
   // Rutas dinámicas para una pregunta específica
   QUESTION_DETAIL: (questionId) => `${API_BASE}/questions/${questionId}`, // GET, PUT (editar), DELETE

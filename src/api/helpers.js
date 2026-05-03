@@ -11,6 +11,8 @@ export const availableAvatars = Array.from(
   (value, index) => `avatar${index + 2}.png`,
 );
 
+//--------------------------------------------------------
+
 // Funcion par Truncar texto
 export const truncateText = (text, maxLength) => {
   if (!text || text.length <= maxLength) return text;
@@ -28,6 +30,7 @@ export const truncateText = (text, maxLength) => {
   return `${truncated}...`;
 };
 
+//----------------------------------------------
 // Formatea una fecha a formato europeo {instanciar con = newDate(fecha_raw)}
 export const format_date = (date_raw) => {
   const date = date_raw.toLocaleDateString("es-ES", {
@@ -36,4 +39,16 @@ export const format_date = (date_raw) => {
     year: "numeric",
   });
   return date;
+};
+
+//---------------------------------------------------
+// Crea una fecha de Hoy y la Formatea
+
+export const getTodayDate = () => {
+  const todayDate = new Date().toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  return todayDate;
 };

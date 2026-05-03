@@ -54,8 +54,10 @@ const routes = (isLoggedIn) => [
         element: <ProtectedRoute />,
         children: [
           { path: "/newanswer", element: <NewAnswer /> },
+          { path: "/edit-answer/:id", element: <NewAnswer /> },
           { path: "/me", element: <Me /> },
           { path: "/newquestion", element: <NewQuestion /> },
+          { path: "/edit-question/:id", element: <NewQuestion /> },
           { path: "/support", element: <Support /> },
           { path: "/myanswers", element: <MyAnswers /> },
           { path: "/myquestions", element: <MyQuestions /> },

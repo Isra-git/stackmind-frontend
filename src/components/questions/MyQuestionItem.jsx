@@ -31,6 +31,14 @@ const MyQuestionItem = ({ question }) => {
     navigate(`/questions/${question.id}`);
   };
 
+  // maneja la Edicion de una Pregunta
+  const handleQuestionEdit = () => {
+    navigate(`/questions/${question.id}/edit`);
+  };
+
+  // maneja la eliminacion de una pregunta
+  const handleQuestionDelete = () => {};
+
   return (
     <div className="collapse collapse-plus mb-4bg-base-300 border-white/20 shadow-xl hover:bg-white/20 transition-all duration-300">
       <input type="checkbox" className="peer" />
@@ -84,6 +92,7 @@ const MyQuestionItem = ({ question }) => {
               <button
                 className="btn btn-sm btn-ghost w-full text-info hover:bg-info/10 flex items-center justify-center gap-2 rounded-lg font-normal text-sm"
                 title="Editar"
+                onClick={handleQuestionEdit}
               >
                 <HiOutlinePencilSquare className="text-lg" />
                 <span className="hidden sm:inline">Editar</span>
@@ -94,6 +103,7 @@ const MyQuestionItem = ({ question }) => {
               <button
                 className="btn btn-sm btn-ghost w-full text-error hover:bg-error/10 flex items-center justify-center gap-2 rounded-lg font-normal text-sm"
                 title="Borrar"
+                onClick={handleQuestionDelete}
               >
                 <HiOutlineTrash className="text-lg" />
                 <span className="hidden sm:inline">Borrar</span>

@@ -1,6 +1,6 @@
 /* 
 
-    Pagina para Crear una Pregunta
+    Pagina para Crear o Editar una Pregunta
 
 
 */
@@ -8,10 +8,12 @@
 // src/pages/NewQuestion.jsx
 
 // dependencias
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { ENDPOINTS } from "../api/constantes";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+import { useAuth } from "../context/AuthContext"; // Contexto AUth
+import { ENDPOINTS } from "../api/constantes"; // RUtas Endpoints
+import { getTodayDate } from "../api/helpers"; // Fecha de Hoy
 
 // Iconos
 import {
@@ -24,11 +26,16 @@ import {
   HiOutlineCheckCircle,
   HiOutlineExclamationCircle,
 } from "react-icons/hi2";
+import { User } from "lucide-react";
 
 const NewQuestion = () => {
+  // Cogemos el ID de la Url -> Si tiene para el modo EDitar
+  const { id } = useParams();
+  const isEditMode = !!id;
+
   // Estados navegacion y usuario
   const navigate = useNavigate();
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   // estados del form
   const [title, setTitle] = useState("");
@@ -48,6 +55,36 @@ const NewQuestion = () => {
     message: "",
     questionId: null, // para Redirigir¡
   });
+
+  //  si estamos en MoDO Edicion -> Cargamos los datos
+  useEffect(() => {
+    if (isEditMode && token) {
+      const fetchQuestionData = async () => {
+        try {
+          const response = await fetch(ENDPOINTS.QUESTION_DETAIL(id));
+
+          if (response.ok) {
+            const data = await response.json();
+
+            // si no es el autor de la Pregunta
+            if (data.author_id !== user?.id) {
+              console.warn("Intento de Edicion NO AUTORIZADO");
+              navigate("/questions", { replace: true });
+              return;
+            }
+            setTitle(data.title);
+            setBody(data.body);
+          } else {
+            navigate("/404");
+          }
+        } catch (err) {
+          console.error("Error al cargar los datos de la pregunta:", err);
+        }
+      };
+
+      fetchQuestionData();
+    }
+  }, [id, isEditMode, token, navigate]);
 
   // Funcion para pedirle a la IA que mejore la pregunta
   const handleImproveWithAI = async (e) => {
@@ -77,7 +114,7 @@ const NewQuestion = () => {
         setModal({
           isOpen: true,
           type: "error",
-          message: error || "Error al intentar mejorar con la IA",
+          message: error.message || "Error al intentar mejorar con la IA",
         });
       }
     } catch (err) {
@@ -107,31 +144,55 @@ const NewQuestion = () => {
     setAiSuggestion(null);
   };
 
-  // Funcion para publicar la pregunta
+  // Funcion para Publicar o Atualizar la pregunta
   const handlePublish = async (e) => {
     if (e) e.preventDefault();
 
     //modificamos el estado
     setIsPublishing(true);
 
+    // Preparamos el Titulo -> SI se EDITA Añadimos Cabecera [Editado + fecha]
+    let finalTitle = title;
+    if (isEditMode) {
+      const dateTag = `[Actualizado ${getTodayDate()}]`;
+
+      // lo añadimos si no esta -> evitar duplicados
+      if (!title.includes("[Actualizado")) {
+        finalTitle = `${title} ${dateTag}`;
+      } else {
+        // si esta -> cambia la fecha vieja por la nueva
+        finalTitle = title.replace(/\[Actualizado .*?\]/, dateTag);
+      }
+    }
+    // Configuramos la Url segun operacion -> Crear o Editar
+    const url = isEditMode
+      ? ENDPOINTS.QUESTION_UPDATE(id) // editar (put)
+      : ENDPOINTS.QUESTIONS_CREATE; // crear nuevo
+
+    // configuramos el metodo
+    const method = isEditMode ? "PUT" : "POST";
+
     // enviamos la Pregunta
     try {
       //hacemos la peticion
-      const response = await fetch(ENDPOINTS.QUESTIONS_CREATE, {
-        method: "POST",
+      const response = await fetch(url, {
+        method: method,
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
 
         body: JSON.stringify({
-          title,
+          title: finalTitle,
           body,
         }),
       });
 
       // si no ha ido bien
-      if (!response.ok) throw new Error("Error al publicar");
+      if (!response.ok)
+        throw new Error(
+          isEditMode ? "Error al Actualizar" : "Error al publicar",
+        );
 
       // leemos la respuesta
       const newQuestion = await response.json();
@@ -140,8 +201,10 @@ const NewQuestion = () => {
       setModal({
         isOpen: true,
         type: "success",
-        message: "¡Tu Pregunta ha sido publicada con exito!",
-        questionId: newQuestion.id,
+        message: isEditMode
+          ? "Tu Pregunta ha sido publicada con exito!"
+          : "¡Tu Pregunta ha sido publicada con exito!",
+        questionId: isEditMode ? id : newQuestion.id,
       });
 
       // // llevamos a su nueva pregunta -> Publicada
@@ -177,7 +240,9 @@ const NewQuestion = () => {
 
               <h3 className="font-bold text-2xl text-base-content">
                 {modal.type === "success"
-                  ? "¡Pregunta Guardada!"
+                  ? isEditMode
+                    ? "¡Cambios Guardados!"
+                    : "¡Pregunta Guardada!"
                   : "Ups, algo salió mal"}
               </h3>
               <p className="text-base-content/80 text-lg">{modal.message}</p>
@@ -193,7 +258,7 @@ const NewQuestion = () => {
                   Ver mi pregunta
                 </button>
               ) : (
-                // Si hay error, el botón cierra el modal para seguir intentándolo
+                // Si hay error, el botón cierra el modal para seguir intentandolo
                 <button
                   className="btn btn-outline w-full"
                   onClick={() => setModal({ ...modal, isOpen: false })}
@@ -207,11 +272,14 @@ const NewQuestion = () => {
       )}
       <div className="mb-8">
         <h1 className="text-4xl tracking-[3px] pb-2 flex justify-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
-          Haz una pregunta a la comunidad
+          {isEditMode
+            ? "Edita tu Pregunta "
+            : "Haz una pregunta a la comunidad"}
         </h1>
         <p className="mt-4 text-lg text-base-content/90 whitespace-pre-wrap leading-relaxed">
-          Explica tu duda de forma sencilla. Nuestra IA te ayudará a darle un
-          formato técnico si lo necesitas.
+          {isEditMode
+            ? "Ajusta los detalles de tu pregunta para obtener una mejor respuesta"
+            : "Explica tu duda de forma sencilla. Nuestra IA te ayudará a darle un formato técnico si lo necesitas."}
         </p>
       </div>
 
@@ -246,7 +314,7 @@ const NewQuestion = () => {
               </div>
             </div>
 
-            {/* Tarjeta: Versión IA */}
+            {/* Tarjeta */}
             <div className="card bg-primary/5 border border-primary/20 shadow-md">
               <div className="card-body">
                 <h2 className="text-sm font-bold uppercase text-primary flex items-center gap-2 mb-2">
@@ -254,7 +322,7 @@ const NewQuestion = () => {
                 </h2>
                 {/* Quitamos el .title y .body, usamos aiSuggestion directamente */}
                 <h3 className="text-lg font-bold text-base-content">
-                  {title} {/* El título se mantiene igual */}
+                  {title} {/* TITULO */}
                 </h3>
                 <p className="whitespace-pre-wrap text-sm mt-2">
                   {aiSuggestion}
