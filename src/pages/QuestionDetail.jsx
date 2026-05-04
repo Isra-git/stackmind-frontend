@@ -13,6 +13,7 @@ import { ENDPOINTS } from "../api/constantes";
 import TopQuestions from "../components/shared/TopQuestions";
 import StackMindEditor from "../components/editor/StackMindEditor";
 import { Preview } from "../components/editor/Preview";
+import { format_date } from "../api/helpers";
 
 // Iconos
 import {
@@ -132,14 +133,15 @@ const QuestionDetail = () => {
   }
 
   // Funcion para formatear la fecha
-  const formattedDate = new Date(questionData.created_at).toLocaleDateString(
-    "es-ES",
-    {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    },
-  );
+  // const formattedDate = new Date(questionData.created_at).toLocaleDateString(
+  //   "es-ES",
+  //   {
+  //     year: "numeric",
+  //     month: "short",
+  //     day: "numeric",
+  //   },
+  // );
+  // format_date(questionData.created_at)
 
   // imagen del avatar del Dueño de la Pregunta | imagen por defecto
   const authorAvatar = `/img/avatars/${questionData.author?.avatar_url || "avatar2.png"}`;
@@ -188,7 +190,7 @@ const QuestionDetail = () => {
             {/* Fecha */}
             <div className="flex items-center gap-2 text-base-content/70">
               <HiMegaphone className="text-[var(--color-info)] text-lg" />
-              <span>{formattedDate}</span>
+              <span>{format_date(new Date(questionData.created_at))}</span>
             </div>
 
             <div className="hidden sm:block w-px h-6 bg-base-300"></div>

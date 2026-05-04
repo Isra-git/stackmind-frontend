@@ -8,21 +8,18 @@
 // dependencias
 import { ENDPOINTS } from "../api/constantes";
 
-// devuelve las preguntas mas-> Nuevas, sin Respuesta, Mas VIews
+// devuelve las preguntas mas-> Nuevas, sin Respuesta, Mas VIews, Y las de un User
 export const getQuestions = async (
   tipo = "new",
   skip = 0,
   limit = 20,
   token = null,
 ) => {
-  // ruta de Base
-  const baseUrl = "https://stackmind-api.onrender.com/questions";
-
   // creamos  diccionario con Opciones (en Home-tab, o navBar)
   const endpoints = {
-    new: `${baseUrl}/?skip=${skip}&limit=${limit}`,
-    unanswered: `${baseUrl}/unanswered?skip=${skip}&limit=${limit}`,
-    top: `${baseUrl}/top?skip=${skip}&limit=${limit}`,
+    new: ENDPOINTS.QUESTIONS_ALL(skip, limit),
+    unanswered: ENDPOINTS.QUESTIONS_UNANSWERED(skip, limit),
+    top: ENDPOINTS.QUESTIONS_TOP(skip, limit),
     my_questions: ENDPOINTS.USER_QUESTIONS(skip, limit), // Preguntas Usuario
   };
 
