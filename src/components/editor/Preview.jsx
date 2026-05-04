@@ -31,7 +31,8 @@ export function Preview({ steps }) {
               )}
             </div>
 
-            <div className="flex-1 ml-4 pb-10">
+            <div className="flex-1 ml-4 pb-10 min-w-0">
+              {/* AÑadido min-w-0 para evitar desborde  de texto en <pre> de type=code*/}
               {step.title && (
                 <div
                   className={`text-[13px] font-bold mb-1 ${stepMeta.colorClass}`}
