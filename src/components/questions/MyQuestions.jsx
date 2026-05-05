@@ -59,7 +59,7 @@ const MyQuestions = () => {
         </span>
       </span>
 
-      <h1 className="w-full max-w-2xl mx-auto text-2xl font-bold text-base-content mb-6 text-start">
+      <h1 className="w-full  mx-auto text-2xl font-bold text-base-content mb-6 text-start">
         Has Realizado estas Preguntas:
       </h1>
 
@@ -76,7 +76,7 @@ const MyQuestions = () => {
         </div>
       )}
 
-      <div className="w-full max-w-2xl mx-auto min-h-[400px]">
+      <div className="w-full  mx-auto min-h-[400px]">
         <MyQuestionList
           questions={questions}
           loading={loading}
