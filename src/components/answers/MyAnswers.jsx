@@ -11,7 +11,19 @@ import { MyAnswersList } from "./MyAnswersList";
 export const MyAnswers = () => {
   // Usamos el hook. De momento pedimos 20.
   // (Aquí luego podrías añadir lógica para un paginador si quieres)
-  const { answers, loading, error, total } = useUserAnswers(0, 20);
+  const { answers, setAnswers, loading, error, total } = useUserAnswers(0, 20);
+
+  //  funcion para borrar -> Al nieto-> myansweritem
+  const handleDeleteFromState = (idDeleted) => {
+    if (setAnswers) {
+      setAnswers((prevAnswers) =>
+        // Si hay respuestas previas, filtramos y quitamos la borrada
+        prevAnswers ? prevAnswers.filter((a) => a.id !== idDeleted) : [],
+      );
+    } else {
+      console.warn("Error al Actualizar la Lista de Respuestas");
+    }
+  };
 
   if (loading) {
     return (
@@ -68,7 +80,7 @@ export const MyAnswers = () => {
         </div>
       </div>
 
-      <MyAnswersList answers={answers} />
+      <MyAnswersList answers={answers} onDelete={handleDeleteFromState} />
     </div>
   );
 };

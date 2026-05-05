@@ -5,15 +5,33 @@ SubComponente de My Answers
 */
 
 // src/components/answers/MyAnswerItem.jsx
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Preview } from "../editor/Preview";
 import { format_date, truncateText } from "../../api/helpers";
 
-import { HiMiniPencilSquare } from "react-icons/hi2";
+// servicions y contexto
+import { useAuth } from "../../context/AuthContext";
+import { deleteAnswers } from "../../services/answerService";
 
-export const MyAnswerItem = ({ answer }) => {
+import {
+  HiMiniPencilSquare,
+  HiOutlineArrowRightCircle,
+  HiOutlinePencilSquare,
+  HiOutlineTrash,
+} from "react-icons/hi2";
+
+export const MyAnswerItem = ({ answer, onDelete }) => {
+  // instanciamos la navegacion
+  const navigate = useNavigate();
+
+  // recuperamos el contexto de Auth
+  const { token } = useAuth();
+
+  // estado para mostrar la vista Previa
+  const [showPreview, setShowPreview] = useState(false);
+
   //  Extraemos y validamos el body
   const bodyArray = Array.isArray(answer.body) ? answer.body : [];
 
@@ -21,6 +39,29 @@ export const MyAnswerItem = ({ answer }) => {
   const previewSteps = bodyArray.slice(0, 2);
   const remainingSteps = bodyArray.length - 2;
 
+  // Manejamos la Edicion de la Respuesta
+  const handleAnswerEdit = () => {
+    navigate(`/edit-answer/${answer.id}`);
+  };
+
+  // Manejamos el Borrado de la Pregunta
+  const handleAnswerDelete = async () => {
+    // TODO CONFIRAMACION y Modal
+    if (window.confirm("¿Estás seguro de querer eliminar esta respuesta?")) {
+      try {
+        await deleteAnswers(answer.id, token);
+        if (onDelete) onDelete(answer.id); // Avisamos a MyAnswersList
+      } catch (error) {
+        console.error("Error al borrar:", error.message);
+        alert("No se pudo borrar la respuesta: " + error.message);
+      }
+    }
+  };
+
+  // Manejamos mostrar la respuesta
+  const handleAnswerSee = () => {
+    setShowPreview(!showPreview);
+  };
   return (
     <div className="collapse collapse-arrow bg-base-100 border border-base-200 mb-4 shadow-sm hover:border-primary/30 transition-colors">
       <input type="checkbox" name={`accordion-answer-${answer.id}`} />
@@ -65,7 +106,47 @@ export const MyAnswerItem = ({ answer }) => {
       </div>
 
       {/* CONTENIDO DEL COLLAPSE -> al desplegar) */}
+
       <div className="collapse-content bg-base-200/30 pt-4 border-t border-base-200">
+        {/* BARRA DE ACCIONES  */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 items-center gap-2 divide-y sm:divide-y-0 sm:divide-x divide-base-300/30 bg-base-100 rounded-lg p-1 border border-base-200/50">
+          {/* Ver */}
+          <div className="flex justify-center px-1 py-2 sm:py-0">
+            <button
+              className="btn btn-sm btn-ghost w-full text-accent hover:bg-success/10 flex items-center justify-center gap-2 rounded-lg font-normal text-sm"
+              title="Ver en la Pregunta"
+              onClick={handleAnswerSee}
+              disabled={!answer.question_id}
+            >
+              <HiOutlineArrowRightCircle className="text-lg" />
+              <span className="hidden sm:inline">Ver</span>
+            </button>
+          </div>
+
+          {/* Editar */}
+          <div className="flex justify-center px-1 py-2 sm:py-0">
+            <button
+              className="btn btn-sm btn-ghost w-full text-info hover:bg-info/10 flex items-center justify-center gap-2 rounded-lg font-normal text-sm"
+              title="Editar en StackMindEditor"
+              onClick={handleAnswerEdit}
+            >
+              <HiOutlinePencilSquare className="text-lg" />
+              <span className="hidden sm:inline">Editar</span>
+            </button>
+          </div>
+
+          {/* Borrar */}
+          <div className="flex justify-center px-1 py-2 sm:py-0">
+            <button
+              className="btn btn-sm btn-ghost w-full text-error hover:bg-error/10 flex items-center justify-center gap-2 rounded-lg font-normal text-sm"
+              title="Borrar"
+              onClick={handleAnswerDelete}
+            >
+              <HiOutlineTrash className="text-lg" />
+              <span className="hidden sm:inline">Borrar</span>
+            </button>
+          </div>
+        </div>
         <div className="pl-2">
           <p className="text-xs text-base-content/60 font-semibold mb-4 uppercase tracking-wider">
             Vista previa de tu respuesta:

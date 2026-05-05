@@ -9,7 +9,7 @@ Subcomponente de MY Answers
 import React from "react";
 import { MyAnswerItem } from "./MyAnswersItem";
 
-export const MyAnswersList = ({ answers }) => {
+export const MyAnswersList = ({ answers, onDelete }) => {
   if (!answers || answers.length === 0) {
     return (
       <div className="text-center py-12 bg-base-200 rounded-box border border-base-300 border-dashed">
@@ -27,7 +27,11 @@ export const MyAnswersList = ({ answers }) => {
   return (
     <div className="w-full">
       {answers.map((answer) => (
-        <MyAnswerItem key={answer.id || answer._id} answer={answer} />
+        <MyAnswerItem
+          key={answer.id || answer._id}
+          answer={answer}
+          onDelete={onDelete}
+        />
       ))}
     </div>
   );

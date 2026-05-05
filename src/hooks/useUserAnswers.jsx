@@ -13,7 +13,7 @@ import { useState, useEffect, useContext } from "react";
 
 // Importamos servicio de respuestas
 import { getUserAnswers } from "../services/answerService";
-import { AuthContext } from "../context/AuthContext"; //  contexto de autenticación
+import { useAuth } from "../context/AuthContext"; //  contexto de autenticación
 
 // custom Hook
 export const useUserAnswers = (skip = 0, limit = 20) => {
@@ -24,7 +24,7 @@ export const useUserAnswers = (skip = 0, limit = 20) => {
   const [error, setError] = useState(null);
 
   // extraemos el Token
-  const { token } = useContext(AuthContext);
+  const { token } = useAuth();
 
   // cada vez que cambia el estado/Limite o el Token
   useEffect(() => {
