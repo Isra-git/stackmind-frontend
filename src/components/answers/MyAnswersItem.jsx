@@ -9,7 +9,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { Preview } from "../editor/Preview";
-import { format_date } from "../../api/helpers";
+import { format_date, truncateText } from "../../api/helpers";
+
 import { HiMiniPencilSquare } from "react-icons/hi2";
 
 export const MyAnswerItem = ({ answer }) => {
@@ -57,7 +58,9 @@ export const MyAnswerItem = ({ answer }) => {
 
         {/* Mostramos a q pregunta pertenece  */}
         <p className="text-base font-semibold leading-tight">
-          Re: {answer.question?.title || "Pregunta original no disponible"}
+          Re:
+          {truncateText(answer.question?.title, 80) ||
+            "Pregunta original no disponible"}
         </p>
       </div>
 

@@ -52,7 +52,7 @@ const MyQuestions = () => {
   };
 
   return (
-    <div className="flex flex-col items-center w-full mb-6 min-h-[60vh] p-8 bg-base-100 rounded-box shadow-sm border border-base-200 overflow-hidden relative">
+    <div className="w-full max-w-4xl mx-auto py-6">
       <span className="w-full flex items-center justify-center mb-10">
         <span className="badge badge-primary badge-outline mb-4 font-bold tracking-wider text-xs uppercase p-3 self-start">
           StackMind - Comunidad de IA

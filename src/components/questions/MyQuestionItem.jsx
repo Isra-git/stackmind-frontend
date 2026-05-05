@@ -110,44 +110,54 @@ const MyQuestionItem = ({ question, onDelete }) => {
   };
 
   return (
-    <div className="collapse collapse-plus mb-4 bg-base-200 border-white/20 shadow-xl hover:bg-base-300 transition-all duration-300">
+    <div className="collapse collapse-arrow mb-4 bg-base-100 border border-base-200 shadow-sm  hover:border-primary/30 transition-colors">
       <input type="checkbox" className="peer" />
       {/* PREGUNTA ->  */}
-      <div className="collapse-title text-xl font-medium peer-checked:bg-base-300 peer-checked:text-secondary-content-content flex justify-between items-center">
-        <span className="flex items-center gap-2">
-          <span>
-            <HiChatBubbleLeftRight className="h-5 w-5 opacity-70" />
-          </span>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-            {" "}
-            {truncateText(question.title, 35)}
-          </span>
-        </span>
-        <span className="text-sm text-[var(--color-secondary)]">
-          {format_date(new Date(question.created_at))}
-        </span>
+      {/* CABECERA COLLAPSE */}
+      <div className="collapse-title text-xl font-medium flex flex-col gap-2">
+        <div className="flex justify-between items-start">
+          <div className="flex items-center gap-2">
+            {/* BADGE "PREGUNTA"  */}
+            <span className="badge badge-accent badge-lg gap-1">
+              <HiChatBubbleLeftRight className="h-5 w-5 opacity-70" /> Pregunta
+            </span>
+            <span className="text-sm opacity-60 font-normal">
+              {format_date(new Date(question.created_at))}
+            </span>
+          </div>
+        </div>
+
+        {/* TÍTULO DE LA PREGUNTA */}
+        <p className="text-base font-semibold leading-tight mt-1">
+          {truncateText(question.title, 60)}
+        </p>
       </div>
-      {/* PARTE COLAPSADA -> VISTO / RESPUESTAS / VER /EDITAR / BORRAR  */}
-      <div className="collapse-content peer-checked:bg-base-300 peer-checked:text-primary-content">
-        <span className="pt-4 opacity-90">
-          <div className="grid grid-cols-1 sm:grid-cols-5 items-center mt-3 pt-3 border-t border-base-300/50 divide-x divide-base-300/30">
+
+      {/* CONTENIDO DEL COLLAPSE  */}
+      <div className="collapse-content pl-2 bg-base-200/30 pt-4 border-t border-base-200">
+        <div className="pl-2">
+          {/* BARRA DE ACCIONES  */}
+          <div className="grid grid-cols-1 sm:grid-cols-5 items-center gap-2 divide-y sm:divide-y-0 sm:divide-x divide-base-300/30">
+            {/* Vistas */}
             <div
-              className="flex justify-center items-center gap-1.5 text-sm font-medium text-base-content/60 hover:text-base-content transition-colors py-1"
+              className="flex justify-center items-center gap-1.5 text-sm font-medium text-base-content/60 hover:text-base-content transition-colors py-2 sm:py-0"
               title="Veces visto"
             >
               <HiOutlineEye className="text-lg text-success" />
               <span>{question.views || 0}</span>
             </div>
 
+            {/* Respuestas */}
             <div
-              className="flex justify-center items-center gap-1.5 text-sm font-medium text-base-content/60 hover:text-base-content transition-colors py-1"
+              className="flex justify-center items-center gap-1.5 text-sm font-medium text-base-content/60 hover:text-base-content transition-colors py-2 sm:py-0"
               title="Respuestas"
             >
               <HiOutlineChatBubbleLeftRight className="text-lg text-warning" />
               <span>{question.answers_count || 0}</span>
             </div>
 
-            <div className="flex justify-center px-1">
+            {/* Ver */}
+            <div className="flex justify-center px-1 py-2 sm:py-0">
               <button
                 className="btn btn-sm btn-ghost w-full text-accent hover:bg-success/10 flex items-center justify-center gap-2 rounded-lg font-normal text-sm"
                 title="Ver Pregunta"
@@ -158,7 +168,8 @@ const MyQuestionItem = ({ question, onDelete }) => {
               </button>
             </div>
 
-            <div className="flex justify-center px-1">
+            {/* Editar */}
+            <div className="flex justify-center px-1 py-2 sm:py-0">
               <button
                 className="btn btn-sm btn-ghost w-full text-info hover:bg-info/10 flex items-center justify-center gap-2 rounded-lg font-normal text-sm"
                 title="Editar"
@@ -169,7 +180,8 @@ const MyQuestionItem = ({ question, onDelete }) => {
               </button>
             </div>
 
-            <div className="flex justify-center px-1">
+            {/* Borrar */}
+            <div className="flex justify-center px-1 py-2 sm:py-0">
               <button
                 className="btn btn-sm btn-ghost w-full text-error hover:bg-error/10 flex items-center justify-center gap-2 rounded-lg font-normal text-sm"
                 title="Borrar"
@@ -180,7 +192,7 @@ const MyQuestionItem = ({ question, onDelete }) => {
               </button>
             </div>
           </div>
-        </span>
+        </div>
       </div>
     </div>
   );

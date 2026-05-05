@@ -46,6 +46,12 @@ export const MyAnswers = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto py-6">
+      <span className="w-full flex items-center justify-center mb-10">
+        <span className="badge badge-primary badge-outline mb-4 font-bold tracking-wider text-xs uppercase p-3 self-start">
+          StackMind - Comunidad de IA
+        </span>
+      </span>
+
       <div className="flex items-center justify-between mb-6 pb-2 border-b border-base-200">
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
