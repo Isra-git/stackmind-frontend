@@ -12,7 +12,7 @@ import { useAuth } from "../../context/AuthContext";
 import { getAnswerById, updateAnswers } from "../../services/answerService";
 import StackMindEditor from "../../components/editor/StackMindEditor";
 
-export const EditAnswer = () => {
+const EditAnswer = () => {
   // Extraemos el ID de la URL
   const { id } = useParams();
 
@@ -45,7 +45,6 @@ export const EditAnswer = () => {
 
   // FUNCIoN PARA GUARDAR LOS CAMBIOS
   const handleSaveEdit = async (newBodyData) => {
-    setSaving(true);
     try {
       // función updateAnswers
       // Enviamos el body actualizado y el token
@@ -55,7 +54,6 @@ export const EditAnswer = () => {
       navigate("/my-answers");
     } catch (err) {
       alert("Error al guardar: " + err.message);
-      setSaving(false);
     }
   };
 

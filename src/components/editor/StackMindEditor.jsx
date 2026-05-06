@@ -16,12 +16,17 @@ import { useAuth } from "../../context/AuthContext";
 
 import { ENDPOINTS } from "../../api/constantes";
 
-export default function StackMindEditor({ questionId, onSuccess }) {
+export default function StackMindEditor({
+  questionId,
+  onSuccess,
+  initialContent = null,
+  onSave = null,
+}) {
   //estado para Autenticar
   const { token } = useAuth();
 
   // estados para el editor
-  const [steps, setSteps] = useState(defaultSteps);
+  const [steps, setSteps] = useState(initialContent || defaultSteps);
   const [activeTab, setActiveTab] = useState("editor");
   const [newStepType, setNewStepType] = useState("step");
   const [isCopied, setIsCopied] = useState(false);
@@ -31,6 +36,12 @@ export default function StackMindEditor({ questionId, onSuccess }) {
   const handlePublish = async () => {
     // Si no hay ningun pasos, no se puede publicar
     if (steps.length === 0) return;
+
+    // si estamos Editando ->
+    if (onSave) {
+      onSave(steps);
+      return;
+    }
 
     // activamos el estado de publicación
     setIspublish(true);
