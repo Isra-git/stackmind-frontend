@@ -4,7 +4,7 @@
 
 */
 
-// src/pages/EditAnswerPage.jsx
+// src/
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -51,7 +51,7 @@ const EditAnswer = () => {
       await updateAnswers(id, { body: newBodyData }, token);
 
       // Si va bien, volvemos al panel de Mis Respuestas
-      navigate("/my-answers");
+      navigate("/myanswers");
     } catch (err) {
       alert("Error al guardar: " + err.message);
     }
