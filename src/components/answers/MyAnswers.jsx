@@ -4,16 +4,34 @@
 
 */
 // src/components/answers/MyAnswers.jsx
-import React from "react";
+import React, { useState } from "react";
 import { useUserAnswers } from "../../hooks/useUserAnswers"; // Ajusta la ruta a tu hook
 import { MyAnswersList } from "./MyAnswersList";
 
 export const MyAnswers = () => {
-  // Usamos el hook. De momento pedimos 20.
-  // (Aquí luego podrías añadir lógica para un paginador si quieres)
-  const { answers, setAnswers, loading, error, total } = useUserAnswers(0, 20);
+  // Estilos de Paginacion
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 5;
+  const skip = (currentPage - 1) * limit;
 
-  //  funcion para borrar -> Al nieto-> myansweritem
+  //pasamos datos y recibidos del servicio
+  const { answers, setAnswers, loading, error, total } = useUserAnswers(
+    skip,
+    limit,
+  );
+
+  // calulo de Paginaas TOtales
+  const totalPages = Math.ceil((total || 0) / limit);
+
+  // Funciones Para la NAvegacion
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+  const handlePrevPage = () => {
+    if (currentPage > totalPages) setCurrentPage((prev) => prev - 1);
+  };
+
+  //  funcion para borrar y sincro UI -> Al nieto-> myansweritem
   const handleDeleteFromState = (idDeleted) => {
     if (setAnswers) {
       setAnswers((prevAnswers) =>
@@ -79,8 +97,35 @@ export const MyAnswers = () => {
           </p>
         </div>
       </div>
+      <div className="flex-grow min-h-[400px]">
+        <MyAnswersList answers={answers} onDelete={handleDeleteFromState} />
+      </div>
+      {/* CONTROLES DE PAG DE DAISYUI */}
+      {!loading && !error && totalPages > 1 && (
+        <div className="flex justify-center w-full mt-8">
+          <div className="join shadow-sm border border-base-300">
+            <button
+              className="join-item btn btn-sm hover:bg-base-300"
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+            >
+              « Anterior
+            </button>
 
-      <MyAnswersList answers={answers} onDelete={handleDeleteFromState} />
+            <button className="join-item btn btn-sm no-animation bg-base-200 pointer-events-none">
+              Página {currentPage} de {totalPages}
+            </button>
+
+            <button
+              className="join-item btn btn-sm hover:bg-base-300"
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+            >
+              Siguiente »
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

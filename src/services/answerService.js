@@ -68,3 +68,17 @@ export const updateAnswers = async (answerId, updatedAnswer, token) => {
   }
   return true;
 };
+
+// Obtener una Respuesta por su ID
+export const getAnswerById = async (answerId, token) => {
+  const response = await fetch(ENDPOINTS.ANSWER_DETAIL(answerId), {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+  if (!response.ok) {
+    throw new Error("Error al obtener la respuesta");
+  }
+  return response.json();
+};

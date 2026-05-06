@@ -25,7 +25,9 @@ import MyQuestions from "../components/questions/MyQuestions";
 import MyAnswers from "../components/answers/MyAnswers";
 import Support from "../pages/Support";
 import NewQuestion from "../pages/NewQuestion";
-import NewAnswer from "../pages/NewAnswer";
+import NewAnswer from "../components/answers/NewAnswer";
+import EditAnswer from "../components/answers/EditAnswer";
+
 import QuestionDetail from "../pages/QuestionDetail";
 
 // temporal ->
@@ -54,7 +56,7 @@ const routes = (isLoggedIn) => [
         element: <ProtectedRoute />,
         children: [
           { path: "/newanswer", element: <NewAnswer /> },
-          { path: "/edit-answer/:id", element: <NewAnswer /> },
+          { path: "/edit-answer/:id", element: <EditAnswer /> },
           { path: "/me", element: <Me /> },
           { path: "/newquestion", element: <NewQuestion /> },
           { path: "/edit-question/:id", element: <NewQuestion /> },
