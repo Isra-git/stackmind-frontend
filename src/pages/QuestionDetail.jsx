@@ -7,7 +7,13 @@
 
 // dependencias
 import React, { useEffect, useState } from "react";
-import { Link, useParams, useLocation } from "react-router-dom";
+import {
+  Link,
+  useParams,
+  useLocation,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 
 import { ENDPOINTS } from "../api/constantes";
 import TopQuestions from "../components/shared/TopQuestions";
@@ -26,6 +32,9 @@ import {
 } from "react-icons/hi2";
 
 const QuestionDetail = () => {
+  // navegacion
+  const navigate = useNavigate();
+
   // extraemos las variables de la URL que definimos en el Route
   const { id } = useParams();
   const location = useLocation(); // cuando viene de Responder/QuestionCard
@@ -85,6 +94,31 @@ const QuestionDetail = () => {
     }
   }, [location.state]);
 
+  // Maneja el scroll automático al hash (#answer-ID)
+  useEffect(() => {
+    // Solo  si no estamos cargando y hay un hash en la URL
+    if (!loading && location.hash) {
+      const idHash = location.hash.replace("#", ""); // obtener el ID real
+
+      // asegura que React ha terminado de pintar las respuestas en Dom
+      const timer = setTimeout(() => {
+        const element = document.getElementById(idHash);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+
+          // Efecto visual
+          element.classList.add("ring-2", "ring-primary", "duration-500");
+          setTimeout(
+            () => element.classList.remove("ring-2", "ring-primary"),
+            2000,
+          );
+        }
+      }, 300); // suficiente para el renderizado
+
+      return () => clearTimeout(timer);
+    }
+  }, [loading, location.hash, answers]); // Se activa al cargar, cambiar hash o recibir respuestas
+
   // Funcion para Compartir (copia Url a Clipboard)  -> Msg: 2 segundos
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -106,7 +140,7 @@ const QuestionDetail = () => {
         setFeedback(null);
       }, 4000);
 
-      // Función de limpieza para que no queden "fantasmas" en la memoria
+      // Función de limpieza para que no queden  en la memoria
       return () => clearTimeout(timer);
     }
   }, [feedback]);
@@ -131,17 +165,6 @@ const QuestionDetail = () => {
       </div>
     );
   }
-
-  // Funcion para formatear la fecha
-  // const formattedDate = new Date(questionData.created_at).toLocaleDateString(
-  //   "es-ES",
-  //   {
-  //     year: "numeric",
-  //     month: "short",
-  //     day: "numeric",
-  //   },
-  // );
-  // format_date(questionData.created_at)
 
   // imagen del avatar del Dueño de la Pregunta | imagen por defecto
   const authorAvatar = `/img/avatars/${questionData.author?.avatar_url || "avatar2.png"}`;
@@ -279,6 +302,7 @@ const QuestionDetail = () => {
               return (
                 <div
                   key={answer.id}
+                  id={`answer-${answer.id}`} // Ver Respuesta --> Te lleva hasta aqui
                   className="card bg-base-100 shadow-sm border border-base-200 rounded-xl"
                 >
                   <div className="card-body p-6">
@@ -318,7 +342,7 @@ const QuestionDetail = () => {
                           <div
                             key={index}
                             className="badge badge-primary badge-outline badge-sm font-medium"
-                            onClick={<Link to={`/tags/${tag.trim()}`} />}
+                            onClick={() => navigate(`/tags/${tag.trim()}`)}
                           >
                             {tag.trim()}
                           </div>

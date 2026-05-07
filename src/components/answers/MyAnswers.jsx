@@ -28,7 +28,7 @@ export const MyAnswers = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
   const handlePrevPage = () => {
-    if (currentPage > totalPages) setCurrentPage((prev) => prev - 1);
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
   //  funcion para borrar y sincro UI -> Al nieto-> myansweritem

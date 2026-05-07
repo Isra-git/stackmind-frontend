@@ -60,7 +60,7 @@ export const MyAnswerItem = ({ answer, onDelete }) => {
 
   // Manejamos mostrar la respuesta
   const handleAnswerSee = () => {
-    setShowPreview(!showPreview);
+    navigate(`/questions/${answer.question_id}#answer-${answer.id}`);
   };
   return (
     <div className="collapse collapse-arrow bg-base-100 border border-base-200 mb-4 shadow-sm hover:border-primary/30 transition-colors">
@@ -129,6 +129,8 @@ export const MyAnswerItem = ({ answer, onDelete }) => {
               className="btn btn-sm btn-ghost w-full text-info hover:bg-info/10 flex items-center justify-center gap-2 rounded-lg font-normal text-sm"
               title="Editar en StackMindEditor"
               onClick={handleAnswerEdit}
+             disabled={!answer.question_id}
+
             >
               <HiOutlinePencilSquare className="text-lg" />
               <span className="hidden sm:inline">Editar</span>
@@ -141,6 +143,8 @@ export const MyAnswerItem = ({ answer, onDelete }) => {
               className="btn btn-sm btn-ghost w-full text-error hover:bg-error/10 flex items-center justify-center gap-2 rounded-lg font-normal text-sm"
               title="Borrar"
               onClick={handleAnswerDelete}
+                            disabled={!answer.question_id}
+
             >
               <HiOutlineTrash className="text-lg" />
               <span className="hidden sm:inline">Borrar</span>
