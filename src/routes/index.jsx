@@ -18,6 +18,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import History from "../pages/History";
 import Logout from "../pages/Logout";
+import Error404 from "../pages/Error404";
 
 // protegidas
 import Me from "../pages/Me";
@@ -85,15 +86,11 @@ const routes = (isLoggedIn) => [
   // --- RESTO DE RUTAS -> ERRORES 404 ---
   {
     path: "*",
-    element: <Navigate to="/error404" replace />,
+    element: <Error404 />,
   },
   {
     path: "/error404",
-    element: (
-      <div className="min-h-screen flex items-center justify-center text-2xl font-bold bg-base-200">
-        404 - ¡Ups! Página no encontrada
-      </div>
-    ),
+    element: <Error404 />,
   },
 ];
 
