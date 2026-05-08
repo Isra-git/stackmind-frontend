@@ -6,6 +6,9 @@
 // src/pages/History.jsx
 import React from "react";
 import { Link } from "react-router-dom";
+
+import NewQuestion from "./NewQuestion.jsx";
+import Register from "./Register.jsx";
 import {
   HiOutlineGlobeAlt,
   HiOutlineUserGroup,
@@ -146,7 +149,7 @@ const History = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Escribir pregunta */}
           <Link
-            to="/ask"
+            to="/newquestion"
             className="card bg-base-100 shadow-md border border-base-200 hover:border-primary hover:shadow-xl transition-all duration-300 group"
           >
             <div className="card-body items-center text-center">
