@@ -106,7 +106,7 @@ La aplicación estará disponible y corriendo a la velocidad del rayo en http://
 
 📂 Estructura del Proyecto
 Hemos adoptado una arquitectura basada en características (Feature-driven) para mantener el código escalable:
-````
+```
 Plaintext
 src/
 ├── api/          # Configuración de Axios y llamadas al backend (questionService, authService...)
