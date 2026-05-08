@@ -106,7 +106,7 @@ La aplicación estará disponible y corriendo a la velocidad del rayo en http://
 
 📂 Estructura del Proyecto
 Hemos adoptado una arquitectura basada en características (Feature-driven) para mantener el código escalable:
-
+````
 Plaintext
 src/
 ├── api/          # Configuración de Axios y llamadas al backend (questionService, authService...)
@@ -116,6 +116,8 @@ src/
 ├── pages/        # Vistas completas de la aplicación (Home, Ask, QuestionDetail, Profile...)
 ├── routes/       # Configuración de React Router (Rutas públicas y privadas)
 └── App.jsx       # Punto de entrada y proveedor de contexto
+```
+
 🔗 Repositorios Relacionados
 El frontend no funciona solo. Descubre la magia que ocurre bajo el capó en nuestro repositorio backend:
 
