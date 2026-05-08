@@ -76,7 +76,8 @@ const Answer = {
   created_at: "2026-05-08T11:15:00Z",
   author: { /* Datos reducidos del User */ }
 }
-
+```
+-----------------------------
 💻 Instalación Local
 Sigue estos pasos para levantar el entorno de desarrollo en tu máquina:
 
