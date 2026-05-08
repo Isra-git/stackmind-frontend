@@ -76,3 +76,39 @@ const Answer = {
   created_at: "2026-05-08T11:15:00Z",
   author: { /* Datos reducidos del User */ }
 }
+
+💻 Instalación Local
+Sigue estos pasos para levantar el entorno de desarrollo en tu máquina:
+
+Bash
+# 1. Clona el repositorio
+git clone [https://github.com/Isra-git/stackmind-frontend.git](https://github.com/Isra-git/stackmind-frontend.git)
+cd stackmind-frontend
+
+# 2. Instala las dependencias
+npm install
+
+# 3. Configura las variables de entorno
+# Crea un archivo .env en la raíz del proyecto y añade:
+VITE_API_URL=[http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+# 4. Arranca el servidor de desarrollo impulsado por Vite
+npm run dev
+La aplicación estará disponible y corriendo a la velocidad del rayo en http://localhost:5173.
+
+📂 Estructura del Proyecto
+Hemos adoptado una arquitectura basada en características (Feature-driven) para mantener el código escalable:
+
+Plaintext
+src/
+├── api/          # Configuración de Axios y llamadas al backend (questionService, authService...)
+├── components/   # Componentes modulares y reutilizables (Botones, Tarjetas, Editor IA...)
+├── context/      # Estados globales (AuthContext para JWT)
+├── hooks/        # Lógica reutilizable (useQuestions, useUserAnswers...)
+├── pages/        # Vistas completas de la aplicación (Home, Ask, QuestionDetail, Profile...)
+├── routes/       # Configuración de React Router (Rutas públicas y privadas)
+└── App.jsx       # Punto de entrada y proveedor de contexto
+🔗 Repositorios Relacionados
+El frontend no funciona solo. Descubre la magia que ocurre bajo el capó en nuestro repositorio backend:
+
+stackmind-backend — API REST ultrarrápida construida con FastAPI, base de datos en PostgreSQL (Supabase) utilizando pgvector, e integración con el LLM Llama 3 (Groq).
