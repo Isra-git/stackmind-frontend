@@ -30,8 +30,6 @@ export default function ProfileInfo({
             </div>
           </div>
 
-          {/* Info Principal */}
-          <h2 className="card-title text-2xl font-bold">{user.username}</h2>
           {/* email */}
           <p className="text-base-content/60 font-medium flex items-center gap-2 mt-2">
             <HiOutlineEnvelope className="text-lg text-accent" /> {user.email}
