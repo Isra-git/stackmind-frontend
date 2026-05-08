@@ -83,18 +83,25 @@ Sigue estos pasos para levantar el entorno de desarrollo en tu máquina:
 
 Bash
 # 1. Clona el repositorio
+```
 git clone [https://github.com/Isra-git/stackmind-frontend.git](https://github.com/Isra-git/stackmind-frontend.git)
 cd stackmind-frontend
-
+```
 # 2. Instala las dependencias
+```
 npm install
+```
 
 # 3. Configura las variables de entorno
 # Crea un archivo .env en la raíz del proyecto y añade:
+```
 VITE_API_URL=[http://127.0.0.1:8000](http://127.0.0.1:8000)
+```
 
 # 4. Arranca el servidor de desarrollo impulsado por Vite
+```
 npm run dev
+```
 La aplicación estará disponible y corriendo a la velocidad del rayo en http://localhost:5173.
 
 📂 Estructura del Proyecto
