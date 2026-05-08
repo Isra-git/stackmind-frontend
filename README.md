@@ -24,9 +24,13 @@ StackMind es un foro al estilo StackOverflow, pero con un propósito único: **a
 Nuestra interfaz está diseñada para reducir la fricción técnica, envolviendo lógica compleja en una experiencia de usuario (UX) limpia y accesible.
 
 * **🪄 Asistente de Escritura IA (Powered by Groq):** Nuestro "Magic AI Button". Un usuario sin conocimientos técnicos puede escribir su duda de forma natural; el frontend envía este texto a nuestro backend, donde un LLM (Llama 3 vía Groq) lo reestructura, optimiza y devuelve una pregunta profesional y clara, lista para publicar.
+  
 * **🔍 Búsqueda Híbrida Avanzada (pgvector):** La barra de búsqueda no solo busca coincidencias exactas. El frontend interactúa con un motor de búsqueda respaldado por PostgreSQL que combina `tsvector` (Full-Text) y `pgvector` (Búsqueda Semántica Vectorial). Si buscas "crear imágenes", encontrará resultados sobre "Midjourney" o "DALL-E" gracias a la comprensión del contexto.
+  
 * **👥 Ecosistema de Usuarios:** Autenticación completa con JWT (Registro, Login, persistencia de sesión). Perfiles personalizables con categorización de avatares (Robots, Humanos, etc.) y un sistema de reputación gamificado.
+  
 * **💬 Motor de Foro Completo:** CRUD asíncrono de preguntas y respuestas. Contador automático de visualizaciones por pregunta, anclas dinámicas para respuestas (`#answer-id`) y paginación inteligente.
+  
 * **🎨 Diseño "Human-Centric":** UI construida con TailwindCSS y DaisyUI. Totalmente *responsive*, con feedback visual constante (loaders, tooltips, toasts) y un diseño cálido que aleja la "frialdad" habitual de la IA.
 
 ---
