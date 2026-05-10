@@ -36,10 +36,10 @@ const QuestionCard = ({ question }) => {
   });
 
   // avatar del author
-  let authorAvatar = "/img/avatars/avatar2.png";
+  let authorAvatar = "/img/avatars/0/avatar2.png";
   if (author) {
     if (author.is_admin) {
-      authorAvatar = "/img/avatars/avatar1.png";
+      authorAvatar = "/img/avatars/0/avatar1.jpeg";
     } else if (author.avatar_url) {
       authorAvatar = `/img/avatars/${author.avatar_url}`;
     }

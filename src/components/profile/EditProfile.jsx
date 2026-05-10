@@ -12,7 +12,9 @@ import React, { useContext, useState } from "react";
 
 import { AuthContext } from "../../context/AuthContext";
 import { ENDPOINTS } from "../../api/constantes";
-import {availableAvatars} from "../../api/helpers";
+
+import {avatarGroups} from "../../api/helpers";
+import AvatarPicker from "./AvatarPicker";
 
 
 import {
@@ -31,7 +33,7 @@ const EditProfile = ({ setEditing }) => {
   const [formData, setFormData] = useState({
     username: user?.username || "",
     full_name: user?.full_name || "",
-    avatar_url: user?.avatar_url || "avatar2.png",
+    avatar_url: user?.avatar_url || "0/avatar2.png",
   });
 
   // estados
@@ -39,11 +41,6 @@ const EditProfile = ({ setEditing }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  // generamos la lista de avatares
-  // const availableAvatars = Array.from(
-  //   { length: 13 },
-  //   (value, index) => `avatar${index + 2}.png`,
-  // );
 
   //  Manejador para actualizar el estado cuando el usuario escribe
   const handleChange = (e) => {
@@ -83,7 +80,7 @@ const EditProfile = ({ setEditing }) => {
       const data = await response.json();
 
       if (!response.ok) {
-        // Capturamos el HTTP_400_BAD_REQUEST de tu backend ("usuario no disponible")
+        // Capturamos el HTTP_400_BAD_REQUEST de -> usuario no disponible
         throw new Error(data.detail || "Hubo un error al actualizar el perfil");
       }
 
@@ -159,9 +156,9 @@ const EditProfile = ({ setEditing }) => {
             </div>
           </div>
 
-          {/* Cambiar AVATAR->  Grid (4 columnas en móvil, 5 en PC) */}
+          {/* Cambiar AVATAR->  Grid (4 columnas en móvil, 5 en PC)
           <div className="grid grid-cols-4 sm:grid-cols-5 gap-4 mt-2 p-2 bg-base-200/50 rounded-xl border border-base-300">
-            {availableAvatars.map((avatar) => (
+            {avatarGroups.map((avatar) => (
               <div
                 key={avatar}
                 // Si el avatar es el que tenemos -> borde brillante
@@ -183,7 +180,18 @@ const EditProfile = ({ setEditing }) => {
                 />
               </div>
             ))}
-          </div>
+          </div> }*/}
+              {/* Componente -> AvatarPicker: usamos  avatarGroups y actualizamos formData.avatar_url */}
+          <AvatarPicker
+            avatarGroups={avatarGroups}
+            formData={formData}
+            setFormData={setFormData}
+            setSuccess={setSuccess}
+          />
+
+          {/* Mostrar error o e xito */}
+          {error && <div className="text-sm text-error mt-2">{error}</div>}
+          {success && <div className="text-sm text-success mt-2">Perfil actualizado correctamente.</div>}
 
           {/* Botones de Acción */}
           <div className="form-control mt-8 pt-4">

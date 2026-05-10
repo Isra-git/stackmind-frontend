@@ -75,10 +75,10 @@ const Me = () => {
   }
 
   // avatares -> si User -> Si Admin -> Sino avatar_url
-  let avatarPath = "/img/avatars/avatar2.png";
+  let avatarPath = "/img/avatars/0/avatar2.png";
   if (user) {
     if (user.is_admin) {
-      avatarPath = "/img/avatars/avatar1.jpeg";
+      avatarPath = "/img/avatars/0/avatar1.jpeg";
     } else if (user.avatar_url) {
       avatarPath = `/img/avatars/${user.avatar_url}`;
     }
