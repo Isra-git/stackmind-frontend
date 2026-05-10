@@ -120,7 +120,7 @@ export const AuthProvider = ({ children }) => {
   // devolvemos el Provider con los datos del contexto
   return (
     <AuthContext.Provider
-      value={{ token, user, login, logout, error, loading }}
+      value={{ token, user, setUser, login, logout, error, loading }}
     >
       {loading && !user && token ? (
         <div className="min-h-screen flex items-center justify-center bg-base-200">

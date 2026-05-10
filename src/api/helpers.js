@@ -8,32 +8,31 @@
 
 // Carpetas de avatares -> Configuracion -> Diccionario
 export const AVATAR_CONFIG = {
-  "0": {name:"surrealistas",count :14}, 
-  "1": {name:"tecnologicos",count :12}, 
-  "2": {name:"IA",count :16},
-  "3": {name:"clasicos",count :12}, 
- 
+  0: { name: "surrealistas", count: 14 },
+  1: { name: "tecnologicos", count: 12 },
+  2: { name: "IA", count: 16 },
+  3: { name: "clasicos", count: 12 },
 };
 
 // Transformamos el Dict en un Array para mostrar los avatares
-export const avatarGroups=Object.entries(AVATAR_CONFIG).map(([folder,data])=>{
+export const avatarGroups = Object.entries(AVATAR_CONFIG).map(
+  ([folder, data]) => {
+    // si no hay numero de avatares -> 10 por defecto
+    const numbersOfAvatars = data.count || 10;
 
-  // si no hay numero de avatares -> 10 por defecto
-  const numbersOfAvatars=data.count || 10;
+    return {
+      id: folder,
+      name: data.name || `Coleccion ${folder}`,
+      avatars: Array.from(
+        { length: numbersOfAvatars },
+        (_, i) => `${folder}/avatar${i + 1}.png`,
+      ),
+    };
+  },
+);
 
-  return{
-    id: folder,
-    name: data.name || `Coleccion ${folder}`,
-    avatars: Array.from({length:numbersOfAvatars},
-      (_,i)=>`${folder}/avatar${i+1}.png`
-    )
-  };
-});
-
-
-// lista plana de avatares oara probar 
-export const availableAvatars = avatarGroups.flatMap(group => group.avatars);
-
+// lista plana de avatares oara probar
+//export const availableAvatars = avatarGroups.flatMap(group => group.avatars);
 
 // // Funcion que genera la LIsta de avatares
 // export const availableAvatars = Array.from(

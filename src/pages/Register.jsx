@@ -9,7 +9,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { availableAvatars } from "../api/helpers";
+import { avatarGroups } from "../api/helpers";
+import AvatarPicker from "../components/profile/AvatarPicker";
+import { ENDPOINTS } from "../api/constantes";
+
+// iconos
 import {
   HiOutlineUser,
   HiOutlineEnvelope,
@@ -18,9 +22,6 @@ import {
   HiOutlineLockClosed,
   HiOutlineIdentification,
 } from "react-icons/hi2";
-import { ENDPOINTS } from "../api/constantes";
-
-// iconos
 
 const Register = () => {
   // estados -> Objeto para los datos del Registro
@@ -274,30 +275,12 @@ const Register = () => {
                 {/* Línea separadora: 80% de ancho, centrada y sutil */}
                 <div className="h-[1px] w-[80%] bg-base-content/10 mt-2"></div>
               </div>
-              <div className="grid grid-cols-4 sm:grid-cols-5 gap-4 mt-2 p-2 bg-base-200/50 rounded-xl border border-base-300">
-                {availableAvatars.map((avatar) => (
-                  <div
-                    key={avatar}
-                    // Si el avatar es el que tenemos -> borde brillante
-                    className={`cursor-pointer rounded-full transition-all duration-200 ${
-                      datos.avatar_url === avatar
-                        ? "ring-4 ring-primary ring-offset-2 ring-offset-base-100 scale-110 shadow-lg"
-                        : "opacity-50 hover:opacity-100 hover:scale-105"
-                    }`}
-                    //  actualizamos el avatar_url en el estado
-                    onClick={() => {
-                      setDatos({ ...datos, avatar_url: avatar });
-                      setSuccess(false);
-                    }}
-                  >
-                    <img
-                      src={`/img/avatars/${avatar}`}
-                      alt={`Avatar ${avatar}`}
-                      className="w-full h-auto rounded-full bg-base-100"
-                    />
-                  </div>
-                ))}
-              </div>
+              <AvatarPicker
+                avatarGroups={avatarGroups}
+                formData={datos}
+                setFormData={setDatos}
+                setSuccess={setSuccess}
+              />
             </div>
 
             {/* Botón Submit */}

@@ -7,22 +7,33 @@
 //  src/components/profile/avatarPicker.jsx
 
 // dependencias
-import React,{ useState } from "react";
+import React, { useState } from "react";
 
-
-import { avatarGroups } from "../../api/helpers";
-export default function AvatarPicker({ avatarGroups, formData, setFormData, setSuccess }) {
+export default function AvatarPicker({
+  avatarGroups,
+  formData,
+  setFormData,
+  setSuccess,
+}) {
   // Por defecto mostrar la categoría 2 IA
   const [selectedGroupId, setSelectedGroupId] = useState("2");
 
-  // Obtener el grupo seleccionado -> fallback al primero 
-  const selectedGroup = avatarGroups.find(g => g.id === selectedGroupId) || avatarGroups[0];
+  // Obtener el grupo seleccionado -> fallback al primero
+  const selectedGroup =
+    avatarGroups.find((g) => g.id === selectedGroupId) || avatarGroups[0];
 
+  // Constante para el avatar del Admin
+  const ADAVATAR = "0/avatar1.png";
+
+  // filtramos el avatar reservado
+  const availableAvatars = selectedGroup.avatars.filter(
+    (avatar) => avatar !== ADAVATAR,
+  );
   return (
     <div className="space-y-4">
       {/* Navegacion */}
       <nav className="flex gap-2 items-center overflow-x-auto">
-        {avatarGroups.map(group => {
+        {avatarGroups.map((group) => {
           const isActive = group.id === selectedGroupId;
           return (
             <button
@@ -38,7 +49,6 @@ export default function AvatarPicker({ avatarGroups, formData, setFormData, setS
               aria-label={`Ver colección ${group.name}`}
             >
               <span className="inline-block mr-2">{group.name}</span>
-              <span className="text-xs opacity-70">({group.avatars.length})</span>
             </button>
           );
         })}
@@ -47,12 +57,12 @@ export default function AvatarPicker({ avatarGroups, formData, setFormData, setS
       {/* Mostramos los grupos */}
       <div className="flex items-center justify-between">
         <h4 className="text-sm font-semibold">{selectedGroup.name}</h4>
-        <span className="text-xs opacity-60">{selectedGroup.avatars.length} avatares</span>
+        <span className="text-xs opacity-60"> avatares</span>
       </div>
 
       {/* Mostramos los avatares */}
       <div className="grid grid-cols-4 sm:grid-cols-5 gap-4 mt-2 p-2 bg-base-200/50 rounded-xl border border-base-300">
-        {selectedGroup.avatars.map((avatar) => {
+        {availableAvatars.map((avatar) => {
           const isSelected = formData.avatar_url === avatar;
           const key = `${selectedGroup.id}-${avatar}`;
 

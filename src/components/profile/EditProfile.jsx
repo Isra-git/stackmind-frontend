@@ -13,9 +13,8 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { ENDPOINTS } from "../../api/constantes";
 
-import {avatarGroups} from "../../api/helpers";
+import { avatarGroups } from "../../api/helpers";
 import AvatarPicker from "./AvatarPicker";
-
 
 import {
   HiOutlineUser,
@@ -27,7 +26,7 @@ import {
 
 const EditProfile = ({ setEditing }) => {
   // extraemos Token del contexto
-  const { token, user, updateLocalUser } = useContext(AuthContext);
+  const { token, user, setUser } = useContext(AuthContext);
 
   // Inicializamos el estado con los datos actuales del usuario
   const [formData, setFormData] = useState({
@@ -40,7 +39,6 @@ const EditProfile = ({ setEditing }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-
 
   //  Manejador para actualizar el estado cuando el usuario escribe
   const handleChange = (e) => {
@@ -86,8 +84,8 @@ const EditProfile = ({ setEditing }) => {
 
       // Si el backend responde 200_OK, actualizamos el estado global en React
       // para que el navbar y otras vistas cambien al instante
-      if (updateLocalUser) {
-        updateLocalUser(data);
+      if (setUser) {
+        setUser(data);
       }
 
       setSuccess(true);
@@ -156,32 +154,7 @@ const EditProfile = ({ setEditing }) => {
             </div>
           </div>
 
-          {/* Cambiar AVATAR->  Grid (4 columnas en móvil, 5 en PC)
-          <div className="grid grid-cols-4 sm:grid-cols-5 gap-4 mt-2 p-2 bg-base-200/50 rounded-xl border border-base-300">
-            {avatarGroups.map((avatar) => (
-              <div
-                key={avatar}
-                // Si el avatar es el que tenemos -> borde brillante
-                className={`cursor-pointer rounded-full transition-all duration-200 ${
-                  formData.avatar_url === avatar
-                    ? "ring-4 ring-primary ring-offset-2 ring-offset-base-100 scale-110 shadow-lg"
-                    : "opacity-50 hover:opacity-100 hover:scale-105"
-                }`}
-                //  actualizamos el avatar_url en el estado
-                onClick={() => {
-                  setFormData({ ...formData, avatar_url: avatar });
-                  setSuccess(false);
-                }}
-              >
-                <img
-                  src={`/img/avatars/${avatar}`}
-                  alt={`Avatar ${avatar}`}
-                  className="w-full h-auto rounded-full bg-base-100"
-                />
-              </div>
-            ))}
-          </div> }*/}
-              {/* Componente -> AvatarPicker: usamos  avatarGroups y actualizamos formData.avatar_url */}
+          {/* Componente -> AvatarPicker: usamos  avatarGroups y actualizamos formData.avatar_url */}
           <AvatarPicker
             avatarGroups={avatarGroups}
             formData={formData}
@@ -191,7 +164,11 @@ const EditProfile = ({ setEditing }) => {
 
           {/* Mostrar error o e xito */}
           {error && <div className="text-sm text-error mt-2">{error}</div>}
-          {success && <div className="text-sm text-success mt-2">Perfil actualizado correctamente.</div>}
+          {success && (
+            <div className="text-sm text-success mt-2">
+              Perfil actualizado correctamente.
+            </div>
+          )}
 
           {/* Botones de Acción */}
           <div className="form-control mt-8 pt-4">
