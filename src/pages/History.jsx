@@ -7,8 +7,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import NewQuestion from "./NewQuestion.jsx";
-import Register from "./Register.jsx";
+// import NewQuestion from "./NewQuestion.jsx";
+// import Register from "./Register.jsx";
 import {
   HiOutlineGlobeAlt,
   HiOutlineUserGroup,
