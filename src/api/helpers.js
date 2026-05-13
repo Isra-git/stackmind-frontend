@@ -81,3 +81,6 @@ export const getTodayDate = () => {
   });
   return todayDate;
 };
+
+// Ruta del Avatar del Admin
+export const adminAvatar = "public/img/avatars/0/avatar1.jpeg";

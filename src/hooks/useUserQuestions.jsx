@@ -15,6 +15,7 @@ import { useState, useEffect, useContext } from "react";
 
 import { getQuestions } from "../services/questionService";
 import { AuthContext } from "../context/AuthContext"; // Importa el contexto de autenticación
+import { ENDPOINTS } from "../api/constantes";
 
 // custom Hook
 export const useQuestions = (tipo = "new", skip = 0, limit = 20) => {
@@ -50,6 +51,32 @@ export const useQuestions = (tipo = "new", skip = 0, limit = 20) => {
     fetchApi();
   }, [tipo, skip, limit, token]); // dependencias de useEffect
 
+  // FUNCIÓN DE BORRADO REUTILIZABLE
+  const deleteQuestion = async (id) => {
+    try {
+      const response = await fetch(ENDPOINTS.QUESTION_DELETE(id), {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error al eliminar la pregunta");
+      }
+
+      // Update de Estado local
+      // Filtramos la pregunta borrada para que desaparezca de la UI
+      setQuestions((prev) => prev.filter((q) => q.id !== id));
+      setTotal((prev) => prev - 1);
+
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  };
   // devolvemos todo empaquetado_> questions loadong error
-  return { questions, setQuestions, total, loading, error };
+  return { questions, setQuestions, total, loading, error, deleteQuestion };
 }; // Para usarlo -> useQuestions
