@@ -33,7 +33,7 @@ const QuestionCard = ({ question, onDelete }) => {
     //slug,
     body,
     views,
-    //author_id,
+    author_id,
     answers_count,
     created_at,
     author,
@@ -112,8 +112,8 @@ const QuestionCard = ({ question, onDelete }) => {
   // avatar del author
   let authorAvatar = "/img/avatars/0/avatar2.png";
   if (author) {
-    if (user.is_admin) {
-      authorAvatar = "/img/avatars/0/avatar1.jpeg";
+    if (user.is_admin && user.id == author_id) {
+      authorAvatar = adminAvatar;
     } else if (author.avatar_url) {
       authorAvatar = `/img/avatars/${author.avatar_url}`;
     }
