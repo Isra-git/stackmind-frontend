@@ -19,7 +19,11 @@ import { ENDPOINTS } from "../api/constantes";
 import TopQuestions from "../components/shared/TopQuestions";
 import StackMindEditor from "../components/editor/StackMindEditor";
 import { Preview } from "../components/editor/Preview";
-import { format_date } from "../api/helpers";
+import { format_date, adminAvatar } from "../api/helpers";
+
+import { useUserAnswers } from "../hooks/useUserAnswers";
+import { useAuth } from "../context/AuthContext";
+import Modal from "../components/shared/Modal";
 
 // Iconos
 import {
@@ -29,6 +33,8 @@ import {
   HiOutlineShare,
   HiOutlinePencilSquare,
   HiCheckCircle,
+  HiMiniTrash,
+  HiExclamationCircle,
 } from "react-icons/hi2";
 
 const QuestionDetail = () => {
@@ -38,6 +44,10 @@ const QuestionDetail = () => {
   // extraemos las variables de la URL que definimos en el Route
   const { id } = useParams();
   const location = useLocation(); // cuando viene de Responder/QuestionCard
+
+  // estraemos el usuario del contexto y la funcion de borrar
+  const { user } = useAuth();
+  const { deleteAnswer } = useUserAnswers();
 
   // estados del componente
   const [questionData, setQuestionData] = useState(null);
@@ -49,6 +59,15 @@ const QuestionDetail = () => {
   const [showEditor, setShowEditor] = useState(false);
   const [sharedText, setSharedText] = useState("Compartir");
   const [feedback, setFeedback] = useState(null);
+
+  // estados para el Modal
+  const [modal, setModal] = useState({
+    isOpen: false,
+    type: "warning", // 'warning' (confirmación) o 'success'
+    title: "",
+    message: "",
+    answerIdToDelete: null,
+  });
 
   // Funcion para Cargar la Pregunta y las  Respuestas
   const fetchQuestionsAndAnswers = async () => {
@@ -133,6 +152,49 @@ const QuestionDetail = () => {
     fetchQuestionsAndAnswers(); // Recargamos para ver la Respuesta Añadida
   };
 
+  // logica del modal para Confirm. Borrado
+  const handleInitiateDelete = (answerId) => {
+    setModal({
+      isOpen: true,
+      type: "warning",
+      title: "Eliminar Respuesta",
+      message:
+        "¿Estás seguro de que quieres eliminar esta respuesta? Esta acción no se puede deshacer.",
+      answerIdToDelete: answerId,
+    });
+  };
+
+  // logica Modal para Realizar el Borrado
+  const handleConfirmDelete = async () => {
+    const { success, error } = await deleteAnswer(modal.answerIdToDelete);
+
+    if (success) {
+      setModal({
+        isOpen: true,
+        type: "success",
+        title: "Respuesta Eliminada",
+        message: "La respuesta ha sido borrada de la comunidad StackMind.",
+        answerIdToDelete: null,
+      });
+
+      // Recargamos la info después de borrar
+      fetchQuestionsAndAnswers();
+
+      // Cerramos el modal de éxito a los 2.5 seg
+      setTimeout(() => {
+        setModal((prev) => ({ ...prev, isOpen: false }));
+      }, 2500);
+    } else {
+      setModal({
+        isOpen: true,
+        type: "error",
+        title: "Error al borrar",
+        message: error || "No se pudo eliminar la respuesta.",
+        answerIdToDelete: null,
+      });
+    }
+  };
+
   // Controlamos  el estado ->feedback y lo limpia a los 4 segundos
   useEffect(() => {
     if (feedback) {
@@ -167,7 +229,9 @@ const QuestionDetail = () => {
   }
 
   // imagen del avatar del Dueño de la Pregunta | imagen por defecto
-  const authorAvatar = `/img/avatars/${questionData.author?.avatar_url || "avatar2.png"}`;
+  const authorAvatar = questionData.author?.is_admin
+    ? adminAvatar
+    : `/img/avatars/${questionData.author?.avatar_url || "avatar2.png"}`;
 
   return (
     <div className="max-w-5xl mx-auto py-8 px-4 space-y-8 animate-fade-in">
@@ -244,7 +308,7 @@ const QuestionDetail = () => {
             </p>
           </div>
 
-          {/* 4. Botones de Acción */}
+          {/* Botones de Acción */}
           <div className="flex items-center gap-3 mt-10 pt-6 border-t border-base-200">
             <button
               onClick={handleShare}
@@ -299,6 +363,12 @@ const QuestionDetail = () => {
                   day: "numeric",
                 },
               );
+
+              // imagen del avatar
+              const answerAvatar = answer.author?.is_admin
+                ? adminAvatar
+                : `/img/avatars/${answer.author?.avatar_url || "avatar2.png"}`;
+
               return (
                 <div
                   key={answer.id}
@@ -306,24 +376,37 @@ const QuestionDetail = () => {
                   className="card bg-base-100 shadow-sm border border-base-200 rounded-xl"
                 >
                   <div className="card-body p-6">
-                    <div className="flex items-center gap-3 mb-6">
+                    <div className="flex items-center gap-3 mb-6 justify-between">
                       <div className="avatar">
                         <div className="w-10 h-10 rounded-full ring-1 ring-base-300">
-                          <img
-                            src={`/img/avatars/${answer.author?.avatar_url || "avatar2.png"}`}
-                            alt="Avatar"
-                          />
+                          <img src={answerAvatar} alt="Avatar" />
                         </div>
                       </div>
                       <div>
                         <div className="font-bold text-base-content/90">
                           {answer.author?.username || "Usuario"}
+                          {answer.author?.is_admin && (
+                            <span className="badge badge-primary badge-xs ml-2">
+                              Admin
+                            </span>
+                          )}
                         </div>
                         <div className="text-xs text-base-content/60">
                           Respondido el {ansDate}
                         </div>
                       </div>
+                      {/* BORRADO: Solo admin o dueño */}
+                      {(user?.is_admin || user?.id === answer.author_id) && (
+                        <button
+                          onClick={() => handleInitiateDelete(answer.id)}
+                          className="btn btn-ghost btn-sm text-error hover:bg-error/10"
+                          title="Eliminar respuesta"
+                        >
+                          <HiMiniTrash className="text-xl" />
+                        </button>
+                      )}
                     </div>
+
                     {/* Renderizamos el JSONB a traves del subComponente  Preview */}
                     <div
                       className="bg-base-200/40 p-4 rounded-lg text-base-content text-left"
@@ -367,6 +450,30 @@ const QuestionDetail = () => {
           <TopQuestions />
         </div>
       </div>
+      {/*  RENDERIZADO DEL MODAL */}
+      <Modal
+        isOpen={modal.isOpen}
+        title={modal.title}
+        message={modal.message}
+        icon={
+          modal.type === "success" ? (
+            <HiCheckCircle className="text-success" />
+          ) : modal.type === "error" ? (
+            <HiExclamationCircle className="text-error" />
+          ) : (
+            <HiExclamationCircle className="text-warning" />
+          )
+        }
+        // Si el tipo es warning: confirm. previa a borrar -> mostramos ambos botones
+        primaryBtnText={modal.type === "warning" ? "Sí, Eliminar" : "Entendido"}
+        onPrimaryClick={
+          modal.type === "warning"
+            ? handleConfirmDelete
+            : () => setModal({ ...modal, isOpen: false })
+        }
+        secondaryBtnText={modal.type === "warning" ? "Cancelar" : null}
+        onSecondaryClick={() => setModal({ ...modal, isOpen: false })}
+      />
     </div>
   );
 };

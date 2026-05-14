@@ -6,6 +6,8 @@
 */
 
 // src/components/editor/Preview.jsx
+
+// dependencias
 import React from "react";
 import { STEP_TYPES } from "./types";
 
