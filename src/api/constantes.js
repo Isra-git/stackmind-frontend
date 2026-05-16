@@ -45,6 +45,9 @@ export const ENDPOINTS = {
   ANSWERS_BY_QUESTION: (questionId, skip = 0, limit = 50) =>
     `${API_BASE}/answers/question/${questionId}?skip=${skip}&limit=${limit}`,
 
+  // Eliminar una Respuesta
+  ANSWER_DELETE: (answerId) => `${API_BASE}/answers/${answerId}`,
+
   // Rutas dinámicas de una respuesta específica
   ANSWER_DETAIL: (answerId) => `${API_BASE}/answers/${answerId}`, // PUT (editar), DELETE
   ANSWER_VOTE: (answerId) => `${API_BASE}/answers/${answerId}/vote`, // POST

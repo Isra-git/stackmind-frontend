@@ -112,7 +112,7 @@ const QuestionCard = ({ question, onDelete }) => {
   // avatar del author
   let authorAvatar = "/img/avatars/0/avatar2.png";
   if (author) {
-    if (user.is_admin && user.id == author_id) {
+    if (user?.is_admin && user?.id == author_id) {
       authorAvatar = adminAvatar;
     } else if (author.avatar_url) {
       authorAvatar = `/img/avatars/${author.avatar_url}`;
