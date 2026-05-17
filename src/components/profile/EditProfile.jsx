@@ -14,7 +14,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { ENDPOINTS } from "../../api/constantes";
 
 import { avatarGroups } from "../../api/helpers";
-import AvatarPicker from "./AvatarPicker";
+import AvatarPicker from "./avatarPicker";
 
 import {
   HiOutlineUser,
