@@ -11,6 +11,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import TagsComponent from "../sidebar/tagsComponent";
+import TopUsers from "../../pages/TopUsers";
 
 // Importamos solo los iconos que necesita el Sidebar
 import { HiQuestionMarkCircle, HiTag, HiUsers } from "react-icons/hi2";
@@ -46,41 +47,7 @@ const Sidebar = () => {
       {/* Card: Etiquetas */}
       <TagsComponent />
       {/* Card: Top Usuarios */}
-      <div className="card bg-base-200 border border-base-300 shadow-sm overflow-hidden flex flex-col">
-        <div className="bg-base-300 border-b border-base-300 px-6 py-4 flex items-center gap-2 w-full">
-          <h3 className="font-bold m-0 flex items-center gap-2">
-            <HiUsers className="text-accent" /> Top Contribuidores
-          </h3>
-        </div>
-        <div className="p-6 w-full">
-          <ul className="space-y-3">
-            <li className="flex items-center gap-3">
-              <div className="avatar online placeholder">
-                <div className="bg-neutral text-neutral-content rounded-full w-8">
-                  <span className="text-xs">D</span>
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-sm">DevMaster</span>
-                <span className="text-xs text-base-content/50">
-                  1.2k puntos
-                </span>
-              </div>
-            </li>
-            <li className="flex items-center gap-3">
-              <div className="avatar placeholder">
-                <div className="bg-primary text-primary-content rounded-full w-8">
-                  <span className="text-xs">A</span>
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-sm">AI_Wizard</span>
-                <span className="text-xs text-base-content/50">980 puntos</span>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <TopUsers />
     </aside>
   );
 };
