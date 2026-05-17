@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { avatarGroups } from "../api/helpers";
-import AvatarPicker from "../components/profile/AvatarPicker";
+import AvatarPicker from "../components/profile/avatarPicker";
 import { ENDPOINTS } from "../api/constantes";
 
 // iconos

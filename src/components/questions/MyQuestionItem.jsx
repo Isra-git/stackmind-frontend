@@ -63,44 +63,25 @@ const MyQuestionItem = ({ question, onDelete }) => {
 
     // si el usuario es el dueño o el admin
     if (user.id === question.author_id || user.isAdmin) {
-      try {
-        // eliminamos la pregunta
-        const response = await fetch(ENDPOINTS.QUESTION_DELETE(question.id), {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+      if (onDelete) {
+        const result = await onDelete(question.id);
 
-        // si se elimina correctamente
-        if (response.ok) {
+        if (result.success) {
           setModal({
             isOpen: true,
             type: "success",
             message: "Pregunta eliminada de la comunidad StackMind",
           });
-
-          // esperamos a que lea el modal
-          setTimeout(() => {
-            if (onDelete) onDelete(question.id);
-          }, 2500);
         } else {
-          const errorData = await response.json();
-          throw new Error(
-            errorData.message || "Error al intentar eliminar la pregunta",
-          );
+          setModal({
+            isOpen: true,
+            type: "error",
+            message: result.error || "Error al intentar eliminar la pregunta",
+          });
         }
-      } catch (error) {
-        console.error("Error al eliminar la pregunta:", error);
-        setModal({
-          isOpen: true,
-          type: "error",
-          message: error.message,
-        });
       }
     } else {
-      //Intento borrar sin permiso
+      // Intento borrar sin permiso
       setModal({
         isOpen: true,
         type: "error",
