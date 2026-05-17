@@ -121,4 +121,4 @@ src/
 🔗 Repositorios Relacionados
 El frontend no funciona solo. Descubre la magia que ocurre bajo el capó en nuestro repositorio backend:
 
-![stackmind-backend — API REST ultrarrápida construida con FastAPI, base de datos en PostgreSQL (Supabase) utilizando pgvector, e integración con el LLM Llama 3 (Groq).](https://github.com/Isra-git/stackmind-backend)
+🔗[stackmind-backend — API REST ultrarrápida construida con FastAPI, base de datos en PostgreSQL (Supabase) utilizando pgvector, e integración con el LLM Llama 3 (Groq).](https://github.com/Isra-git/stackmind-backend)
