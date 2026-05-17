@@ -110,7 +110,7 @@ const History = () => {
         <div className="md:w-1/2 w-full relative">
           <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-base-200 group">
             <img
-              src="../../public/img/history/mano.avif"
+              src="/img/history/mano.avif"
               alt="Mano robótica sosteniendo letras AI en neón azul"
               className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700"
             />
