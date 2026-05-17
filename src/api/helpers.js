@@ -83,4 +83,4 @@ export const getTodayDate = () => {
 };
 
 // Ruta del Avatar del Admin
-export const adminAvatar = "public/img/avatars/0/avatar1.jpeg";
+export const adminAvatar = "/img/avatars/0/avatar1.jpeg";

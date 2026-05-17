@@ -100,7 +100,7 @@ const QuestionDetail = () => {
   // Escucha si venimos desde el botón Responder -> QuestionCard
   useEffect(() => {
     if (location.state?.openEditor) {
-      // 1. Abrimos el editor
+      // Abrimos el editor
       setShowEditor(true);
 
       //  Esperamos un poquito a que React dibuje el editor, y bajamos la pantalla
@@ -229,10 +229,16 @@ const QuestionDetail = () => {
   }
 
   // imagen del avatar del Dueño de la Pregunta | imagen por defecto
-  const authorAvatar = questionData.author?.is_admin
-    ? adminAvatar
-    : `/img/avatars/${questionData.author?.avatar_url || "avatar2.png"}`;
 
+  // avatar del author
+  let authorAvatar = "/img/avatars/0/avatar2.png";
+  if (questionData?.author) {
+    if (user?.is_admin && user?.id == questionData.author.id) {
+      authorAvatar = adminAvatar;
+    } else if (questionData.author.avatar_url) {
+      authorAvatar = `/img/avatars/${questionData.author.avatar_url}`;
+    }
+  }
   return (
     <div className="max-w-5xl mx-auto py-8 px-4 space-y-8 animate-fade-in">
       {/* FEEDBACK PUBLICAR RESPUESTA->  Toast de Éxito */}
