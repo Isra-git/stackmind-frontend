@@ -23,6 +23,8 @@ import { format_date, adminAvatar } from "../api/helpers";
 
 import { useUserAnswers } from "../hooks/useUserAnswers";
 import { useAuth } from "../context/AuthContext";
+import { useVoteAnswer } from "../hooks/useVoteAnswers";
+
 import Modal from "../components/shared/Modal";
 
 // Iconos
@@ -68,6 +70,50 @@ const QuestionDetail = () => {
     message: "",
     answerIdToDelete: null,
   });
+
+  // estados para el sistema de Votos
+  const { vote, isVoting } = useVoteAnswer();
+  const [stagedVotes, setStagedVotes] = useState({});
+
+  // Para convertir el numero de estrellas en el texto a Mostrar
+  const getVoteLabel = (score) => {
+    switch (score) {
+      case 1:
+        return "No me ayudó";
+      case 2:
+        return "Me ayudó en parte";
+      case 3:
+        return "Me ayudó";
+      case 4:
+        return "Me fue de gran ayuda";
+      default:
+        return "Selecciona una valoración";
+    }
+  };
+
+  // Funcion para convertir Estrellas en Puntos
+  const getStarsFromPoints = (points) => {
+    if (points === -1) return 1;
+    if (points === 1) return 2;
+    if (points === 3) return 3;
+    if (points === 7) return 4;
+    return 0;
+  };
+
+  // Funcion para manejar cuando Clikan en las Estrellas
+  const handleVoteSubmit = async (answerId) => {
+    const scoreToSend = stagedVotes[answerId];
+    if (!scoreToSend) return;
+
+    const updatedAnswer = await vote(answerId, scoreToSend);
+
+    if (updatedAnswer) {
+      setAnswers((prevAnswers) =>
+        prevAnswers.map((ans) => (ans.id === answerId ? updatedAnswer : ans)),
+      );
+      setFeedback("¡Gracias por valorar la respuesta!");
+    }
+  };
 
   // Funcion para Cargar la Pregunta y las  Respuestas
   const fetchQuestionsAndAnswers = async () => {
@@ -375,6 +421,11 @@ const QuestionDetail = () => {
                 ? adminAvatar
                 : `/img/avatars/${answer.author?.avatar_url || "avatar2.png"}`;
 
+              // comprobamos SI ha Permisos para VOtar
+              const isQuestionAuthor = user?.id === questionData.author?.id;
+              const isMyOwnAnswer = user?.id === answer.author_id;
+              const canVote = isQuestionAuthor && !isMyOwnAnswer;
+
               return (
                 <div
                   key={answer.id}
@@ -383,22 +434,24 @@ const QuestionDetail = () => {
                 >
                   <div className="card-body p-6">
                     <div className="flex items-center gap-3 mb-6 justify-between">
-                      <div className="avatar">
-                        <div className="w-10 h-10 rounded-full ring-1 ring-base-300">
-                          <img src={answerAvatar} alt="Avatar" />
+                      <div className="flex items-center gap-4">
+                        <div className="avatar">
+                          <div className="w-10 h-10 rounded-full ring-1 ring-base-300">
+                            <img src={answerAvatar} alt="Avatar" />
+                          </div>
                         </div>
-                      </div>
-                      <div>
-                        <div className="font-bold text-base-content/90">
-                          {answer.author?.username || "Usuario"}
-                          {answer.author?.is_admin && (
-                            <span className="badge badge-primary badge-xs ml-2">
-                              Admin
-                            </span>
-                          )}
-                        </div>
-                        <div className="text-xs text-base-content/60">
-                          Respondido el {ansDate}
+                        <div>
+                          <div className="font-bold text-base-content/90">
+                            {answer.author?.username || "Usuario"}
+                            {answer.author?.is_admin && (
+                              <span className="badge badge-primary badge-xs ml-2">
+                                Admin
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-xs text-base-content/60">
+                            Respondido el {ansDate}
+                          </div>
                         </div>
                       </div>
                       {/* BORRADO: Solo admin o dueño */}
@@ -422,6 +475,95 @@ const QuestionDetail = () => {
                         <Preview steps={answer.body} />
                       </div>
                     </div>
+
+                    {/* Votacion -> */}
+
+                    {(() => {
+                      const isQuestionAuthor =
+                        user?.id === questionData.author?.id;
+                      const isMyOwnAnswer = user?.id === answer.author_id;
+
+                      const hasVoted =
+                        answer.rating !== 0 && answer.rating !== null;
+                      const canVote =
+                        isQuestionAuthor && !isMyOwnAnswer && !hasVoted;
+
+                      const currentStagedStars = stagedVotes[answer.id] || 0;
+                      const starsToDisplay = hasVoted
+                        ? getStarsFromPoints(answer.rating)
+                        : currentStagedStars;
+
+                      const getDynamicLabel = () => {
+                        if (hasVoted) return getVoteLabel(starsToDisplay);
+                        if (canVote && currentStagedStars > 0)
+                          return getVoteLabel(currentStagedStars);
+                        if (canVote) return "¿Te sirvió esta solución?";
+                        return "Esperando valoración del autor";
+                      };
+
+                      return (
+                        <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-base-200/30 p-4 rounded-xl border border-base-300 gap-4 transition-all">
+                          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                            <span className="text-sm font-semibold text-base-content/70">
+                              {hasVoted
+                                ? "Valoración de la comunidad:"
+                                : "Estado:"}
+                            </span>
+
+                            <div className="rating rating-md">
+                              {[1, 2, 3, 4].map((star) => (
+                                <input
+                                  key={star}
+                                  type="radio"
+                                  name={`rating-${answer.id}`}
+                                  className={`mask mask-star-2 transition-all duration-300 ${
+                                    starsToDisplay >= star
+                                      ? "bg-gradient-to-br from-yellow-300 via-amber-400 to-amber-600 opacity-100"
+                                      : "bg-base-content/20 opacity-40"
+                                  }`}
+                                  checked={starsToDisplay === star}
+                                  onChange={() => {
+                                    if (canVote) {
+                                      setStagedVotes((prev) => ({
+                                        ...prev,
+                                        [answer.id]: star,
+                                      }));
+                                    }
+                                  }}
+                                  disabled={!canVote || isVoting}
+                                />
+                              ))}
+                            </div>
+
+                            <span
+                              className={`text-sm transition-all duration-300 ${
+                                starsToDisplay > 0 || hasVoted
+                                  ? "bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary font-bold"
+                                  : "text-base-content/40 font-medium italic"
+                              }`}
+                            >
+                              {getDynamicLabel()}
+                            </span>
+                          </div>
+
+                          {canVote && currentStagedStars > 0 && (
+                            <button
+                              onClick={() => handleVoteSubmit(answer.id)}
+                              disabled={isVoting}
+                              className="btn btn-sm text-white border-0 bg-gradient-to-r from-primary to-secondary hover:brightness-110 shadow-md animate-fade-in"
+                            >
+                              {isVoting ? (
+                                <span className="loading loading-spinner loading-xs"></span>
+                              ) : (
+                                "Enviar Votación"
+                              )}
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })()}
+                    {/* fin sistema de Votacion  */}
+
                     {answer.main_concept && (
                       <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-base-200/50">
                         <span className="text-xs font-semibold opacity-50 uppercase tracking-wider flex items-center mr-2">
