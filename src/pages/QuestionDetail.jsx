@@ -502,8 +502,9 @@ const QuestionDetail = () => {
                       };
 
                       return (
-                        <div className="mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-base-200/30 p-4 rounded-xl border border-base-300 gap-4 transition-all">
-                          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                        <div className="mt-4 flex flex-col sm:flex-row items-center justify-center bg-base-200/30 p-4 rounded-xl border border-base-300 gap-6 transition-all text-center">
+                          {/* Contenedor ->  */}
+                          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                             <span className="text-sm font-semibold text-base-content/70">
                               {hasVoted
                                 ? "Valoración de la comunidad:"
@@ -520,7 +521,7 @@ const QuestionDetail = () => {
                                     starsToDisplay >= star
                                       ? "bg-gradient-to-br from-yellow-300 via-amber-400 to-amber-600 opacity-100"
                                       : "bg-base-content/20 opacity-40"
-                                  }`}
+                                  } ${hasVoted || !canVote ? "cursor-default" : "cursor-pointer hover:scale-110"}`}
                                   checked={starsToDisplay === star}
                                   onChange={() => {
                                     if (canVote) {
@@ -572,8 +573,12 @@ const QuestionDetail = () => {
                         {answer.main_concept.split(",").map((tag, index) => (
                           <div
                             key={index}
-                            className="badge badge-primary badge-outline badge-sm font-medium"
-                            onClick={() => navigate(`/tags/${tag.trim()}`)}
+                            className="badge badge-primary badge-outline badge-sm font-medium cursor-pointer"
+                            onClick={() => {
+                              const cleanTag = tag.trim();
+                              const urlTag = encodeURIComponent(cleanTag);
+                              navigate(`/search?query=${urlTag}`);
+                            }}
                           >
                             {tag.trim()}
                           </div>
