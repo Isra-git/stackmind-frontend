@@ -6,7 +6,10 @@
 
 // src/pages/components/TopUsers.jsx
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { HiUsers } from "react-icons/hi2";
+
+import { ENDPOINTS } from "../api/constantes";
 
 export const TopUsers = () => {
   const [topUsers, setTopUsers] = useState([]);
@@ -15,9 +18,7 @@ export const TopUsers = () => {
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const response = await fetch(
-          "https://stackmind-api.onrender.com/users/leaderboard",
-        );
+        const response = await fetch(ENDPOINTS.LEADERBOARD);
         if (!response.ok) throw new Error("Error al obtener el leaderboard");
 
         const data = await response.json();
@@ -54,33 +55,38 @@ export const TopUsers = () => {
         ) : (
           <ul className="space-y-4">
             {topUsers.map((user) => (
-              <li key={user.username} className="flex items-center gap-3">
-                <div className="avatar">
-                  <div className="w-10 rounded-full ring ring-primary/20 ring-offset-base-100 ring-offset-1">
-                    {/* Ajustamos la ruta base de los avatares  */}
-                    <img
-                      src={`img/avatars/${user.avatar_url}`}
-                      alt={`Avatar de ${user.username}`}
-                      onError={(e) => {
-                        const fallbackPath = "/img/avatars/0/avatar3.png";
-                        if (!e.target.src.includes(fallbackPath)) {
-                          e.target.src = fallbackPath;
-                        }
-                      }}
-                    />
+              <li key={user.id} className="flex items-center gap-3">
+                <Link
+                  to={`/users/${user.id}`}
+                  state={{ user: user }}
+                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-base-300 transition-colors w-full group"
+                >
+                  <div className="avatar">
+                    <div className="w-10 rounded-full ring ring-primary/20 ring-offset-base-100 ring-offset-1 group-hover:ring-primary/50 transition-all">
+                      <img
+                        src={`img/avatars/${user.avatar_url}`}
+                        alt={`Avatar de ${user.username}`}
+                        onError={(e) => {
+                          const fallbackPath = "/img/avatars/0/avatar3.png";
+                          if (!e.target.src.includes(fallbackPath)) {
+                            e.target.src = fallbackPath;
+                          }
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col overflow-hidden">
-                  <span
-                    className="font-bold text-sm truncate"
-                    title={user.username}
-                  >
-                    {user.username}
-                  </span>
-                  <span className="text-xs font-medium text-base-content/60">
-                    {user.reputation} puntos
-                  </span>
-                </div>
+                  <div className="flex flex-col overflow-hidden">
+                    <span
+                      className="font-bold text-sm truncate group-hover:text-primary transition-colors"
+                      title={user.username}
+                    >
+                      {user.username}
+                    </span>
+                    <span className="text-xs font-medium text-base-content/60">
+                      {user.reputation} puntos
+                    </span>
+                  </div>
+                </Link>
               </li>
             ))}
 

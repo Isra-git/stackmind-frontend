@@ -22,6 +22,7 @@ import Error404 from "../pages/Error404";
 
 // protegidas
 import Me from "../pages/Me";
+import UserProfile from "../pages/UserProfile";
 import MyQuestions from "../components/questions/MyQuestions";
 import MyAnswers from "../components/answers/MyAnswers";
 import Support from "../pages/Support";
@@ -59,6 +60,7 @@ const routes = (isLoggedIn) => [
           { path: "/newanswer", element: <NewAnswer /> },
           { path: "/edit-answer/:id", element: <EditAnswer /> },
           { path: "/me", element: <Me /> },
+          { path: "/users/:id", element: <UserProfile /> },
           { path: "/newquestion", element: <NewQuestion /> },
           { path: "/edit-question/:id", element: <NewQuestion /> },
           { path: "/support", element: <Support /> },

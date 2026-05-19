@@ -18,6 +18,7 @@ import UserStats from "../components/shared/UserStats";
 import MeRecentActivity from "./MeRecentActivity";
 import ProfileInfo from "../components/profile/ProfileInfo";
 import EditProfile from "../components/profile/EditProfile";
+import { ENDPOINTS } from "../api/constantes";
 
 // iconos
 import {
@@ -29,7 +30,7 @@ import {
 import { GiToken } from "react-icons/gi";
 
 // direccion backend -> Stats
-const stats_url = "https://stackmind-api.onrender.com/users/me/stats";
+const stats_url = ENDPOINTS.USER_STATS;
 
 const Me = () => {
   // contexto de Autenticacion -> User

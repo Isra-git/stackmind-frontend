@@ -64,4 +64,9 @@ export const ENDPOINTS = {
     `${API_BASE}/users/me/questions?skip=${skip}&limit=${limit}`,
   USER_ANSWERS: (skip = 0, limit = 20) =>
     `${API_BASE}/users/me/answers?skip=${skip}&limit=${limit}`,
+
+  // Perfil publico de un usuario
+  USER_PROFILE: (userId) => `${API_BASE}/users/${userId}`,
+  // Estadisticas publicas de un usuario
+  USER_PROFILE_STATS: (userId) => `${API_BASE}/users/${userId}/stats`,
 };
