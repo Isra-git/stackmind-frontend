@@ -141,7 +141,7 @@ const UserProfile = () => {
         </p>
 
         {/* Reputacion */}
-        <div className="badge badge-secondary badge-lg gap-2 px-5 py-5 text-lg font-bold shadow-sm">
+        <div className="badge badge-primary badge-lg gap-2 px-5 py-5 text-lg font-bold shadow-sm">
           <GiToken className="text-2xl" />
           {profileUser.reputation} de Reputación
         </div>
