@@ -6,7 +6,7 @@
 // src/pages/UserProfile.jsx
 
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation, Navigate } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 
 //  Autenticación
 import { useAuth } from "../context/AuthContext";
@@ -22,60 +22,50 @@ import { GiToken } from "react-icons/gi";
 const UserProfile = () => {
   // Capturamos el id de la URL
   const { id } = useParams();
-  const location = useLocation();
 
   // Contexto de Autenticación
   const { token, user: loggedUser } = useAuth();
 
-  // Verificamos si venimos de un <Link state={{ user: ... }}>
-  const leaderboardData = location.state?.user || null;
-
   // Estados
-  const [profileUser, setProfileUser] = useState(leaderboardData);
+  const [profileUser, setProfileUser] = useState(null);
   const [stats, setStats] = useState({
     questions_count: 0,
     answers_count: 0,
-    reputation: leaderboardData ? leaderboardData.reputation : 0,
+    reputation: 0,
   });
-
-  // Si no tenemos leaderboardData, empezamos en modo carga
-  const [loading, setLoading] = useState(!leaderboardData);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     // Si no hay token, no hacemos la petición
     if (!token) return;
 
+    // Reset al cambiar de usuario
+    setProfileUser(null);
+    setLoading(true);
+    setError(false);
+
     const fetchProfileData = async () => {
       try {
-        if (!profileUser) {
-          // Entramos por URL directa o recargamos página (F5)
-          setLoading(true);
-          const [userRes, statsRes] = await Promise.all([
-            fetch(ENDPOINTS.USER_PROFILE(id), {
-              headers: { Authorization: `Bearer ${token}` },
-            }),
-            fetch(ENDPOINTS.USER_PROFILE_STATS(id), {
-              headers: { Authorization: `Bearer ${token}` },
-            }),
-          ]);
-
-          if (!userRes.ok || !statsRes.ok)
-            throw new Error("Fallo al cargar datos");
-
-          setProfileUser(await userRes.json());
-          setStats(await statsRes.json());
-        } else {
-          //  Venimos del Leaderboard. Ya tenemos los datos base, solo pedimos las stats
-          const statsRes = await fetch(ENDPOINTS.USER_PROFILE_STATS(id), {
+        // Siempre hacemos fetch completo (usuario + stats)
+        const [userRes, statsRes] = await Promise.all([
+          fetch(ENDPOINTS.USER_PROFILE(id), {
             headers: { Authorization: `Bearer ${token}` },
-          });
+          }),
+          fetch(ENDPOINTS.USER_PROFILE_STATS(id), {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
 
-          if (statsRes.ok) {
-            const statsData = await statsRes.json();
-            setStats(statsData);
-          }
-        }
+        // debug 
+        console.log("USER_PROFILE status:", userRes.status, ENDPOINTS.USER_PROFILE(id));
+        console.log("USER_PROFILE_STATS status:", statsRes.status, ENDPOINTS.USER_PROFILE_STATS(id));
+
+        if (!userRes.ok || !statsRes.ok)
+          throw new Error("Fallo al cargar datos");
+
+        setProfileUser(await userRes.json());
+        setStats(await statsRes.json());
       } catch (err) {
         console.error(err);
         setError(true);
