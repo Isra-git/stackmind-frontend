@@ -57,10 +57,6 @@ const UserProfile = () => {
           }),
         ]);
 
-        // debug 
-        console.log("USER_PROFILE status:", userRes.status, ENDPOINTS.USER_PROFILE(id));
-        console.log("USER_PROFILE_STATS status:", statsRes.status, ENDPOINTS.USER_PROFILE_STATS(id));
-
         if (!userRes.ok || !statsRes.ok)
           throw new Error("Fallo al cargar datos");
 
