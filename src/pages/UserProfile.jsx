@@ -1,7 +1,5 @@
 /* 
-
     Componente que Muestra el perfil Publico de un User
-
 */
 // src/pages/UserProfile.jsx
 
@@ -13,11 +11,13 @@ import { useAuth } from "../context/AuthContext";
 
 // componentes
 import UserStats from "../components/shared/UserStats";
+import Modal from "../components/shared/Modal";
 import { format_date } from "../api/helpers";
 import { ENDPOINTS } from "../api/constantes";
 
 // iconos
 import { GiToken } from "react-icons/gi";
+import { FaExclamationTriangle } from "react-icons/fa";
 
 const UserProfile = () => {
   // Capturamos el id de la URL
@@ -35,6 +35,7 @@ const UserProfile = () => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     // Si no hay token, no hacemos la petición
@@ -110,6 +111,10 @@ const UserProfile = () => {
   // Formatear la fecha de registro
   const formatDate = format_date(new Date(profileUser.created_at));
 
+  const handleDeactivateClick = async () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="container mx-auto px-4 py-12 max-w-3xl">
       {/* TARJETA DEL USUARIO  */}
@@ -141,6 +146,15 @@ const UserProfile = () => {
           <GiToken className="text-2xl" />
           {profileUser.reputation} de Reputación
         </div>
+
+        {loggedUser && loggedUser.is_admin && !profileUser.is_admin && (
+          <button
+            className="btn btn-error mt-6"
+            onClick={() => setIsModalOpen(true)}
+          >
+            Desactivar Usuario
+          </button>
+        )}
       </div>
 
       {/* Estadistica  */}
@@ -148,6 +162,17 @@ const UserProfile = () => {
         {/* Asegúrate de que UserStats soporta layout="horizontal" como configuramos antes */}
         <UserStats stats={stats} layout="horizontal" />
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        icon={<FaExclamationTriangle className="text-error" />}
+        title="Desactivar Usuario"
+        message={`¿Estás seguro de que deseas desactivar a ${profileUser.username}? Esta acción restringirá su acceso.`}
+        primaryBtnText="Confirmar Desactivación"
+        onPrimaryClick={handleDeactivateClick}
+        secondaryBtnText="Cancelar"
+        onSecondaryClick={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };

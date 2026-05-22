@@ -4,7 +4,7 @@
 
 */
 import React from "react";
-
+import {useNavigate} from 'react-router-dom'
 // iconos
 import {
   HiOutlineEnvelope,
@@ -19,6 +19,7 @@ export default function ProfileInfo({
   formatDate,
   setEditing,
 }) {
+ const  navigate=useNavigate();
   return (
     <div className="md:col-span-1">
       <div className="card bg-base-100 shadow-xl border border-base-200 ">
@@ -64,7 +65,7 @@ export default function ProfileInfo({
             <div className="card-actions w-full mt-6">
               <button
                 className="btn btn-error btn-outline w-full"
-                onClick={() => setEditing(true)}
+                onClick={() => navigate('/user-list')}
               >
                 Panel Administrador
               </button>

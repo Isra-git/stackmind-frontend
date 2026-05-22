@@ -1,26 +1,42 @@
-// src/pages/AdminUserList.jsx
-
-import React, { useState, useEffect } from "react";
-import { HiOutlineUsers, HiOutlineUserRemove, HiOutlineUserAdd } from "react-icons/hi";
-import toast from "react-hot-toast"; // <-- Importamos react-hot-toast
-import { ENDPOINTS } from "../api/constantes";
+import React, { useState, useEffect, useCallback } from "react";
+import { useAuth } from "../../context/AuthContext";
+import { 
+  HiOutlineUsers, 
+  HiOutlineUserRemove, 
+  HiOutlineUserAdd,
+  HiOutlineCheckCircle,
+  HiOutlineXCircle
+} from "react-icons/hi";
+import { ENDPOINTS } from "../../api/constantes";
+import Modal from "../shared/Modal";
 
 const AdminUserList = () => {
-  const currentUser = JSON.parse(localStorage.getItem("user")) || {};
+  // Contexto de Autenticación
+  const { user: currentUser, token } = useAuth();
 
   // Estados del componente
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Estados del Modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
-  // Función para obtener la lista de usuarios
-  const fetchUsers = async () => {
+  // Estados del Modal de Resultados
+  const [resultModal, setResultModal] = useState({
+    isOpen: false,
+    title: "",
+    message: "",
+    type: "success"
+  });
+
+  // Usamos useCallback para que la función no se recree en cada render
+  // y podamos usarla de forma segura en el useEffect
+  const fetchUsers = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
-      
-      // Asegúrate de incluir el token de autorización si tu backend lo requiere
-      const token = localStorage.getItem("token"); 
       
       const response = await fetch(ENDPOINTS.ADMIN_USER_LIST(0, 50), {
         headers: {
@@ -31,29 +47,40 @@ const AdminUserList = () => {
       if (!response.ok) throw new Error("No se pudo cargar la lista de usuarios");
       
       const data = await response.json();
-      setUsers(data); 
+      
+      // Aseguramos que la respuesta sea un array para que el .map no falle
+      // (Ajusta esto si tu backend devuelve algo como { items: [...] })
+      setUsers(Array.isArray(data) ? data : data.users || []); 
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
+  }, [token]); // Depende del token
+
+  // Cargar usuarios al montar o cuando el currentUser cambie
+  useEffect(() => {
+    // Solo disparamos la petición si hay usuario y es admin
+    if (currentUser?.is_admin && token) {
+      fetchUsers();
+    } else {
+      // Evitamos que se quede en loading infinito si no tiene permisos
+      setLoading(false); 
+    }
+  }, [currentUser, token, fetchUsers]); // Añadidas las dependencias correctas
+
+  const handleOpenModal = (user) => {
+    setSelectedUser(user);
+    setIsModalOpen(true);
   };
 
-  // Cargar usuarios al montar el componente
-  useEffect(() => {
-    if (currentUser.is_admin) {
-      fetchUsers();
-    }
-  }, []);
+  const handleToggleStatus = async () => {
+    if (!selectedUser) return;
 
-  // Función para alternar el estado del usuario (Activar/Desactivar)
-  const handleToggleStatus = async (userId, currentStatus) => {
-    // Opcional: Puedes usar un toast de carga si la petición tarda
-    const loadingToast = toast.loading("Actualizando estado...");
+    const { id: userId, is_active: currentStatus } = selectedUser;
 
     try {
-      const token = localStorage.getItem("token");
-      
+      // Quitamos el localStorage.getItem("token") y usamos el token del contexto
       const response = await fetch(ENDPOINTS.ADMIN_TOGGLE_USER(userId), {
         method: "PUT",
         headers: {
@@ -64,24 +91,33 @@ const AdminUserList = () => {
 
       if (!response.ok) throw new Error("Error al cambiar el estado del usuario");
 
-      // Actualizamos el estado local para reflejar el cambio en la UI instantáneamente
+      // Actualizamos el estado local
       setUsers(users.map(user => 
         user.id === userId ? { ...user, is_active: !currentStatus } : user
       ));
       
-      // Toast de éxito
-      toast.success(
-        currentStatus ? "Usuario desactivado correctamente" : "Usuario activado correctamente",
-        { id: loadingToast } // Reemplaza el toast de carga
-      );
+      setResultModal({
+        isOpen: true,
+        title: "Operación Exitosa",
+        message: currentStatus ? "Usuario desactivado correctamente" : "Usuario activado correctamente",
+        type: "success"
+      });
       
     } catch (err) {
-      // Toast de error (reemplaza el alert)
-      toast.error(`¡Ups! ${err.message}`, { id: loadingToast });
+      setResultModal({
+        isOpen: true,
+        title: "¡Ups! Ocurrió un error",
+        message: err.message,
+        type: "error"
+      });
+    } finally {
+      setIsModalOpen(false);
+      setSelectedUser(null);
     }
   };
 
-  if (!currentUser.is_admin) {
+  // Validacion con opcional chaning
+  if (!currentUser?.is_admin) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
         <h2 className="text-3xl font-bold text-error">Acceso Denegado</h2>
@@ -100,7 +136,6 @@ const AdminUserList = () => {
           <HiOutlineUsers className="text-primary" />
           Gestión de Usuarios
         </h2>
-        {/* Espacio para filtros o pag */}
         <div className="text-sm opacity-70">
           Total: {users.length} usuarios
         </div>
@@ -121,7 +156,6 @@ const AdminUserList = () => {
             No hay usuarios en la plataforma todavía.
           </div>
         ) : (
-          // Tarjetas de usuario
           users.map((user) => (
             <div 
               key={user.id} 
@@ -144,10 +178,10 @@ const AdminUserList = () => {
                 </div>
               </div>
 
-              {/* Botón de Activar / Desactivar */}
+              {/* Activar / Desactivar */}
               <button
-                onClick={() => handleToggleStatus(user.id, user.is_active)}
-                disabled={user.id === currentUser.id}
+                onClick={() => handleOpenModal(user)}
+                disabled={user.id === currentUser?.id}
                 className={`btn btn-sm ${
                   user.is_active 
                     ? 'btn-outline btn-error' 
@@ -170,6 +204,29 @@ const AdminUserList = () => {
           ))
         )}
       </div>
+
+      <Modal
+        isOpen={isModalOpen}
+        icon={selectedUser?.is_active ? <HiOutlineUserRemove className="text-error" /> : <HiOutlineUserAdd className="text-success" />}
+        title={selectedUser?.is_active ? "Desactivar Usuario" : "Activar Usuario"}
+        message={`¿Estás seguro de que deseas ${selectedUser?.is_active ? 'desactivar' : 'activar'} a ${selectedUser?.username || selectedUser?.full_name}?`}
+        primaryBtnText="Confirmar"
+        onPrimaryClick={handleToggleStatus}
+        secondaryBtnText="Cancelar"
+        onSecondaryClick={() => {
+          setIsModalOpen(false);
+          setSelectedUser(null);
+        }}
+      />
+
+      <Modal
+        isOpen={resultModal.isOpen}
+        icon={resultModal.type === "success" ? <HiOutlineCheckCircle className="text-success" /> : <HiOutlineXCircle className="text-error" />}
+        title={resultModal.title}
+        message={resultModal.message}
+        primaryBtnText="Aceptar"
+        onPrimaryClick={() => setResultModal({ ...resultModal, isOpen: false })}
+      />
     </div>
   );
 };

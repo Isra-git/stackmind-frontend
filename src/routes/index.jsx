@@ -29,7 +29,7 @@ import Support from "../pages/Support";
 import NewQuestion from "../pages/NewQuestion";
 import NewAnswer from "../components/answers/NewAnswer";
 import EditAnswer from "../components/answers/EditAnswer";
-
+import AdminUserList from "../components/admin/AdminUserList";
 import QuestionDetail from "../pages/QuestionDetail";
 
 // temporal ->
@@ -69,6 +69,7 @@ const routes = (isLoggedIn) => [
           { path: "/questions/:id/:slug", element: <QuestionDetail /> },
           { path: "/questions/:id", element: <QuestionDetail /> }, // fallback por si no viene el slug
           { path: "/editor", element: <StackMindEditor /> }, // ruta probisional para probar el editor
+          { path: "/user-list", element: <AdminUserList />} // ruta par desactivar usuarios
         ],
       },
     ],
