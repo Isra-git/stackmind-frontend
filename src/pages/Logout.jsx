@@ -1,73 +1,55 @@
-import React from "react";
-import { useQuestions } from "../hooks/useUserQuestions";
+// src/pages/Logout.jsx (o la ruta donde lo tengas)
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { HiOutlineHandRaised } from "react-icons/hi2";
+import { useAuth } from "../context/AuthContext"; 
 
-const MyQuestions = () => {
-  const { questions, loading, error } = useQuestions("my_questions");
+const Logout = () => {
+  const navigate = useNavigate();
+  const { logout } = useAuth(); 
 
-  // Opcional: Log de depuración fuera del JSX
-  if (questions) console.log("Preguntas cargadas:", questions);
+  useEffect(() => {
+    //  Cerramos sesion
+    logout();
+
+    // Redirigimos al inicio  -> 3.5s
+    const timer = setTimeout(() => {
+      navigate("/");
+    }, 3500);
+
+    // Limpiamos el temporizador si el componente se desmonta antes
+    return () => clearTimeout(timer);
+  }, [logout, navigate]);
 
   return (
-    <div className="flex flex-col w-full mt-6 min-h-[60vh] p-8 bg-base-100 rounded-box shadow-sm border border-base-200 overflow-hidden relative">
-      <span className="badge badge-primary badge-outline mb-4 font-bold tracking-wider text-xs uppercase p-3 self-start">
-        StackMind - Comunidad de IA
-      </span>
-
-      <h1 className="text-2xl font-bold text-base-content mb-6 text-start">
-        Has Realizado estas Preguntas:
-      </h1>
-
-      {/* Gestión de Errores */}
-      {error && (
-        <div className="alert alert-error mb-4">
-          <span>Ha habido un error: {error.message || error}</span>
-        </div>
-      )}
-
-      {/* Estado de Carga */}
-      {loading && (
-        <div className="flex flex-col items-center my-10">
-          <div className="loading loading-dots loading-lg text-primary"></div>
-          <p className="mt-2">Cargando tus consultas...</p>
-        </div>
-      )}
-
-      <div className="w-full max-w-2xl mx-auto">
-        {questions && questions.length > 0 ? (
-          <div className="flex flex-col gap-3">
-            {questions.map((question) => (
-              <div
-                key={question.id}
-                className="collapse collapse-plus bg-base-200 border border-base-300"
-              >
-                <input type="checkbox" className="peer" />
-
-                <div className="collapse-title text-xl font-medium peer-checked:bg-primary peer-checked:text-primary-content transition-colors">
-                  {question.title}
-                </div>
-
-                <div className="collapse-content peer-checked:bg-primary display: columns gap-4  peer-checked:text-primary-content transition-colors">
-                  <p className="pt-4 opacity-90">
-                    {question.description || "Sin descripción adicional."}
-                  </p>
-                  <p className="pt-4 opacity-90">
-                    {question.description || "Sin descripción adicional."}
-                  </p>
-                </div>
-              </div>
-            ))}
+    <div className="flex flex-col items-center justify-center min-h-[70vh] p-8 text-center bg-base-100">
+      <div className="max-w-md w-full bg-base-200 p-10 rounded-3xl shadow-xl border border-base-300 transform transition-all duration-500 hover:scale-105">
+        
+        {/* Icono  */}
+        <div className="flex justify-center mb-6">
+          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center animate-pulse">
+            <HiOutlineHandRaised className="w-10 h-10 text-primary" />
           </div>
-        ) : (
-          !loading &&
-          !error && (
-            <div className="text-center opacity-50 mt-10">
-              Todavía no has lanzado ninguna pregunta a la comunidad.
-            </div>
-          )
-        )}
+        </div>
+
+        <h1 className="text-3xl font-extrabold text-base-content mb-4">
+          ¡Hasta pronto!
+        </h1>
+        
+        <p className="text-lg text-base-content/70 leading-relaxed mb-8">
+          Sentimos que te marches, pero esperamos haberte sido de gran ayuda en tu camino por la Inteligencia Artificial.
+        </p>
+
+        <div className="flex flex-col items-center gap-3">
+          <span className="loading loading-dots loading-md text-primary"></span>
+          <span className="text-sm font-medium text-base-content/50 uppercase tracking-widest">
+            Cerrando sesión de forma segura...
+          </span>
+        </div>
+
       </div>
     </div>
   );
 };
 
-export default MyQuestions;
+export default Logout;

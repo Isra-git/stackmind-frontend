@@ -80,7 +80,7 @@ const AdminUserList = () => {
     const { id: userId, is_active: currentStatus } = selectedUser;
 
     try {
-      // Quitamos el localStorage.getItem("token") y usamos el token del contexto
+      // Realizamos la petición al back-end para cambiar el estado del usuario
       const response = await fetch(ENDPOINTS.ADMIN_TOGGLE_USER(userId), {
         method: "PUT",
         headers: {
@@ -169,7 +169,9 @@ const AdminUserList = () => {
                     <span className="badge badge-primary badge-xs">Admin</span>
                   )}
                 </span>
-                <span className="text-sm opacity-70">{user.email}</span>
+                <span className="text-sm opacity-70">
+                   {user.is_admin? "ADMINISTRADOR": user.email}
+                    </span>
                 
                 <div className="mt-2">
                   <span className={`badge badge-sm ${user.is_active ? 'badge-success text-success-content' : 'badge-error text-error-content'}`}>

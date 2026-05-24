@@ -33,6 +33,8 @@ import AdminUserList from "../components/admin/AdminUserList";
 import QuestionDetail from "../pages/QuestionDetail";
 
 // temporal ->
+// import LandingSplash from "../pages/LandingSplash";
+
 import StackMindEditor from "../components/editor/StackMindEditor";
 // contexto de Autenticacion
 import ProtectedRoute from "./ProtectedRoute";
@@ -52,7 +54,7 @@ const routes = (isLoggedIn) => [
       { path: "/search", element: <Search /> },
       { path: "/history", element: <History /> },
       { path: "/logout", element: <Logout /> },
-
+      // { path: "/landing", element: <LandingSplash /> },
       // --- RUTAS PROTEGIDAS ---
       {
         element: <ProtectedRoute />,
