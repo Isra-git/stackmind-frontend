@@ -25,7 +25,7 @@ import {
 export default function MeRecentActivity() {
   // Pedimos solo  3 registros de cada uno
   const { answers, loading: aLoading } = useUserAnswers(0, 3);
-  const { questions, loading: qLoading } = useQuestions(0, 3);
+  const { questions, loading: qLoading } = useQuestions("my_questions", 0, 3);
 
   const isLoading = aLoading || qLoading;
 
