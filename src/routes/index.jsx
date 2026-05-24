@@ -31,11 +31,8 @@ import NewAnswer from "../components/answers/NewAnswer";
 import EditAnswer from "../components/answers/EditAnswer";
 import AdminUserList from "../components/admin/AdminUserList";
 import QuestionDetail from "../pages/QuestionDetail";
-
-// temporal ->
-// import LandingSplash from "../pages/LandingSplash";
-
 import StackMindEditor from "../components/editor/StackMindEditor";
+
 // contexto de Autenticacion
 import ProtectedRoute from "./ProtectedRoute";
 import { AuthContext } from "../context/AuthContext";
@@ -54,7 +51,7 @@ const routes = (isLoggedIn) => [
       { path: "/search", element: <Search /> },
       { path: "/history", element: <History /> },
       { path: "/logout", element: <Logout /> },
-      // { path: "/landing", element: <LandingSplash /> },
+
       // --- RUTAS PROTEGIDAS ---
       {
         element: <ProtectedRoute />,
@@ -71,7 +68,7 @@ const routes = (isLoggedIn) => [
           { path: "/questions/:id/:slug", element: <QuestionDetail /> },
           { path: "/questions/:id", element: <QuestionDetail /> }, // fallback por si no viene el slug
           { path: "/editor", element: <StackMindEditor /> }, // ruta probisional para probar el editor
-          { path: "/user-list", element: <AdminUserList />} // ruta par desactivar usuarios
+          { path: "/user-list", element: <AdminUserList /> }, // ruta par desactivar usuarios
         ],
       },
     ],
