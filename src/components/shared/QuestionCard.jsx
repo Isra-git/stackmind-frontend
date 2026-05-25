@@ -196,15 +196,24 @@ const QuestionCard = ({ question, onDelete }) => {
 
             {/* Información del Autor y Fecha */}
             <div className="flex flex-wrap items-center gap-2 self-end sm:self-auto text-xs text-base-content/60 bg-base-200/50 px-3 py-1.5 rounded-full">
-              <div className="avatar hidden sm:block">
-                <div className="w-5 h-5 rounded-full ring-1 ring-base-300">
-                  <img src={authorAvatar} alt={author?.username || "Anónimo"} />
+              <Link
+                to={`/users/${author?.id}`}
+                state={{ author }}
+                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+              >
+                <div className="avatar hidden sm:block">
+                  <div className="w-5 h-5 rounded-full ring-1 ring-base-300">
+                    <img
+                      src={authorAvatar}
+                      alt={author?.username || "Anónimo"}
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <span className="font-medium text-base-content/80">
-                {author?.username || "Usuario Anónimo"}
-              </span>
+                <span className="font-medium text-base-content/80">
+                  {author?.username || "Usuario Anónimo"}
+                </span>
+              </Link>
 
               <span className="hidden sm:inline opacity-50">•</span>
 
